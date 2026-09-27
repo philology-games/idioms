@@ -118,7 +118,6 @@ html, body {
   z-index: 10;
 }
 .game-field .start-btn:hover { background-color: #3a5a7a; }
-/* ===== ОБЪЁМНЫЕ КОСТЯШКИ ===== */
 .tile {
   --edge1: #7a90ac;
   --edge2: #6a80a0;
@@ -211,43 +210,44 @@ html, body {
   min-height: 0;
   min-width: 0;
 }
+/* ===== СТОПКА — КОЛОНКА ГОРИЗОНТАЛЬНЫХ КОСТЯШЕК ===== */
 .stack {
   flex: 0 0 38%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   border: 2px solid #b8860b;
   border-radius: 6px;
   background-color: rgba(0,0,0,0.08);
-  padding: 8px 8px 24px 8px;
-  position: relative;
+  padding: 10px 8px;
+  overflow: hidden;
 }
 .stack-inner {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 1px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   width: 100%;
-  align-content: start;
-  position: relative;
-  z-index: 2;
+  align-items: stretch;
+  padding-bottom: 2px;
+  border-bottom: 3px solid #8a6a3a;
+  border-radius: 0 0 3px 3px;
 }
-/* ===== ОБЪЁМНЫЕ КОСТЯШКИ В СТОПКЕ ===== */
 .stack-tile {
-  aspect-ratio: 2 / 1;
+  height: 8px;
   background: linear-gradient(180deg, #3a4a6a 0%, #1a2a4a 100%);
   border: 1px solid #b8860b;
-  border-radius: 2px 3px 3px 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Playfair Display', Georgia, serif;
-  font-weight: 900;
-  color: #b8860b;
-  font-size: 0.5rem;
+  border-radius: 2px;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.15),
-    0 1px 0 #0a1a2a,
-    0 2px 2px rgba(0,0,0,0.35);
+    0 1px 0 rgba(0,0,0,0.4);
+}
+.stack-tile:nth-child(odd) {
+  margin-left: 1px;
+  margin-right: -1px;
+}
+.stack-tile:nth-child(even) {
+  margin-left: -1px;
+  margin-right: 1px;
 }
 .book-shelf {
   flex: 1;
@@ -302,10 +302,10 @@ html, body {
   background-image:
     radial-gradient(circle at 20% 30%, rgba(184, 92, 56, 0.1) 0.5px, transparent 1px),
     radial-gradient(circle at 70% 60%, rgba(166, 138, 58, 0.1) 0.5px, transparent 1px);
-  padding: 12px 6px;
+  padding: 14px 8px;
   display: grid;
-  grid-template-rows: repeat(5, minmax(0, 1fr));
-  gap: 6px;
+  grid-template-rows: repeat(4, minmax(0, 1fr));
+  gap: 14px;
   position: relative;
 }
 .book-fold {
@@ -339,7 +339,7 @@ html, body {
   text-align: left;
   font-family: 'EB Garamond', Georgia, serif;
   font-weight: 700;
-  font-size: 0.63rem;
+  font-size: 0.61rem;
   position: relative;
 }
 .pair-content {
@@ -365,7 +365,7 @@ html, body {
   color: #152040;
   font-weight: 700;
   padding: 0 1px;
-  font-size: 0.63rem;
+  font-size: 0.61rem;
 }
 .book-pair .pair-meaning {
   flex: 1;
@@ -373,7 +373,7 @@ html, body {
   padding: 1px 1px;
   color: #152040;
   text-align: left;
-  font-size: 0.63rem;
+  font-size: 0.61rem;
   font-weight: 400;
 }
 .book-pair .pair-meaning .second { color: #2a4a7a; }
@@ -435,10 +435,10 @@ html, body {
   width: 100%; height: 100%;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  padding: 12px 6px;
+  padding: 14px 8px;
   display: grid;
-  grid-template-rows: repeat(5, minmax(0, 1fr));
-  gap: 6px;
+  grid-template-rows: repeat(4, minmax(0, 1fr));
+  gap: 14px;
 }
 .footer {
   flex-shrink: 0;
@@ -1112,12 +1112,12 @@ function getDeviceType() {
 function getParams() {
   const device = getDeviceType();
   if (device === 'phone') {
-    return { pairsPerRound: 6, tabs: 3, cols: 3, rows: 4, gap: 5, bookPairsPerPage: 5, totalTiles: 190 };
+    return { pairsPerRound: 6, tabs: 3, cols: 3, rows: 4, gap: 5, bookPairsPerPage: 4, totalTiles: 190 };
   }
   if (device === 'tablet') {
-    return { pairsPerRound: 15, tabs: 3, cols: 5, rows: 6, gap: 5, bookPairsPerPage: 5, totalTiles: 190 };
+    return { pairsPerRound: 15, tabs: 3, cols: 5, rows: 6, gap: 5, bookPairsPerPage: 4, totalTiles: 190 };
   }
-  return { pairsPerRound: 20, tabs: 1, cols: 5, rows: 8, gap: 6, bookPairsPerPage: 5, totalTiles: 568 };
+  return { pairsPerRound: 20, tabs: 1, cols: 5, rows: 8, gap: 6, bookPairsPerPage: 4, totalTiles: 568 };
 }
 function normalizeMeaning(meaning) {
   return meaning.toLowerCase().replace(/[;,.!?()]/g, ' ').split(/\s+/).filter(w => w.length > 2).sort().join(' ');
@@ -1396,33 +1396,19 @@ function applyPortraitTabletLayout() {
   }
 }
 
-/* Стопка: верхний слой = 40 (или остаток), под ним — полоски-тени по количеству слоёв */
+/* Стопка: вертикальная колонка горизонтальных костяшек. Количество полосок пропорционально stackRemaining */
 function renderStack() {
   const stackInner = document.getElementById('stackInner');
   stackInner.innerHTML = '';
-
-  let visible, extraLayers;
-  if (stackRemaining >= 40) {
-    visible = 40;
-    extraLayers = Math.min(4, Math.ceil((stackRemaining - 40) / 40));
-  } else {
-    visible = stackRemaining;
-    extraLayers = 0;
-  }
-
-  // Тени слоёв под стопкой
-  const shadows = [];
-  for (let i = 0; i < extraLayers; i++) {
-    const depth = (i + 1) * 4;
-    const opacity = 0.55 - i * 0.12;
-    shadows.push(`0 ${depth}px 0 rgba(26,42,74,${opacity})`);
-  }
-  stackInner.style.boxShadow = shadows.join(', ') || 'none';
-
-  for (let i = 0; i < visible; i++) {
+  // Число полосок: от 1 до 12, пропорционально оставшимся костяшкам
+  const total = deviceParams.totalTiles;
+  const ratio = stackRemaining / total;
+  let count;
+  if (stackRemaining === 0) count = 0;
+  else count = Math.max(1, Math.round(12 * ratio));
+  for (let i = 0; i < count; i++) {
     const tile = document.createElement('div');
     tile.className = 'stack-tile';
-    tile.textContent = 'Ф';
     stackInner.appendChild(tile);
   }
 }
@@ -1522,7 +1508,6 @@ function renderField() {
 
   fitTiles();
 
-  // Вылет из ПРАВОГО НИЖНЕГО УГЛА стопки
   const stackEl = document.getElementById('stack');
   const stackRect = stackEl.getBoundingClientRect();
   const stackCX = stackRect.right - 20;
@@ -1540,12 +1525,12 @@ function renderField() {
   setTimeout(() => {
     allTiles.forEach((tile, i) => {
       setTimeout(() => {
-        tile.style.transition = 'transform 0.55s cubic-bezier(0.2, 0.7, 0.3, 1), opacity 0.35s ease-out';
+        tile.style.transition = 'transform 0.7s cubic-bezier(0.2, 0.7, 0.3, 1), opacity 0.45s ease-out';
         tile.style.transform = 'translate(0, 0) scale(1)';
         tile.style.opacity = '1';
-      }, i * 100);
+      }, i * 110);
     });
-    const totalTime = allTiles.length * 100 + 700;
+    const totalTime = allTiles.length * 110 + 800;
     setTimeout(() => {
       allTiles.forEach(tile => {
         tile.style.transition = '';
@@ -1706,7 +1691,6 @@ function flipBookPage(callback) {
   front.className = 'flip-clone-front';
   front.innerHTML = rightPage.innerHTML;
   clone.appendChild(front);
-  // Очищаем только правую страницу — левая остаётся видимой
   rightPage.innerHTML = '';
   spread.appendChild(clone);
   setTimeout(() => { clone.remove(); if (callback) callback(); }, 1300);
