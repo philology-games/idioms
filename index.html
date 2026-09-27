@@ -283,7 +283,7 @@ html, body {
   display: grid;
   grid-template-rows: repeat(5, minmax(0, 1fr));
   gap: 6px;
-  overflow: hidden;
+  overflow: visible;
   position: relative;
 }
 .book-fold {
@@ -319,7 +319,7 @@ html, body {
   text-align: left;
   font-family: 'EB Garamond', Georgia, serif;
   font-weight: 700;
-  font-size: 0.63rem;
+  font-size: 0.62rem;
   position: relative;
 }
 .pair-content {
@@ -353,7 +353,7 @@ html, body {
   padding: 1px 1px;
   color: #152040;
   text-align: left;
-  font-size: 0.63rem;
+  font-size: 0.62rem;
   font-weight: 400;
 }
 .book-pair .pair-meaning .second { color: #2a4a7a; }
@@ -1666,6 +1666,8 @@ function flipBookPage(callback) {
   front.className = 'flip-clone-front';
   front.innerHTML = rightPage.innerHTML;
   clone.appendChild(front);
+  document.getElementById('pageLeft').innerHTML = '';
+rightPage.innerHTML = '';
   spread.appendChild(clone);
   setTimeout(() => { clone.remove(); if (callback) callback(); }, 1300);
 }
