@@ -118,7 +118,6 @@ html, body {
   z-index: 10;
 }
 .game-field .start-btn:hover { background-color: #3a5a7a; }
-/* ===== КОСТЯШКИ ===== */
 .tile {
   width: 100%;
   height: 100%;
@@ -1269,8 +1268,11 @@ function playFanfare() {
 const SHORT_WORDS = ['в','на','с','к','по','за','из','от','до','у','о','об','во','со','ко','под','над','при','про','без','для','через','между','перед','и','а','но','да','или','либо','что','как','то','же','бы','ли','не','ни'];
 function addNbsp(text) {
   let result = text;
-  // Неразрывный дефис для слов типа "из-под", "что-либо", "по-разному"
+  // Сначала все дефисы делаем неразрывными
   result = result.replace(/(\S)-(\S)/g, '$1\u2011$2');
+  // Возвращаем обычный дефис тем словам, где перенос разрешён
+  result = result.replace(/один\u2011одинёшенек/g, 'один-одинёшенек');
+  // Потом — неразрывные пробелы после коротких слов
   SHORT_WORDS.forEach(word => {
     const regex = new RegExp('(^|\\s)(' + word + ')\\s+', 'gi');
     result = result.replace(regex, '$1$2&nbsp;');
@@ -1279,7 +1281,6 @@ function addNbsp(text) {
 }
 function splitMeaning(meaning) { return meaning.split(';').map(s => s.trim()); }
 
-/* Значения друг под другом через <br>, без пустой строки между ними */
 function renderMeaningHTMLStacked(meaning) {
   const parts = splitMeaning(meaning);
   const classes = ['', 'second', 'third'];
