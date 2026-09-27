@@ -1009,8 +1009,8 @@ const ALL_PAIRS = [
   { p: "прийти в голову", m: "возникнуть в сознании" },
   { p: "прийти в себя", m: "очнуться" },
   { p: "принять меры", m: "осуществить необходимые действия" },
-  { p: "приятного аппетита", m: "пожелание перед едой или тому, кто уже ест" },
-  { p: "проникнуть в душу", m: "понять внутренний мир человека; оказать сильное эмоциональное воздействие" },
+  { p: "приятного аппетита", m: "пожелание перед едой" },
+  { p: "проникнуть в душу", m: "понять человека; сильно взволновать" },
   { p: "пропасть без вести", m: "находиться неизвестно где" },
   { p: "пуля не берёт", m: "о том, кто остаётся невредимым" },
   { p: "путаться под ногами", m: "мешать" },
@@ -1264,15 +1264,18 @@ function addNbsp(text) {
   return result;
 }
 function splitMeaning(meaning) { return meaning.split(';').map(s => s.trim()); }
+
+/* Два значения — друг под другом через <br> */
 function renderMeaningHTMLStacked(meaning) {
   const parts = splitMeaning(meaning);
   const classes = ['', 'second', 'third'];
   return parts.map((part, i) => {
     const cls = classes[i] || 'third';
     const sep = i < parts.length - 1 ? ';' : '';
-    return `<span class="m-line ${cls}">${addNbsp(part)}${sep}</span>`;
-  }).join('');
+    return `<span class="${cls}">${addNbsp(part)}${sep}</span>`;
+  }).join('<br>');
 }
+/* В словаре — в одну строку */
 function renderMeaningHTMLInline(meaning) {
   const parts = splitMeaning(meaning);
   const classes = ['', 'second', 'third'];
@@ -1281,6 +1284,29 @@ function renderMeaningHTMLInline(meaning) {
     const sep = i < parts.length - 1 ? ';' : '';
     return `<span class="${cls}">${addNbsp(part)}${sep}</span>`;
   }).join(' ');
+}
+
+/* АВТОПОДГОНКА ШРИФТА НА КОСТЯШКАХ */
+function fitTiles() {
+  const tiles = document.querySelectorAll('.tile');
+  tiles.forEach(tile => {
+    // сбрасываем на исходный размер
+    tile.style.fontSize = '';
+    const computed = parseFloat(getComputedStyle(tile).fontSize);
+    const minSize = 9;
+    let size = computed;
+    let iteration = 0;
+    // Проверяем, влезает ли содержимое
+    while (
+      (tile.scrollHeight > tile.clientHeight + 1 ||
+       tile.scrollWidth > tile.clientWidth + 1) &&
+      size > minSize && iteration < 25
+    ) {
+      size -= 0.5;
+      tile.style.fontSize = size + 'px';
+      iteration++;
+    }
+  });
 }
 
 const LAMP_PHRASE = 'будь здоров';
@@ -1452,6 +1478,9 @@ function renderField() {
     field.appendChild(tile);
   });
 
+  // Автоподгонка шрифта ДО анимации — чтобы размер был правильным
+  fitTiles();
+
   const stackEl = document.getElementById('stack');
   const stackRect = stackEl.getBoundingClientRect();
   const stackCX = stackRect.left + stackRect.width / 2;
@@ -1481,6 +1510,8 @@ function renderField() {
         tile.style.transform = '';
         tile.style.opacity = '';
       });
+      // Пересчитываем ещё раз после анимации
+      fitTiles();
     }, totalTime);
   }, 60);
 }
@@ -1582,7 +1613,7 @@ function addPairToBook(phrase, meaning) {
   dashDiv.textContent = '—';
   const meaningDiv = document.createElement('div');
   meaningDiv.className = 'pair-meaning';
-  // Используем СТЕКОВУЮ версию — значения друг под другом
+  // В книге тоже два значения друг под другом
   meaningDiv.innerHTML = renderMeaningHTMLStacked(meaning);
   pairDiv.appendChild(phraseDiv);
   pairDiv.appendChild(dashDiv);
