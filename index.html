@@ -405,6 +405,7 @@ html, body {
   0% { transform: rotateY(0deg); }
   100% { transform: rotateY(-180deg); }
 }
+/* Клон-обёртка: фон пергамента + вращение */
 .flip-clone {
   position: absolute;
   top: 0;
@@ -412,20 +413,31 @@ html, body {
   width: 50%;
   height: 100%;
   transform-origin: left center;
+  transform-style: preserve-3d;
   animation: flipPage 1.3s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
   z-index: 10;
   background-color: #e0d4b8;
   background-image:
     radial-gradient(circle at 20% 30%, rgba(184, 92, 56, 0.1) 0.5px, transparent 1px),
     radial-gradient(circle at 70% 60%, rgba(166, 138, 58, 0.1) 0.5px, transparent 1px);
-  padding: 8px 6px;
-  display: grid;
-  grid-template-rows: repeat(5, minmax(0, 1fr));
-  gap: 6px;
   border-radius: 2px;
   box-shadow: 0 0 12px rgba(0,0,0,0.3);
   overflow: hidden;
 }
+/* Передняя сторона (с содержимым) */
+.flip-clone-front {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  padding: 8px 6px;
+  display: grid;
+  grid-template-rows: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+}
+/* Обратная сторона — пустая (просто фон пергамента под клоном) */
+/* Пока анимация крутится, под .flip-clone видна пустая "бумага" (фон клона) */
 .footer {
   flex-shrink: 0;
   display: flex;
@@ -1266,6 +1278,8 @@ function playFanfare() {
 const SHORT_WORDS = ['в','на','с','к','по','за','из','от','до','у','о','об','во','со','ко','под','над','при','про','без','для','через','между','перед','и','а','но','да','или','либо','что','как','то','же','бы','ли','не','ни'];
 function addNbsp(text) {
   let result = text;
+  // Неразрывные дефисы — чтобы "из-под", "по-разному" не рвались
+  result = result.replace(/(\S)-(\S)/g, '$1\u2011$2');
   SHORT_WORDS.forEach(word => {
     const regex = new RegExp('(^|\\s)(' + word + ')\\s+', 'gi');
     result = result.replace(regex, '$1$2&nbsp;');
@@ -1274,7 +1288,6 @@ function addNbsp(text) {
 }
 function splitMeaning(meaning) { return meaning.split(';').map(s => s.trim()); }
 
-/* Значения — в одну строку через ; и пробел, разные цвета */
 function renderMeaningHTML(meaning) {
   const parts = splitMeaning(meaning);
   const classes = ['', 'second', 'third'];
@@ -1657,13 +1670,23 @@ function flipBookPage(callback) {
   const rightPage = document.getElementById('pageRight');
   const rightRect = rightPage.getBoundingClientRect();
   const spreadRect = spread.getBoundingClientRect();
-  const clone = rightPage.cloneNode(true);
-  clone.classList.add('flip-clone');
+
+  // Клон-обёртка с фоном и вращением
+  const clone = document.createElement('div');
+  clone.className = 'flip-clone';
   clone.style.position = 'absolute';
   clone.style.left = (rightRect.left - spreadRect.left) + 'px';
   clone.style.top = '0';
   clone.style.width = rightRect.width + 'px';
   clone.style.height = '100%';
+
+  // Внутренняя передняя сторона с содержимым правой страницы
+  const front = document.createElement('div');
+  front.className = 'flip-clone-front';
+  // Копируем содержимое правой страницы
+  front.innerHTML = rightPage.innerHTML;
+  clone.appendChild(front);
+
   spread.appendChild(clone);
   setTimeout(() => { clone.remove(); if (callback) callback(); }, 1300);
 }
