@@ -118,6 +118,7 @@ html, body {
   z-index: 10;
 }
 .game-field .start-btn:hover { background-color: #3a5a7a; }
+/* ===== КОСТЯШКИ ===== */
 .tile {
   width: 100%;
   height: 100%;
@@ -129,10 +130,9 @@ html, body {
   font-family: 'EB Garamond', Georgia, serif;
   font-size: 1.05rem;
   font-weight: 700;
-  line-height: 1.1;
+  line-height: 1.15;
   user-select: none;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 2px 4px;
@@ -149,6 +149,12 @@ html, body {
     inset 0 2px 0 rgba(255,255,255,0.5),
     inset 0 -2px 0 rgba(0,0,0,0.1);
   border: 1px solid rgba(0,0,0,0.15);
+}
+/* Внутренний контейнер — чтобы br работал как обычный перенос строки */
+.tile-content {
+  display: block;
+  width: 100%;
+  text-align: center;
 }
 .tile.phrase { background: linear-gradient(180deg, #c8d8ee 0%, #B0C4DE 50%, #9ab0cc 100%); color: #1a2a4a; }
 .tile.meaning { background: linear-gradient(180deg, #fae8c8 0%, #F5DEB3 50%, #e8d0a0 100%); color: #1a2a4a; }
@@ -168,9 +174,8 @@ html, body {
   color: #1a2a4a !important;
 }
 .tile.hidden { visibility: hidden; pointer-events: none; }
-.tile .m-line { display: block; }
-.tile .m-line.second { color: #2a4a7a !important; }
-.tile .m-line.third { color: #3a6a9a !important; }
+.tile .second { color: #2a4a7a; }
+.tile .third { color: #3a6a9a; }
 @media (min-width: 1100px) {
   .tile { font-size: 1.5rem; }
 }
@@ -324,6 +329,13 @@ html, body {
   overflow: hidden;
   overflow-wrap: normal;
   word-break: keep-all;
+  hyphens: none;
+  -webkit-hyphens: none;
+}
+.pair-content {
+  display: block;
+  width: 100%;
+  text-align: left;
 }
 .book-pair .pair-phrase .lamp-inline {
   font-size: 0.7rem;
@@ -352,14 +364,13 @@ html, body {
   font-size: 0.6rem;
   font-weight: 600;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   overflow: hidden;
   overflow-wrap: normal;
   word-break: keep-all;
+  hyphens: none;
+  -webkit-hyphens: none;
 }
-.book-pair .pair-meaning .m-line { display: block; }
 .book-pair .pair-meaning .second { color: #1a2a5a; }
 .book-pair .pair-meaning .third { color: #2a3a7a; }
 .shelf {
@@ -1265,17 +1276,18 @@ function addNbsp(text) {
 }
 function splitMeaning(meaning) { return meaning.split(';').map(s => s.trim()); }
 
-/* Два значения — друг под другом через <br> */
+/* Значения друг под другом через <br>, обёрнуты в один span, чтобы br работал как обычный перенос */
 function renderMeaningHTMLStacked(meaning) {
   const parts = splitMeaning(meaning);
   const classes = ['', 'second', 'third'];
-  return parts.map((part, i) => {
+  const inner = parts.map((part, i) => {
     const cls = classes[i] || 'third';
     const sep = i < parts.length - 1 ? ';' : '';
     return `<span class="${cls}">${addNbsp(part)}${sep}</span>`;
   }).join('<br>');
+  return `<span class="m-wrap">${inner}</span>`;
 }
-/* В словаре — в одну строку */
+/* В словаре — в одну строку через ; */
 function renderMeaningHTMLInline(meaning) {
   const parts = splitMeaning(meaning);
   const classes = ['', 'second', 'third'];
@@ -1286,24 +1298,39 @@ function renderMeaningHTMLInline(meaning) {
   }).join(' ');
 }
 
-/* АВТОПОДГОНКА ШРИФТА НА КОСТЯШКАХ */
+/* АВТОПОДГОНКА ШРИФТА */
 function fitTiles() {
   const tiles = document.querySelectorAll('.tile');
   tiles.forEach(tile => {
-    // сбрасываем на исходный размер
     tile.style.fontSize = '';
     const computed = parseFloat(getComputedStyle(tile).fontSize);
-    const minSize = 9;
-    let size = computed;
-    let iteration = 0;
-    // Проверяем, влезает ли содержимое
+    const minSize = 8;
+    let size = computed, iteration = 0;
     while (
       (tile.scrollHeight > tile.clientHeight + 1 ||
        tile.scrollWidth > tile.clientWidth + 1) &&
-      size > minSize && iteration < 25
+      size > minSize && iteration < 40
     ) {
       size -= 0.5;
       tile.style.fontSize = size + 'px';
+      iteration++;
+    }
+  });
+}
+function fitBook() {
+  const items = document.querySelectorAll('.pair-phrase, .pair-meaning');
+  items.forEach(item => {
+    item.style.fontSize = '';
+    const computed = parseFloat(getComputedStyle(item).fontSize);
+    const minSize = 6;
+    let size = computed, iteration = 0;
+    while (
+      (item.scrollHeight > item.clientHeight + 1 ||
+       item.scrollWidth > item.clientWidth + 1) &&
+      size > minSize && iteration < 40
+    ) {
+      size -= 0.3;
+      item.style.fontSize = size + 'px';
       iteration++;
     }
   });
@@ -1469,8 +1496,11 @@ function renderField() {
   tiles.forEach((data) => {
     const tile = document.createElement('div');
     tile.className = 'tile ' + data.type;
-    if (data.type === 'phrase') tile.innerHTML = addNbsp(data.text);
-    else tile.innerHTML = renderMeaningHTMLStacked(data.text);
+    const inner = document.createElement('div');
+    inner.className = 'tile-content';
+    if (data.type === 'phrase') inner.innerHTML = addNbsp(data.text);
+    else inner.innerHTML = renderMeaningHTMLStacked(data.text);
+    tile.appendChild(inner);
     tile.dataset.type = data.type;
     tile.dataset.phrase = data.pair.p;
     tile.dataset.meaning = data.pair.m;
@@ -1478,7 +1508,6 @@ function renderField() {
     field.appendChild(tile);
   });
 
-  // Автоподгонка шрифта ДО анимации — чтобы размер был правильным
   fitTiles();
 
   const stackEl = document.getElementById('stack');
@@ -1510,7 +1539,6 @@ function renderField() {
         tile.style.transform = '';
         tile.style.opacity = '';
       });
-      // Пересчитываем ещё раз после анимации
       fitTiles();
     }, totalTime);
   }, 60);
@@ -1600,7 +1628,10 @@ function addPairToBook(phrase, meaning) {
   pairDiv.className = 'book-pair';
   const phraseDiv = document.createElement('div');
   phraseDiv.className = 'pair-phrase';
-  phraseDiv.innerHTML = addNbsp(phrase);
+  const phraseInner = document.createElement('div');
+  phraseInner.className = 'pair-content';
+  phraseInner.innerHTML = addNbsp(phrase);
+  phraseDiv.appendChild(phraseInner);
   if (phrase === LAMP_PHRASE) {
     const lamp = document.createElement('span');
     lamp.className = 'lamp-inline';
@@ -1613,8 +1644,10 @@ function addPairToBook(phrase, meaning) {
   dashDiv.textContent = '—';
   const meaningDiv = document.createElement('div');
   meaningDiv.className = 'pair-meaning';
-  // В книге тоже два значения друг под другом
-  meaningDiv.innerHTML = renderMeaningHTMLStacked(meaning);
+  const meaningInner = document.createElement('div');
+  meaningInner.className = 'pair-content';
+  meaningInner.innerHTML = renderMeaningHTMLStacked(meaning);
+  meaningDiv.appendChild(meaningInner);
   pairDiv.appendChild(phraseDiv);
   pairDiv.appendChild(dashDiv);
   pairDiv.appendChild(meaningDiv);
@@ -1627,6 +1660,9 @@ function addPairToBook(phrase, meaning) {
     bookRightPairs++;
   }
   pairsInBook.push({ phrase, meaning });
+
+  // Автоподгонка шрифта в книге
+  setTimeout(fitBook, 30);
 
   if (bookLeftPairs >= perPage && bookRightPairs >= perPage) {
     isFlipping = true;
