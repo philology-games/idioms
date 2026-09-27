@@ -269,7 +269,6 @@ html, body {
   height: 100%;
   margin: 4px 3px;
   border-radius: 2px;
-  overflow: hidden;
   perspective: 1600px;
 }
 .page {
@@ -279,11 +278,10 @@ html, body {
   background-image:
     radial-gradient(circle at 20% 30%, rgba(184, 92, 56, 0.1) 0.5px, transparent 1px),
     radial-gradient(circle at 70% 60%, rgba(166, 138, 58, 0.1) 0.5px, transparent 1px);
-  padding: 8px 6px;
+  padding: 12px 6px;
   display: grid;
   grid-template-rows: repeat(5, minmax(0, 1fr));
   gap: 6px;
-  overflow: visible;
   position: relative;
 }
 .book-fold {
@@ -301,7 +299,6 @@ html, body {
   height: 100%;
   background: rgba(0,0,0,0.15);
 }
-/* ===== ПАРА В КНИГЕ — БЕЗ ПЛАШЕК ===== */
 .book-pair {
   display: flex;
   flex-direction: row;
@@ -309,7 +306,6 @@ html, body {
   align-items: center;
   min-width: 0;
   min-height: 0;
-  overflow: hidden;
 }
 .book-pair .pair-phrase {
   flex: 0 0 45%;
@@ -319,7 +315,7 @@ html, body {
   text-align: left;
   font-family: 'EB Garamond', Georgia, serif;
   font-weight: 700;
-  font-size: 0.62rem;
+  font-size: 0.61rem;
   position: relative;
 }
 .pair-content {
@@ -345,7 +341,7 @@ html, body {
   color: #152040;
   font-weight: 700;
   padding: 0 1px;
-  font-size: 0.65rem;
+  font-size: 0.63rem;
 }
 .book-pair .pair-meaning {
   flex: 1;
@@ -353,7 +349,7 @@ html, body {
   padding: 1px 1px;
   color: #152040;
   text-align: left;
-  font-size: 0.62rem;
+  font-size: 0.61rem;
   font-weight: 400;
 }
 .book-pair .pair-meaning .second { color: #2a4a7a; }
@@ -415,7 +411,7 @@ html, body {
   width: 100%; height: 100%;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  padding: 8px 6px;
+  padding: 12px 6px;
   display: grid;
   grid-template-rows: repeat(5, minmax(0, 1fr));
   gap: 6px;
@@ -1666,8 +1662,8 @@ function flipBookPage(callback) {
   front.className = 'flip-clone-front';
   front.innerHTML = rightPage.innerHTML;
   clone.appendChild(front);
-  document.getElementById('pageLeft').innerHTML = '';
-rightPage.innerHTML = '';
+  // Очищаем только правую страницу — левая остаётся видимой
+  rightPage.innerHTML = '';
   spread.appendChild(clone);
   setTimeout(() => { clone.remove(); if (callback) callback(); }, 1300);
 }
