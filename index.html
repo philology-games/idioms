@@ -210,44 +210,217 @@ html, body {
   min-height: 0;
   min-width: 0;
 }
-/* ===== СТОПКА — КОЛОНКА ГОРИЗОНТАЛЬНЫХ КОСТЯШЕК ===== */
-.stack {
+.chest {
   flex: 0 0 38%;
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  border: 2px solid #b8860b;
-  border-radius: 6px;
-  background-color: rgba(0,0,0,0.08);
-  padding: 10px 8px;
-  overflow: hidden;
+  padding: 4px 4px 8px 4px;
+  perspective: 700px;
+  min-height: 0;
 }
-.stack-inner {
+.chest-inner {
+  position: relative;
+  width: 92%;
+  height: 62%;
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  align-items: flex-end;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+.chest-body {
+  position: relative;
   width: 100%;
-  align-items: stretch;
-  padding-bottom: 2px;
-  border-bottom: 3px solid #8a6a3a;
-  border-radius: 0 0 3px 3px;
-}
-.stack-tile {
-  height: 8px;
-  background: linear-gradient(180deg, #3a4a6a 0%, #1a2a4a 100%);
-  border: 1px solid #b8860b;
-  border-radius: 2px;
+  height: 100%;
+  background: linear-gradient(180deg, #6b4423 0%, #4a2e15 55%, #2a1a08 100%);
+  border: 2px solid #1a0f05;
+  border-radius: 3px 3px 6px 6px;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.15),
-    0 1px 0 rgba(0,0,0,0.4);
+    inset 0 3px 0 rgba(255,200,150,0.12),
+    inset 0 -6px 10px rgba(0,0,0,0.6),
+    0 6px 14px rgba(0,0,0,0.55);
+  z-index: 2;
 }
-.stack-tile:nth-child(odd) {
-  margin-left: 1px;
-  margin-right: -1px;
+.body-wood {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 6px,
+      rgba(0,0,0,0.15) 6px,
+      rgba(0,0,0,0.15) 7px
+    );
+  border-radius: 3px 3px 6px 6px;
+  pointer-events: none;
 }
-.stack-tile:nth-child(even) {
-  margin-left: -1px;
-  margin-right: 1px;
+.body-strap-left, .body-strap-right {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 8px;
+  background: linear-gradient(90deg, #6a4a1a 0%, #d4a843 50%, #6a4a1a 100%);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.35);
+}
+.body-strap-left { left: 14%; }
+.body-strap-right { right: 14%; }
+.body-strap-bottom {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 10px;
+  height: 8px;
+  background: linear-gradient(180deg, #6a4a1a 0%, #d4a843 50%, #6a4a1a 100%);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.35);
+}
+.chest-contents {
+  position: absolute;
+  top: -3px;
+  left: 6px;
+  right: 6px;
+  height: 7px;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1px;
+  z-index: 1;
+  pointer-events: none;
+}
+.chest-tile {
+  border-radius: 1px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 1px 1px rgba(0,0,0,0.4);
+}
+.chest-tile.blue { background: linear-gradient(180deg, #a8bcd4, #6a80a0); }
+.chest-tile.yellow { background: linear-gradient(180deg, #f0d8a0, #b8a070); }
+.chest-lid {
+  position: absolute;
+  top: -28%;
+  left: 0;
+  right: 0;
+  height: 28%;
+  background: linear-gradient(180deg, #7a5030 0%, #4a2e15 100%);
+  border: 2px solid #1a0f05;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  transform-origin: bottom center;
+  transform: rotateX(0deg);
+  transition: transform 1.2s cubic-bezier(0.4, 0.0, 0.6, 1.0);
+  box-shadow: inset 0 3px 0 rgba(255,200,150,0.18);
+  z-index: 5;
+}
+.chest-lid.open {
+  transform: rotateX(-115deg);
+}
+.lid-wood {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 5px,
+      rgba(0,0,0,0.12) 5px,
+      rgba(0,0,0,0.12) 6px
+    );
+  border-radius: 8px 8px 0 0;
+}
+.lid-strap-left, .lid-strap-right {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 8px;
+  background: linear-gradient(90deg, #6a4a1a 0%, #d4a843 50%, #6a4a1a 100%);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.35);
+}
+.lid-strap-left { left: 14%; }
+.lid-strap-right { right: 14%; }
+.chest-lock {
+  position: absolute;
+  bottom: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 34px;
+  height: 30px;
+  background: linear-gradient(180deg, #d4a843 0%, #8a6a2a 100%);
+  border: 2px solid #3a2408;
+  border-radius: 4px;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.35),
+    inset 0 -2px 0 rgba(0,0,0,0.25),
+    0 2px 4px rgba(0,0,0,0.5);
+  z-index: 3;
+}
+.chest-lock::before {
+  content: '';
+  position: absolute;
+  top: -4px; left: 50%;
+  transform: translateX(-50%);
+  width: 6px; height: 6px;
+  background: linear-gradient(180deg, #d4a843, #8a6a2a);
+  border: 2px solid #3a2408;
+  border-bottom: none;
+  border-radius: 3px 3px 0 0;
+}
+.chest-lock::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 9px;
+  background: #0a0500;
+  border-radius: 50% 50% 2px 2px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.chest-key {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%) rotate(0deg);
+  transform-origin: 50% 0%;
+  transition: transform 0.9s cubic-bezier(0.4, 0.0, 0.6, 1.0);
+  z-index: 4;
+}
+.chest-key.turned {
+  transform: translateX(-50%) rotate(90deg);
+}
+.key-head {
+  width: 22px;
+  height: 22px;
+  background: radial-gradient(circle at 40% 35%, #f0c860 0%, #d4a843 50%, #8a6a2a 100%);
+  border: 2px solid #3a2408;
+  border-radius: 50%;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.4),
+    0 2px 3px rgba(0,0,0,0.5);
+  position: relative;
+}
+.key-head::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px; height: 8px;
+  background: #3a2408;
+  border-radius: 50%;
+  box-shadow: inset 0 1px 0 rgba(0,0,0,0.5);
+}
+.key-head::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  width: 16px; height: 3px;
+  background: #3a2408;
+  border-radius: 2px;
+}
+.key-stem {
+  width: 5px;
+  height: 14px;
+  background: linear-gradient(90deg, #8a6a2a 0%, #d4a843 50%, #8a6a2a 100%);
+  margin: -2px auto 0;
+  border: 1px solid #3a2408;
+  border-top: none;
+  border-radius: 0 0 2px 2px;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.4);
 }
 .book-shelf {
   flex: 1;
@@ -699,7 +872,7 @@ html, body {
     min-height: 0;
     min-width: 0;
   }
-  .top-part .stack {
+  .top-part .chest {
     flex: 1;
     min-width: 0;
     height: 100%;
@@ -743,8 +916,27 @@ html, body {
       </div>
     </div>
     <div class="right-column" id="rightColumn">
-      <div class="stack" id="stack">
-        <div class="stack-inner" id="stackInner"></div>
+      <div class="chest" id="chest">
+        <div class="chest-inner">
+          <div class="chest-lid" id="chestLid">
+            <div class="lid-wood"></div>
+            <div class="lid-strap-left"></div>
+            <div class="lid-strap-right"></div>
+          </div>
+          <div class="chest-body">
+            <div class="chest-contents" id="chestContents"></div>
+            <div class="body-wood"></div>
+            <div class="body-strap-left"></div>
+            <div class="body-strap-right"></div>
+            <div class="body-strap-bottom"></div>
+            <div class="chest-lock">
+              <div class="chest-key" id="chestKey">
+                <div class="key-head"></div>
+                <div class="key-stem"></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="book-shelf" id="bookShelf">
         <div class="book">
@@ -1276,6 +1468,110 @@ function playFanfare() {
     });
   } catch(e) {}
 }
+function playKeyTurn() {
+  if (!soundOn) return;
+  try {
+    const ctx = getAudioCtx();
+    const notes = [880, 1108, 1318];
+    notes.forEach((freq, i) => {
+      const t = ctx.currentTime + i * 0.1;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.001, t);
+      gain.gain.exponentialRampToValueAtTime(0.14, t + 0.008);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(t); osc.stop(t + 0.2);
+      const nLen = Math.floor(ctx.sampleRate * 0.01);
+      const nBuf = ctx.createBuffer(1, nLen, ctx.sampleRate);
+      const nd = nBuf.getChannelData(0);
+      for (let k = 0; k < nLen; k++) nd[k] = (Math.random() * 2 - 1) * Math.pow(1 - k / nLen, 3);
+      const nSrc = ctx.createBufferSource();
+      nSrc.buffer = nBuf;
+      const bp = ctx.createBiquadFilter();
+      bp.type = 'bandpass';
+      bp.frequency.value = 3500;
+      bp.Q.value = 3;
+      const ng = ctx.createGain();
+      ng.gain.value = 0.1;
+      nSrc.connect(bp); bp.connect(ng); ng.connect(ctx.destination);
+      nSrc.start(t);
+    });
+  } catch(e) {}
+}
+function playChestOpen() {
+  if (!soundOn) return;
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    const dur = 1.2;
+    const osc = ctx.createOscillator();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(180, now);
+    osc.frequency.linearRampToValueAtTime(200, now + dur * 0.5);
+    osc.frequency.linearRampToValueAtTime(170, now + dur);
+    const vib = ctx.createOscillator();
+    vib.frequency.value = 8;
+    const vibGain = ctx.createGain();
+    vibGain.gain.value = 25;
+    vib.connect(vibGain); vibGain.connect(osc.frequency);
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.001, now);
+    gain.gain.linearRampToValueAtTime(0.08, now + 0.15);
+    gain.gain.setValueAtTime(0.08, now + dur * 0.7);
+    gain.gain.linearRampToValueAtTime(0.001, now + dur);
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 800;
+    filter.Q.value = 1.5;
+    osc.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+    osc.start(now); osc.stop(now + dur);
+    vib.start(now); vib.stop(now + dur);
+  } catch(e) {}
+}
+function playChestClose() {
+  if (!soundOn) return;
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    const dur = 1.2;
+    const osc = ctx.createOscillator();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(150, now);
+    osc.frequency.linearRampToValueAtTime(170, now + dur * 0.5);
+    osc.frequency.linearRampToValueAtTime(140, now + dur);
+    const vib = ctx.createOscillator();
+    vib.frequency.value = 9;
+    const vibGain = ctx.createGain();
+    vibGain.gain.value = 22;
+    vib.connect(vibGain); vibGain.connect(osc.frequency);
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.001, now);
+    gain.gain.linearRampToValueAtTime(0.08, now + 0.15);
+    gain.gain.setValueAtTime(0.08, now + dur * 0.7);
+    gain.gain.linearRampToValueAtTime(0.001, now + dur);
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 700;
+    filter.Q.value = 1.5;
+    osc.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+    osc.start(now); osc.stop(now + dur);
+    vib.start(now); vib.stop(now + dur);
+    const thudTime = now + dur + 0.05;
+    const thudOsc = ctx.createOscillator();
+    thudOsc.type = 'sine';
+    thudOsc.frequency.setValueAtTime(90, thudTime);
+    thudOsc.frequency.exponentialRampToValueAtTime(45, thudTime + 0.15);
+    const thudGain = ctx.createGain();
+    thudGain.gain.setValueAtTime(0.001, thudTime);
+    thudGain.gain.exponentialRampToValueAtTime(0.35, thudTime + 0.005);
+    thudGain.gain.exponentialRampToValueAtTime(0.001, thudTime + 0.18);
+    thudOsc.connect(thudGain); thudGain.connect(ctx.destination);
+    thudOsc.start(thudTime); thudOsc.stop(thudTime + 0.2);
+  } catch(e) {}
+}
 
 const SHORT_WORDS = ['в','на','с','к','по','за','из','от','до','у','о','об','во','со','ко','под','над','при','про','без','для','через','между','перед','и','а','но','да','или','либо','что','как','то','же','бы','ли','не','ни'];
 function addNbsp(text) {
@@ -1370,7 +1666,7 @@ function applyPortraitTabletLayout() {
   const main = document.getElementById('mainArea');
   const leftPart = document.getElementById('leftPart');
   const rightColumn = document.getElementById('rightColumn');
-  const stack = document.getElementById('stack');
+  const chest = document.getElementById('chest');
   const bookShelf = document.getElementById('bookShelf');
   const isTabletPortrait = getDeviceType() === 'tablet' && !isLandscape();
 
@@ -1382,34 +1678,30 @@ function applyPortraitTabletLayout() {
       topPart.className = 'top-part';
       main.insertBefore(topPart, leftPart);
     }
-    topPart.appendChild(stack);
+    topPart.appendChild(chest);
     topPart.appendChild(bookShelf);
     rightColumn.style.display = 'none';
   } else {
     const topPart = document.getElementById('topPart');
     if (topPart) {
       rightColumn.style.display = 'flex';
-      rightColumn.appendChild(stack);
+      rightColumn.appendChild(chest);
       rightColumn.appendChild(bookShelf);
       topPart.remove();
     }
   }
 }
 
-/* Стопка: вертикальная колонка горизонтальных костяшек. Количество полосок пропорционально stackRemaining */
 function renderStack() {
-  const stackInner = document.getElementById('stackInner');
-  stackInner.innerHTML = '';
-  // Число полосок: от 1 до 12, пропорционально оставшимся костяшкам
+  const contents = document.getElementById('chestContents');
+  contents.innerHTML = '';
   const total = deviceParams.totalTiles;
   const ratio = stackRemaining / total;
-  let count;
-  if (stackRemaining === 0) count = 0;
-  else count = Math.max(1, Math.round(12 * ratio));
+  const count = stackRemaining === 0 ? 0 : Math.max(1, Math.round(12 * ratio));
   for (let i = 0; i < count; i++) {
     const tile = document.createElement('div');
-    tile.className = 'stack-tile';
-    stackInner.appendChild(tile);
+    tile.className = 'chest-tile ' + (Math.random() < 0.5 ? 'blue' : 'yellow');
+    contents.appendChild(tile);
   }
 }
 
@@ -1422,6 +1714,9 @@ function initGame() {
   selectedPhrase = null; selectedMeaning = null;
   isAnimating = false; isFlipping = false;
   stackRemaining = deviceParams.totalTiles;
+
+  document.getElementById('chestLid').classList.remove('open');
+  document.getElementById('chestKey').classList.remove('turned');
 
   const tabsRow = document.getElementById('tabsRow');
   if (deviceParams.tabs > 1) tabsRow.classList.remove('empty');
@@ -1455,6 +1750,10 @@ function switchVariant(index) {
   gameStarted = false; isAnimating = false; isFlipping = false;
   selectedPhrase = null; selectedMeaning = null;
   stackRemaining = deviceParams.totalTiles;
+
+  document.getElementById('chestLid').classList.remove('open');
+  document.getElementById('chestKey').classList.remove('turned');
+
   document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === index));
   const field = document.getElementById('gameField');
   field.innerHTML = '<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
@@ -1468,7 +1767,13 @@ function startGame() {
   gameStarted = true;
   const btn = document.getElementById('startBtn');
   if (btn) btn.remove();
-  nextRound();
+  playKeyTurn();
+  document.getElementById('chestKey').classList.add('turned');
+  setTimeout(() => {
+    playChestOpen();
+    document.getElementById('chestLid').classList.add('open');
+  }, 700);
+  setTimeout(() => nextRound(), 1700);
 }
 
 function nextRound() {
@@ -1508,15 +1813,15 @@ function renderField() {
 
   fitTiles();
 
-  const stackEl = document.getElementById('stack');
-  const stackRect = stackEl.getBoundingClientRect();
-  const stackCX = stackRect.right - 20;
-  const stackCY = stackRect.bottom - 20;
+  const chestEl = document.getElementById('chest');
+  const chestRect = chestEl.getBoundingClientRect();
+  const chestCX = chestRect.left + chestRect.width / 2;
+  const chestCY = chestRect.top + chestRect.height * 0.4;
   const allTiles = field.querySelectorAll('.tile');
   allTiles.forEach(tile => {
     const rect = tile.getBoundingClientRect();
-    const dx = stackCX - (rect.left + rect.width / 2);
-    const dy = stackCY - (rect.top + rect.height / 2);
+    const dx = chestCX - (rect.left + rect.width / 2);
+    const dy = chestCY - (rect.top + rect.height / 2);
     tile.style.transform = `translate(${dx}px, ${dy}px) scale(0.15)`;
     tile.style.opacity = '0';
     tile.style.transition = 'none';
@@ -1697,9 +2002,14 @@ function flipBookPage(callback) {
 }
 
 function showFinal() {
-  document.getElementById('rotateWrap').style.display = 'none';
-  document.getElementById('finalOverlay').classList.add('active');
-  playFanfare();
+  playChestClose();
+  document.getElementById('chestLid').classList.remove('open');
+  document.getElementById('chestKey').classList.remove('turned');
+  setTimeout(() => {
+    document.getElementById('rotateWrap').style.display = 'none';
+    document.getElementById('finalOverlay').classList.add('active');
+    playFanfare();
+  }, 1500);
 }
 
 let dictPages = [];
