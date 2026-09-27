@@ -1279,7 +1279,7 @@ const SHORT_WORDS = ['в','на','с','к','по','за','из','от','до','�
 function addNbsp(text) {
   let result = text;
   // Неразрывные дефисы — чтобы "из-под", "по-разному" не рвались
-  result = result.replace(/(\S)-(\S)/g, '$1\u2011$2');
+  result = result.replace(/([A-Za-zА-Яа-яЁё]+-[A-Za-zА-Яа-яЁё]+)/g, '<span style="white-space:nowrap">$1</span>');
   SHORT_WORDS.forEach(word => {
     const regex = new RegExp('(^|\\s)(' + word + ')\\s+', 'gi');
     result = result.replace(regex, '$1$2&nbsp;');
