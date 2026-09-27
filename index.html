@@ -26,7 +26,6 @@ html, body {
   flex-direction: column;
   overflow: hidden;
 }
-/* ===== ШАПКА ===== */
 .header { text-align: center; padding: 6px 0 4px; flex-shrink: 0; }
 .header h1 {
   font-family: 'Playfair Display', Georgia, serif;
@@ -119,7 +118,6 @@ html, body {
   z-index: 10;
 }
 .game-field .start-btn:hover { background-color: #3a5a7a; }
-/* ===== КОСТЯШКИ ===== */
 .tile {
   width: 100%;
   height: 100%;
@@ -173,7 +171,6 @@ html, body {
 .tile .m-line { display: block; }
 .tile .m-line.second { color: #2a4a7a !important; }
 .tile .m-line.third { color: #3a6a9a !important; }
-/* ===== ШРИФТЫ КОСТЯШЕК ПО УСТРОЙСТВАМ ===== */
 @media (min-width: 1100px) {
   .tile { font-size: 1.5rem; }
 }
@@ -183,7 +180,6 @@ html, body {
 @media (max-width: 749px) {
   .tile { font-size: 1.05rem; }
 }
-/* ===== ПРАВАЯ КОЛОНКА ===== */
 .right-column {
   flex: 0 0 37%;
   display: flex;
@@ -356,11 +352,14 @@ html, body {
   font-size: 0.6rem;
   font-weight: 600;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
   overflow: hidden;
   overflow-wrap: normal;
   word-break: keep-all;
 }
+.book-pair .pair-meaning .m-line { display: block; }
 .book-pair .pair-meaning .second { color: #1a2a5a; }
 .book-pair .pair-meaning .third { color: #2a3a7a; }
 .shelf {
@@ -663,7 +662,6 @@ html, body {
 .dict-entry.empty .entry-phrase,
 .dict-entry.empty .entry-dash,
 .dict-entry.empty .entry-meaning { visibility: hidden; }
-/* ===== ПЛАНШЕТ В ПОРТРЕТНОЙ ===== */
 @media (orientation: portrait) and (min-width: 600px) and (max-width: 1100px) {
   .main {
     flex-direction: column;
@@ -1584,7 +1582,8 @@ function addPairToBook(phrase, meaning) {
   dashDiv.textContent = '—';
   const meaningDiv = document.createElement('div');
   meaningDiv.className = 'pair-meaning';
-  meaningDiv.innerHTML = renderMeaningHTMLInline(meaning);
+  // Используем СТЕКОВУЮ версию — значения друг под другом
+  meaningDiv.innerHTML = renderMeaningHTMLStacked(meaning);
   pairDiv.appendChild(phraseDiv);
   pairDiv.appendChild(dashDiv);
   pairDiv.appendChild(meaningDiv);
