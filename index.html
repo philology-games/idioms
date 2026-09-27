@@ -118,7 +118,6 @@ html, body {
   z-index: 10;
 }
 .game-field .start-btn:hover { background-color: #3a5a7a; }
-/* ===== КОСТЯШКИ ===== */
 .tile {
   width: 100%;
   height: 100%;
@@ -150,7 +149,6 @@ html, body {
     inset 0 -2px 0 rgba(0,0,0,0.1);
   border: 1px solid rgba(0,0,0,0.15);
 }
-/* Внутренний контейнер — чтобы br работал как обычный перенос строки */
 .tile-content {
   display: block;
   width: 100%;
@@ -1276,41 +1274,26 @@ function addNbsp(text) {
 }
 function splitMeaning(meaning) { return meaning.split(';').map(s => s.trim()); }
 
-/* Значения друг под другом через <br>, обёрнуты в один span, чтобы br работал как обычный перенос */
-function renderMeaningHTMLStacked(meaning) {
-  const parts = splitMeaning(meaning);
-  const classes = ['', 'second', 'third'];
-  const inner = parts.map((part, i) => {
-    const cls = classes[i] || 'third';
-    const sep = i < parts.length - 1 ? ';' : '';
-    return `<span class="${cls}">${addNbsp(part)}${sep}</span>`;
-  }).join('<br>');
-  return `<span class="m-wrap">${inner}</span>`;
-}
-/* В словаре — в одну строку через ; */
-function renderMeaningHTMLInline(meaning) {
+/* Значения — в одну строку через ; и пробел, разные цвета */
+function renderMeaningHTML(meaning) {
   const parts = splitMeaning(meaning);
   const classes = ['', 'second', 'third'];
   return parts.map((part, i) => {
     const cls = classes[i] || 'third';
     const sep = i < parts.length - 1 ? ';' : '';
-    return `<span class="${cls}">${addNbsp(part)}${sep}</span>`;
+    return cls
+      ? `<span class="${cls}">${addNbsp(part)}${sep}</span>`
+      : `${addNbsp(part)}${sep}`;
   }).join(' ');
 }
 
-/* АВТОПОДГОНКА ШРИФТА */
 function fitTiles() {
-  const tiles = document.querySelectorAll('.tile');
-  tiles.forEach(tile => {
+  document.querySelectorAll('.tile').forEach(tile => {
     tile.style.fontSize = '';
     const computed = parseFloat(getComputedStyle(tile).fontSize);
     const minSize = 8;
     let size = computed, iteration = 0;
-    while (
-      (tile.scrollHeight > tile.clientHeight + 1 ||
-       tile.scrollWidth > tile.clientWidth + 1) &&
-      size > minSize && iteration < 40
-    ) {
+    while ((tile.scrollHeight > tile.clientHeight + 1 || tile.scrollWidth > tile.clientWidth + 1) && size > minSize && iteration < 40) {
       size -= 0.5;
       tile.style.fontSize = size + 'px';
       iteration++;
@@ -1318,17 +1301,12 @@ function fitTiles() {
   });
 }
 function fitBook() {
-  const items = document.querySelectorAll('.pair-phrase, .pair-meaning');
-  items.forEach(item => {
+  document.querySelectorAll('.pair-phrase, .pair-meaning').forEach(item => {
     item.style.fontSize = '';
     const computed = parseFloat(getComputedStyle(item).fontSize);
     const minSize = 6;
     let size = computed, iteration = 0;
-    while (
-      (item.scrollHeight > item.clientHeight + 1 ||
-       item.scrollWidth > item.clientWidth + 1) &&
-      size > minSize && iteration < 40
-    ) {
+    while ((item.scrollHeight > item.clientHeight + 1 || item.scrollWidth > item.clientWidth + 1) && size > minSize && iteration < 40) {
       size -= 0.3;
       item.style.fontSize = size + 'px';
       iteration++;
@@ -1499,7 +1477,7 @@ function renderField() {
     const inner = document.createElement('div');
     inner.className = 'tile-content';
     if (data.type === 'phrase') inner.innerHTML = addNbsp(data.text);
-    else inner.innerHTML = renderMeaningHTMLStacked(data.text);
+    else inner.innerHTML = renderMeaningHTML(data.text);
     tile.appendChild(inner);
     tile.dataset.type = data.type;
     tile.dataset.phrase = data.pair.p;
@@ -1644,10 +1622,7 @@ function addPairToBook(phrase, meaning) {
   dashDiv.textContent = '—';
   const meaningDiv = document.createElement('div');
   meaningDiv.className = 'pair-meaning';
-  const meaningInner = document.createElement('div');
-  meaningInner.className = 'pair-content';
-  meaningInner.innerHTML = renderMeaningHTMLStacked(meaning);
-  meaningDiv.appendChild(meaningInner);
+  meaningDiv.innerHTML = renderMeaningHTML(meaning);
   pairDiv.appendChild(phraseDiv);
   pairDiv.appendChild(dashDiv);
   pairDiv.appendChild(meaningDiv);
@@ -1661,7 +1636,6 @@ function addPairToBook(phrase, meaning) {
   }
   pairsInBook.push({ phrase, meaning });
 
-  // Автоподгонка шрифта в книге
   setTimeout(fitBook, 30);
 
   if (bookLeftPairs >= perPage && bookRightPairs >= perPage) {
@@ -1769,7 +1743,7 @@ function renderDictPage() {
         dash.textContent = collected ? '—' : '';
         const meaning = document.createElement('span');
         meaning.className = 'entry-meaning';
-        meaning.innerHTML = collected ? renderMeaningHTMLInline(pair.m) : '';
+        meaning.innerHTML = collected ? renderMeaningHTML(pair.m) : '';
         div.appendChild(lock); div.appendChild(phrase); div.appendChild(dash); div.appendChild(meaning);
         content.appendChild(div);
       }
