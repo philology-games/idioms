@@ -301,11 +301,12 @@ html, body {
   height: 100%;
   background: rgba(0,0,0,0.15);
 }
+/* ===== ПАРА В КНИГЕ — БЕЗ ПЛАШЕК ===== */
 .book-pair {
   display: flex;
   flex-direction: row;
-  gap: 2px;
-  align-items: stretch;
+  gap: 4px;
+  align-items: center;
   min-width: 0;
   min-height: 0;
   overflow: hidden;
@@ -313,15 +314,12 @@ html, body {
 .book-pair .pair-phrase {
   flex: 0 0 45%;
   min-width: 0;
-  background-color: #c8e6c9;
-  border: 1px solid #4caf50;
-  border-radius: 3px;
-  padding: 3px 6px;
+  padding: 1px 2px;
   color: #152040;
   text-align: left;
   font-family: 'EB Garamond', Georgia, serif;
   font-weight: 700;
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   position: relative;
   overflow: hidden;
 }
@@ -348,23 +346,20 @@ html, body {
   color: #152040;
   font-weight: 700;
   padding: 0 1px;
-  font-size: 0.6rem;
+  font-size: 0.65rem;
 }
 .book-pair .pair-meaning {
   flex: 1;
   min-width: 0;
-  background-color: #c8e6c9;
-  border: 1px solid #4caf50;
-  border-radius: 3px;
-  padding: 3px 6px;
+  padding: 1px 2px;
   color: #152040;
   text-align: left;
-  font-size: 0.6rem;
-  font-weight: 600;
+  font-size: 0.65rem;
+  font-weight: 400;
   overflow: hidden;
 }
-.book-pair .pair-meaning .second { color: #1a2a5a; }
-.book-pair .pair-meaning .third { color: #2a3a7a; }
+.book-pair .pair-meaning .second { color: #2a4a7a; }
+.book-pair .pair-meaning .third { color: #3a6a9a; }
 .shelf {
   position: relative;
   width: 100%;
@@ -1268,11 +1263,8 @@ function playFanfare() {
 const SHORT_WORDS = ['в','на','с','к','по','за','из','от','до','у','о','об','во','со','ко','под','над','при','про','без','для','через','между','перед','и','а','но','да','или','либо','что','как','то','же','бы','ли','не','ни'];
 function addNbsp(text) {
   let result = text;
-  // Сначала все дефисы делаем неразрывными
   result = result.replace(/(\S)-(\S)/g, '$1\u2011$2');
-  // Возвращаем обычный дефис тем словам, где перенос разрешён
   result = result.replace(/один\u2011одинёшенек/g, 'один-одинёшенек');
-  // Потом — неразрывные пробелы после коротких слов
   SHORT_WORDS.forEach(word => {
     const regex = new RegExp('(^|\\s)(' + word + ')\\s+', 'gi');
     result = result.replace(regex, '$1$2&nbsp;');
