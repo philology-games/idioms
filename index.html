@@ -118,6 +118,7 @@ html, body {
   z-index: 10;
 }
 .game-field .start-btn:hover { background-color: #3a5a7a; }
+/* ===== КОСТЯШКИ ===== */
 .tile {
   width: 100%;
   height: 100%;
@@ -129,17 +130,13 @@ html, body {
   font-family: 'EB Garamond', Georgia, serif;
   font-size: 1.05rem;
   font-weight: 700;
-  line-height: 1.15;
+  line-height: 1.1;
   user-select: none;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2px 4px;
   overflow: hidden;
-  overflow-wrap: normal;
-  word-break: keep-all;
-  hyphens: none;
-  -webkit-hyphens: none;
   position: relative;
   transition: box-shadow 0.15s, background-color 0.15s, border-color 0.15s, transform 0.15s;
   box-shadow:
@@ -153,7 +150,14 @@ html, body {
   display: block;
   width: 100%;
   text-align: center;
+  line-height: 1.1;
+  overflow-wrap: normal;
+  word-break: keep-all;
+  hyphens: none;
+  -webkit-hyphens: none;
 }
+.tile-content .second { color: #2a4a7a; }
+.tile-content .third { color: #3a6a9a; }
 .tile.phrase { background: linear-gradient(180deg, #c8d8ee 0%, #B0C4DE 50%, #9ab0cc 100%); color: #1a2a4a; }
 .tile.meaning { background: linear-gradient(180deg, #fae8c8 0%, #F5DEB3 50%, #e8d0a0 100%); color: #1a2a4a; }
 .tile.selected {
@@ -172,8 +176,6 @@ html, body {
   color: #1a2a4a !important;
 }
 .tile.hidden { visibility: hidden; pointer-events: none; }
-.tile .second { color: #2a4a7a; }
-.tile .third { color: #3a6a9a; }
 @media (min-width: 1100px) {
   .tile { font-size: 1.5rem; }
 }
@@ -325,15 +327,16 @@ html, body {
   align-items: center;
   position: relative;
   overflow: hidden;
-  overflow-wrap: normal;
-  word-break: keep-all;
-  hyphens: none;
-  -webkit-hyphens: none;
 }
 .pair-content {
   display: block;
   width: 100%;
   text-align: left;
+  line-height: 1.15;
+  overflow-wrap: normal;
+  word-break: keep-all;
+  hyphens: none;
+  -webkit-hyphens: none;
 }
 .book-pair .pair-phrase .lamp-inline {
   font-size: 0.7rem;
@@ -364,10 +367,6 @@ html, body {
   display: flex;
   align-items: center;
   overflow: hidden;
-  overflow-wrap: normal;
-  word-break: keep-all;
-  hyphens: none;
-  -webkit-hyphens: none;
 }
 .book-pair .pair-meaning .second { color: #1a2a5a; }
 .book-pair .pair-meaning .third { color: #2a3a7a; }
@@ -405,7 +404,6 @@ html, body {
   0% { transform: rotateY(0deg); }
   100% { transform: rotateY(-180deg); }
 }
-/* Клон-обёртка: фон пергамента + вращение */
 .flip-clone {
   position: absolute;
   top: 0;
@@ -424,7 +422,6 @@ html, body {
   box-shadow: 0 0 12px rgba(0,0,0,0.3);
   overflow: hidden;
 }
-/* Передняя сторона (с содержимым) */
 .flip-clone-front {
   position: absolute;
   top: 0; left: 0;
@@ -436,8 +433,6 @@ html, body {
   grid-template-rows: repeat(5, minmax(0, 1fr));
   gap: 6px;
 }
-/* Обратная сторона — пустая (просто фон пергамента под клоном) */
-/* Пока анимация крутится, под .flip-clone видна пустая "бумага" (фон клона) */
 .footer {
   flex-shrink: 0;
   display: flex;
@@ -1278,8 +1273,8 @@ function playFanfare() {
 const SHORT_WORDS = ['в','на','с','к','по','за','из','от','до','у','о','об','во','со','ко','под','над','при','про','без','для','через','между','перед','и','а','но','да','или','либо','что','как','то','же','бы','ли','не','ни'];
 function addNbsp(text) {
   let result = text;
-  // Неразрывные дефисы — чтобы "из-под", "по-разному" не рвались
-  result = result.replace(/([A-Za-zА-Яа-яЁё]+-[A-Za-zА-Яа-яЁё]+)/g, '<span style="white-space:nowrap">$1</span>');
+  // Неразрывный дефис для слов типа "из-под", "что-либо", "по-разному"
+  result = result.replace(/(\S)-(\S)/g, '$1\u2011$2');
   SHORT_WORDS.forEach(word => {
     const regex = new RegExp('(^|\\s)(' + word + ')\\s+', 'gi');
     result = result.replace(regex, '$1$2&nbsp;');
@@ -1288,7 +1283,8 @@ function addNbsp(text) {
 }
 function splitMeaning(meaning) { return meaning.split(';').map(s => s.trim()); }
 
-function renderMeaningHTML(meaning) {
+/* Значения друг под другом через <br>, без пустой строки между ними */
+function renderMeaningHTMLStacked(meaning) {
   const parts = splitMeaning(meaning);
   const classes = ['', 'second', 'third'];
   return parts.map((part, i) => {
@@ -1296,8 +1292,8 @@ function renderMeaningHTML(meaning) {
     const sep = i < parts.length - 1 ? ';' : '';
     return cls
       ? `<span class="${cls}">${addNbsp(part)}${sep}</span>`
-      : `${addNbsp(part)}${sep}`;
-  }).join(' ');
+      : `<span>${addNbsp(part)}${sep}</span>`;
+  }).join('<br>');
 }
 
 function fitTiles() {
@@ -1490,7 +1486,7 @@ function renderField() {
     const inner = document.createElement('div');
     inner.className = 'tile-content';
     if (data.type === 'phrase') inner.innerHTML = addNbsp(data.text);
-    else inner.innerHTML = renderMeaningHTML(data.text);
+    else inner.innerHTML = renderMeaningHTMLStacked(data.text);
     tile.appendChild(inner);
     tile.dataset.type = data.type;
     tile.dataset.phrase = data.pair.p;
@@ -1635,7 +1631,10 @@ function addPairToBook(phrase, meaning) {
   dashDiv.textContent = '—';
   const meaningDiv = document.createElement('div');
   meaningDiv.className = 'pair-meaning';
-  meaningDiv.innerHTML = renderMeaningHTML(meaning);
+  const meaningInner = document.createElement('div');
+  meaningInner.className = 'pair-content';
+  meaningInner.innerHTML = renderMeaningHTMLStacked(meaning);
+  meaningDiv.appendChild(meaningInner);
   pairDiv.appendChild(phraseDiv);
   pairDiv.appendChild(dashDiv);
   pairDiv.appendChild(meaningDiv);
@@ -1670,8 +1669,6 @@ function flipBookPage(callback) {
   const rightPage = document.getElementById('pageRight');
   const rightRect = rightPage.getBoundingClientRect();
   const spreadRect = spread.getBoundingClientRect();
-
-  // Клон-обёртка с фоном и вращением
   const clone = document.createElement('div');
   clone.className = 'flip-clone';
   clone.style.position = 'absolute';
@@ -1679,14 +1676,10 @@ function flipBookPage(callback) {
   clone.style.top = '0';
   clone.style.width = rightRect.width + 'px';
   clone.style.height = '100%';
-
-  // Внутренняя передняя сторона с содержимым правой страницы
   const front = document.createElement('div');
   front.className = 'flip-clone-front';
-  // Копируем содержимое правой страницы
   front.innerHTML = rightPage.innerHTML;
   clone.appendChild(front);
-
   spread.appendChild(clone);
   setTimeout(() => { clone.remove(); if (callback) callback(); }, 1300);
 }
@@ -1766,7 +1759,11 @@ function renderDictPage() {
         dash.textContent = collected ? '—' : '';
         const meaning = document.createElement('span');
         meaning.className = 'entry-meaning';
-        meaning.innerHTML = collected ? renderMeaningHTML(pair.m) : '';
+        meaning.innerHTML = collected ? splitMeaning(pair.m).map((part, i) => {
+          const cls = ['', 'second', 'third'][i] || 'third';
+          const sep = i < splitMeaning(pair.m).length - 1 ? ';' : '';
+          return `<span class="${cls}">${addNbsp(part)}${sep}</span>`;
+        }).join(' ') : '';
         div.appendChild(lock); div.appendChild(phrase); div.appendChild(dash); div.appendChild(meaning);
         content.appendChild(div);
       }
