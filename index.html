@@ -118,12 +118,15 @@ html, body {
   z-index: 10;
 }
 .game-field .start-btn:hover { background-color: #3a5a7a; }
+/* ===== ОБЪЁМНЫЕ КОСТЯШКИ ===== */
 .tile {
+  --edge1: #7a90ac;
+  --edge2: #6a80a0;
   width: 100%;
   height: 100%;
   min-width: 0;
   min-height: 0;
-  border-radius: 4px 6px 6px 4px;
+  border-radius: 5px 8px 8px 5px;
   cursor: pointer;
   text-align: center;
   font-family: 'EB Garamond', Georgia, serif;
@@ -134,16 +137,18 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2px 4px;
+  padding: 2px 4px 4px 4px;
   overflow: hidden;
   position: relative;
-  transition: box-shadow 0.15s, background-color 0.15s, border-color 0.15s, transform 0.15s;
+  transition: box-shadow 0.15s, transform 0.15s;
   box-shadow:
-    0 2px 0 rgba(0,0,0,0.2),
-    0 3px 4px rgba(0,0,0,0.12),
-    inset 0 2px 0 rgba(255,255,255,0.5),
-    inset 0 -2px 0 rgba(0,0,0,0.1);
+    inset 0 2px 0 rgba(255,255,255,0.55),
+    inset 0 -2px 0 rgba(0,0,0,0.12),
+    0 2px 0 var(--edge1),
+    0 4px 0 var(--edge2),
+    0 6px 6px rgba(0,0,0,0.3);
   border: 1px solid rgba(0,0,0,0.15);
+  border-bottom: none;
 }
 .tile-content {
   display: block;
@@ -157,33 +162,47 @@ html, body {
 }
 .tile-content .second { color: #2a4a7a; }
 .tile-content .third { color: #3a6a9a; }
-.tile.phrase { background: linear-gradient(180deg, #c8d8ee 0%, #B0C4DE 50%, #9ab0cc 100%); color: #1a2a4a; }
-.tile.meaning { background: linear-gradient(180deg, #fae8c8 0%, #F5DEB3 50%, #e8d0a0 100%); color: #1a2a4a; }
+.tile.phrase {
+  --edge1: #7a90ac;
+  --edge2: #5a708c;
+  background: linear-gradient(180deg, #cfddef 0%, #B0C4DE 45%, #8aa0bc 100%);
+  color: #1a2a4a;
+}
+.tile.meaning {
+  --edge1: #b8a070;
+  --edge2: #9a8458;
+  background: linear-gradient(180deg, #f8e8c8 0%, #F5DEB3 45%, #d8c090 100%);
+  color: #1a2a4a;
+}
 .tile.selected {
   border: 2px solid #b8860b;
-  box-shadow: 0 0 0 2px #b8860b, 0 2px 0 rgba(0,0,0,0.2), 0 3px 4px rgba(0,0,0,0.12);
+  box-shadow:
+    0 0 0 2px #b8860b,
+    inset 0 2px 0 rgba(255,255,255,0.55),
+    inset 0 -2px 0 rgba(0,0,0,0.12),
+    0 2px 0 var(--edge1),
+    0 4px 0 var(--edge2),
+    0 6px 6px rgba(0,0,0,0.3);
   transform: translateY(-2px);
 }
 .tile.correct {
   background: linear-gradient(180deg, #c8e6c9 0%, #a8d5a8 100%) !important;
   border: 2px solid #4caf50 !important;
   color: #1a2a4a !important;
+  --edge1: #6a9a6a;
+  --edge2: #4a7a4a;
 }
 .tile.wrong {
   background: linear-gradient(180deg, #ffcdd2 0%, #ef9a9a 100%) !important;
   border: 2px solid #c62828 !important;
   color: #1a2a4a !important;
+  --edge1: #a04040;
+  --edge2: #802020;
 }
 .tile.hidden { visibility: hidden; pointer-events: none; }
-@media (min-width: 1100px) {
-  .tile { font-size: 1.5rem; }
-}
-@media (min-width: 750px) and (max-width: 1099px) {
-  .tile { font-size: 1.2rem; }
-}
-@media (max-width: 749px) {
-  .tile { font-size: 1.05rem; }
-}
+@media (min-width: 1100px) { .tile { font-size: 1.5rem; } }
+@media (min-width: 750px) and (max-width: 1099px) { .tile { font-size: 1.2rem; } }
+@media (max-width: 749px) { .tile { font-size: 1.05rem; } }
 .right-column {
   flex: 0 0 37%;
   display: flex;
@@ -200,20 +219,22 @@ html, body {
   border: 2px solid #b8860b;
   border-radius: 6px;
   background-color: rgba(0,0,0,0.08);
-  padding: 8px;
-  overflow: hidden;
+  padding: 8px 8px 24px 8px;
+  position: relative;
 }
 .stack-inner {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 1px;
   width: 100%;
-  height: 100%;
-  align-content: center;
+  align-content: start;
+  position: relative;
+  z-index: 2;
 }
+/* ===== ОБЪЁМНЫЕ КОСТЯШКИ В СТОПКЕ ===== */
 .stack-tile {
   aspect-ratio: 2 / 1;
-  background: linear-gradient(180deg, #2a3a5a 0%, #1a2a4a 100%);
+  background: linear-gradient(180deg, #3a4a6a 0%, #1a2a4a 100%);
   border: 1px solid #b8860b;
   border-radius: 2px 3px 3px 2px;
   display: flex;
@@ -223,7 +244,10 @@ html, body {
   font-weight: 900;
   color: #b8860b;
   font-size: 0.5rem;
-  box-shadow: 0 1px 0 rgba(0,0,0,0.3);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    0 1px 0 #0a1a2a,
+    0 2px 2px rgba(0,0,0,0.35);
 }
 .book-shelf {
   flex: 1;
@@ -315,7 +339,7 @@ html, body {
   text-align: left;
   font-family: 'EB Garamond', Georgia, serif;
   font-weight: 700;
-  font-size: 0.61rem;
+  font-size: 0.63rem;
   position: relative;
 }
 .pair-content {
@@ -349,7 +373,7 @@ html, body {
   padding: 1px 1px;
   color: #152040;
   text-align: left;
-  font-size: 0.61rem;
+  font-size: 0.63rem;
   font-weight: 400;
 }
 .book-pair .pair-meaning .second { color: #2a4a7a; }
@@ -1372,10 +1396,29 @@ function applyPortraitTabletLayout() {
   }
 }
 
+/* Стопка: верхний слой = 40 (или остаток), под ним — полоски-тени по количеству слоёв */
 function renderStack() {
   const stackInner = document.getElementById('stackInner');
   stackInner.innerHTML = '';
-  const visible = Math.min(40, stackRemaining);
+
+  let visible, extraLayers;
+  if (stackRemaining >= 40) {
+    visible = 40;
+    extraLayers = Math.min(4, Math.ceil((stackRemaining - 40) / 40));
+  } else {
+    visible = stackRemaining;
+    extraLayers = 0;
+  }
+
+  // Тени слоёв под стопкой
+  const shadows = [];
+  for (let i = 0; i < extraLayers; i++) {
+    const depth = (i + 1) * 4;
+    const opacity = 0.55 - i * 0.12;
+    shadows.push(`0 ${depth}px 0 rgba(26,42,74,${opacity})`);
+  }
+  stackInner.style.boxShadow = shadows.join(', ') || 'none';
+
   for (let i = 0; i < visible; i++) {
     const tile = document.createElement('div');
     tile.className = 'stack-tile';
@@ -1479,10 +1522,11 @@ function renderField() {
 
   fitTiles();
 
+  // Вылет из ПРАВОГО НИЖНЕГО УГЛА стопки
   const stackEl = document.getElementById('stack');
   const stackRect = stackEl.getBoundingClientRect();
-  const stackCX = stackRect.left + stackRect.width / 2;
-  const stackCY = stackRect.top + stackRect.height / 2;
+  const stackCX = stackRect.right - 20;
+  const stackCY = stackRect.bottom - 20;
   const allTiles = field.querySelectorAll('.tile');
   allTiles.forEach(tile => {
     const rect = tile.getBoundingClientRect();
