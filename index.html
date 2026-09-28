@@ -216,19 +216,18 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  padding: 4px 4px 14px 4px;
-  perspective: 900px;
+  padding: 6px 6px 14px 6px;
+  perspective: 1400px;
   min-height: 0;
 }
 .chest-inner {
   position: relative;
-  width: 68%;
-  height: 55%;
+  width: 82%;
+  height: 42%;
   display: flex;
   align-items: flex-end;
   justify-content: center;
   transform-style: preserve-3d;
-  margin-top: 30px;
 }
 .chest-body {
   position: relative;
@@ -263,9 +262,9 @@ html, body {
 .lid-strap-left, .lid-strap-right {
   position: absolute;
   top: -2px; bottom: -2px;
-  width: 18px;
+  width: 16px;
   background:
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='28' viewBox='0 0 18 28'%3E%3Cpath d='M9 0 L9 28 M4 7 Q9 3 14 7 M4 21 Q9 25 14 21' stroke='%232a1808' fill='none' stroke-width='1.3'/%3E%3Ccircle cx='9' cy='14' r='1.5' fill='%232a1808'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='28' viewBox='0 0 16 28'%3E%3Cpath d='M8 0 L8 28 M3.5 7 Q8 3.5 12.5 7 M3.5 21 Q8 24.5 12.5 21' stroke='%232a1808' fill='none' stroke-width='1.2'/%3E%3Ccircle cx='8' cy='14' r='1.4' fill='%232a1808'/%3E%3C/svg%3E"),
     linear-gradient(90deg, #6a4a1a 0%, #d4a843 50%, #6a4a1a 100%);
   background-repeat: repeat-y, no-repeat;
   background-size: 100% auto, 100% 100%;
@@ -284,9 +283,9 @@ html, body {
   position: absolute;
   left: -2px; right: -2px;
   bottom: 12px;
-  height: 12px;
+  height: 11px;
   background:
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='12' viewBox='0 0 28 12'%3E%3Cpath d='M0 6 L28 6 M7 3 Q14 1 21 3 M7 9 Q14 11 21 9' stroke='%232a1808' fill='none' stroke-width='1.2'/%3E%3Ccircle cx='14' cy='6' r='1.4' fill='%232a1808'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='11' viewBox='0 0 26 11'%3E%3Cpath d='M0 5.5 L26 5.5 M6 2.5 Q13 0.5 20 2.5 M6 8.5 Q13 10.5 20 8.5' stroke='%232a1808' fill='none' stroke-width='1.1'/%3E%3Ccircle cx='13' cy='5.5' r='1.3' fill='%232a1808'/%3E%3C/svg%3E"),
     linear-gradient(180deg, #6a4a1a 0%, #d4a843 50%, #6a4a1a 100%);
   background-repeat: repeat-x, no-repeat;
   background-size: auto 100%, 100% 100%;
@@ -296,16 +295,16 @@ html, body {
   border-radius: 2px;
 }
 
-/* Полоска костяшек в сундуке */
+/* Полоска костяшек — ровно 8, между стенками */
 .chest-contents {
   position: absolute;
   top: -3px;
-  left: 8px;
-  right: 8px;
+  left: 5px;
+  right: 5px;
   height: 7px;
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 1px;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 2px;
   z-index: 1;
   pointer-events: none;
 }
@@ -316,13 +315,13 @@ html, body {
 .chest-tile.blue { background: linear-gradient(180deg, #a8bcd4, #6a80a0); }
 .chest-tile.yellow { background: linear-gradient(180deg, #f0d8a0, #b8a070); }
 
-/* Крышка сундука */
+/* Крышка — прилегает к верхнему краю тела */
 .chest-lid {
   position: absolute;
-  top: -48%;
+  bottom: 100%;
   left: -3px;
   right: -3px;
-  height: 52%;
+  height: 42%;
   background: linear-gradient(180deg, #a06a35 0%, #6a3e18 60%, #3a2008 100%);
   border: 2px solid #1a0f05;
   border-bottom: none;
@@ -336,9 +335,8 @@ html, body {
   z-index: 5;
   overflow: hidden;
 }
-/* Откинута назад и остаётся слегка наклонённой */
 .chest-lid.open {
-  transform: rotateX(-100deg);
+  transform: rotateX(-110deg);
 }
 .lid-wood {
   position: absolute;
@@ -397,13 +395,13 @@ html, body {
     0 0 2px rgba(0,0,0,0.6);
 }
 
-/* Ключ — старинный, цельный */
+/* Ключ — только головка, торчит над замком */
 .chest-key {
   position: absolute;
-  top: -16px;
+  top: -14px;
   left: 50%;
   transform: translateX(-50%) rotate(0deg);
-  transform-origin: 50% 48px;
+  transform-origin: 50% 13px;
   transition: transform 1.0s cubic-bezier(0.45, 0.05, 0.55, 0.95);
   z-index: 4;
 }
@@ -441,29 +439,6 @@ html, body {
   background: #d4a843;
   border-radius: 2px;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
-}
-.key-stem {
-  width: 6px;
-  height: 22px;
-  background: linear-gradient(90deg, #6a4a1a 0%, #d4a843 50%, #6a4a1a 100%);
-  margin: -3px auto 0;
-  border: 1px solid #2a1808;
-  border-top: none;
-  border-radius: 0 0 3px 3px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-  position: relative;
-}
-.key-stem::after {
-  content: '';
-  position: absolute;
-  bottom: 3px;
-  left: 100%;
-  width: 7px;
-  height: 3px;
-  background: #d4a843;
-  border: 1px solid #2a1808;
-  border-left: none;
-  border-radius: 0 2px 2px 0;
 }
 .book-shelf {
   flex: 1;
