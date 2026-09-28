@@ -8,912 +8,146 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body {
-  background-color: #346a48;
-  font-family: 'EB Garamond', Georgia, serif;
-  height: 100%;
-  overflow: hidden;
-  color: #1a2a4a;
-}
-#rotateWrap {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  transform-origin: top left;
-  background-color: #346a48;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-.header { text-align: center; padding: 6px 0 4px; flex-shrink: 0; }
-.header h1 {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 1.6rem;
-  font-weight: 900;
-  color: #e6b800;
-  letter-spacing: 2px;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-  margin-bottom: 4px;
-}
-.instruction {
-  font-size: 0.85rem;
-  color: #d4a843;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-  flex-wrap: wrap;
-}
-.label-phrase, .label-meaning {
-  display: inline-block;
-  padding: 1px 7px;
-  border-radius: 4px;
-  font-weight: 700;
-  font-size: 0.78rem;
-}
-.label-phrase { background: linear-gradient(180deg, #c8d8ee 0%, #B0C4DE 100%); color: #1a2a4a; border: 1px solid #5a7a9a; }
-.label-meaning { background: linear-gradient(180deg, #fae8c8 0%, #F5DEB3 100%); color: #1a2a4a; border: 1px solid #b8a060; }
-.tabs-row {
-  flex-shrink: 0;
-  display: flex;
-  justify-content: flex-start;
-  gap: 6px;
-  padding: 2px 16px 4px 16px;
-}
-.tabs-row.empty { display: none; }
-.tab {
-  font-family: 'EB Garamond', Georgia, serif;
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 3px 14px;
-  background-color: #1a2a4a;
-  color: #e0d4b8;
-  border: 1px solid #b8860b;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.tab.active { background-color: #b8860b; color: #1a2a4a; }
-.tab:hover { background-color: #2a3a5a; }
-.main {
-  flex: 1;
-  display: flex;
-  gap: 10px;
-  padding: 0 16px 6px 16px;
-  min-height: 0;
-}
-.left-part {
-  flex: 0 0 63%;
-  min-height: 0;
-  min-width: 0;
-  display: flex;
-}
-.game-field {
-  flex: 1;
-  border: 3px solid #b8860b;
-  border-radius: 8px;
-  padding: var(--gap, 5px);
-  display: grid;
-  grid-template-columns: repeat(var(--cols, 5), minmax(0, 1fr));
-  grid-auto-rows: minmax(0, 1fr);
-  gap: var(--gap, 5px);
-  min-height: 0;
-  min-width: 0;
-  position: relative;
-  background-color: rgba(0,0,0,0.05);
-}
-.game-field .start-btn {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 1rem;
-  padding: 8px 24px;
-  background-color: #2a4a6a;
-  color: #e0d4b8;
-  border: 2px solid #b8860b;
-  border-radius: 6px;
-  cursor: pointer;
-  z-index: 10;
-}
-.game-field .start-btn:hover { background-color: #3a5a7a; }
-.tile {
-  --edge1: #7a90ac;
-  --edge2: #6a80a0;
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-  min-height: 0;
-  border-radius: 5px 8px 8px 5px;
-  cursor: pointer;
-  text-align: center;
-  font-family: 'EB Garamond', Georgia, serif;
-  font-size: 1.05rem;
-  font-weight: 700;
-  line-height: 1.1;
-  user-select: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2px 4px 4px 4px;
-  overflow: hidden;
-  position: relative;
-  transition: box-shadow 0.15s, transform 0.15s;
-  box-shadow:
-    inset 0 2px 0 rgba(255,255,255,0.55),
-    inset 0 -2px 0 rgba(0,0,0,0.12),
-    0 2px 0 var(--edge1),
-    0 4px 0 var(--edge2),
-    0 6px 6px rgba(0,0,0,0.3);
-  border: 1px solid rgba(0,0,0,0.15);
-  border-bottom: none;
-}
-.tile-content {
-  display: block;
-  width: 100%;
-  text-align: center;
-  line-height: 1.1;
-  overflow-wrap: normal;
-  word-break: keep-all;
-  hyphens: none;
-  -webkit-hyphens: none;
-}
-.tile-content .second { color: #2a4a7a; }
-.tile-content .third { color: #3a6a9a; }
-.tile.phrase {
-  --edge1: #7a90ac;
-  --edge2: #5a708c;
-  background: linear-gradient(180deg, #cfddef 0%, #B0C4DE 45%, #8aa0bc 100%);
-  color: #1a2a4a;
-}
-.tile.meaning {
-  --edge1: #b8a070;
-  --edge2: #9a8458;
-  background: linear-gradient(180deg, #f8e8c8 0%, #F5DEB3 45%, #d8c090 100%);
-  color: #1a2a4a;
-}
-.tile.selected {
-  border: 2px solid #b8860b;
-  box-shadow:
-    0 0 0 2px #b8860b,
-    inset 0 2px 0 rgba(255,255,255,0.55),
-    inset 0 -2px 0 rgba(0,0,0,0.12),
-    0 2px 0 var(--edge1),
-    0 4px 0 var(--edge2),
-    0 6px 6px rgba(0,0,0,0.3);
-  transform: translateY(-2px);
-}
-.tile.correct {
-  background: linear-gradient(180deg, #c8e6c9 0%, #a8d5a8 100%) !important;
-  border: 2px solid #4caf50 !important;
-  color: #1a2a4a !important;
-  --edge1: #6a9a6a;
-  --edge2: #4a7a4a;
-}
-.tile.wrong {
-  background: linear-gradient(180deg, #ffcdd2 0%, #ef9a9a 100%) !important;
-  border: 2px solid #c62828 !important;
-  color: #1a2a4a !important;
-  --edge1: #a04040;
-  --edge2: #802020;
-}
-.tile.hidden { visibility: hidden; pointer-events: none; }
-@media (min-width: 1100px) { .tile { font-size: 1.5rem; } }
-@media (min-width: 750px) and (max-width: 1099px) { .tile { font-size: 1.2rem; } }
-@media (max-width: 749px) { .tile { font-size: 1.05rem; } }
-.right-column {
-  flex: 0 0 37%;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-height: 0;
-  min-width: 0;
-}
-/* ===== СУНДУК v2 ===== */
-/* ===== СУНДУК v4 ===== */
-.chest {
-  flex: 0 0 38%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  padding: 10px 6px 14px 6px;
-  min-height: 0;
-}
-.chest-inner {
-  position: relative;
-  width: 82%;
-  height: 42%;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  perspective: 1200px;
-}
-.chest-body {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(180deg, #8b5a2b 0%, #5a3414 55%, #2e1808 100%);
-  border: 2px solid #1a0f05;
-  border-radius: 3px 3px 7px 7px;
-  box-shadow:
-    inset 0 3px 0 rgba(255,200,150,0.18),
-    inset 0 -8px 14px rgba(0,0,0,0.6),
-    0 6px 14px rgba(0,0,0,0.55);
-  z-index: 1;
-}
-.body-wood {
-  position: absolute;
-  inset: 0;
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0,
-      transparent 6px,
-      rgba(0,0,0,0.15) 6px,
-      rgba(0,0,0,0.15) 7px
-    );
-  pointer-events: none;
-}
-.body-strap-left, .body-strap-right {
-  position: absolute;
-  top: -2px; bottom: -2px;
-  width: 16px;
-  background:
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='28' viewBox='0 0 16 28'%3E%3Cpath d='M8 0 L8 28 M3.5 7 Q8 3.5 12.5 7 M3.5 21 Q8 24.5 12.5 21' stroke='%232a1808' fill='none' stroke-width='1.2'/%3E%3Ccircle cx='8' cy='14' r='1.4' fill='%232a1808'/%3E%3C/svg%3E"),
-    linear-gradient(90deg, #6a4a1a 0%, #d4a843 50%, #6a4a1a 100%);
-  background-repeat: repeat-y, no-repeat;
-  background-size: 100% auto, 100% 100%;
-  box-shadow:
-    inset 0 0 0 1px rgba(40,25,5,0.7),
-    0 0 4px rgba(0,0,0,0.5);
-  border-radius: 2px;
-  z-index: 2;
-}
-.body-strap-left { left: 18%; }
-.body-strap-right { right: 18%; }
-.body-strap-bottom {
-  position: absolute;
-  left: -2px; right: -2px;
-  bottom: 12px;
-  height: 11px;
-  background:
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='11' viewBox='0 0 26 11'%3E%3Cpath d='M0 5.5 L26 5.5 M6 2.5 Q13 0.5 20 2.5 M6 8.5 Q13 10.5 20 8.5' stroke='%232a1808' fill='none' stroke-width='1.1'/%3E%3Ccircle cx='13' cy='5.5' r='1.3' fill='%232a1808'/%3E%3C/svg%3E"),
-    linear-gradient(180deg, #6a4a1a 0%, #d4a843 50%, #6a4a1a 100%);
-  background-repeat: repeat-x, no-repeat;
-  background-size: auto 100%, 100% 100%;
-  box-shadow:
-    inset 0 0 0 1px rgba(40,25,5,0.7),
-    0 0 4px rgba(0,0,0,0.5);
-  border-radius: 2px;
-  z-index: 2;
-}
-/* Костяшки — скрыты до открытия */
-.chest-contents {
-  position: absolute;
-  top: 2px;
-  left: 5px;
-  right: 5px;
-  height: 7px;
-  display: none;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 2px;
-  z-index: 3;
-  pointer-events: none;
-}
-.chest-contents.visible { display: grid; }
-.chest-tile {
-  border-radius: 1px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 1px 1px rgba(0,0,0,0.4);
-}
-.chest-tile.blue { background: linear-gradient(180deg, #a8bcd4, #6a80a0); }
-.chest-tile.yellow { background: linear-gradient(180deg, #f0d8a0, #b8a070); }
-
-/* Крышка — стоит вертикально над телом */
-.chest-lid {
-  position: absolute;
-  bottom: 100%;
-  left: -3px;
-  right: -3px;
-  height: 42%;
-  background: linear-gradient(180deg, #a06a35 0%, #6a3e18 60%, #3a2008 100%);
-  border: 2px solid #1a0f05;
-  border-bottom: none;
-  border-radius: 55% 55% 0 0 / 100% 100% 0 0;
-  transform-origin: center bottom;
-  transform: rotateX(0deg);
-  transition: transform 1.4s cubic-bezier(0.45, 0.05, 0.55, 0.95);
-  box-shadow:
-    inset 0 6px 0 rgba(255,200,150,0.22),
-    inset 0 -2px 8px rgba(0,0,0,0.45);
-  z-index: 5;
-}
-.chest-lid.open {
-  transform: rotateX(-75deg);
-}
-.lid-wood {
-  position: absolute;
-  inset: 0;
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0,
-      transparent 5px,
-      rgba(0,0,0,0.12) 5px,
-      rgba(0,0,0,0.12) 6px
-    );
-  border-radius: 55% 55% 0 0 / 100% 100% 0 0;
-}
-.lid-strap-left, .lid-strap-right {
-  position: absolute;
-  top: -2px; bottom: -2px;
-  width: 16px;
-  background:
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='28' viewBox='0 0 16 28'%3E%3Cpath d='M8 0 L8 28 M3.5 7 Q8 3.5 12.5 7 M3.5 21 Q8 24.5 12.5 21' stroke='%232a1808' fill='none' stroke-width='1.2'/%3E%3Ccircle cx='8' cy='14' r='1.4' fill='%232a1808'/%3E%3C/svg%3E"),
-    linear-gradient(90deg, #6a4a1a 0%, #d4a843 50%, #6a4a1a 100%);
-  background-repeat: repeat-y, no-repeat;
-  background-size: 100% auto, 100% 100%;
-  box-shadow:
-    inset 0 0 0 1px rgba(40,25,5,0.7),
-    0 0 4px rgba(0,0,0,0.5);
-  border-radius: 2px;
-}
-.lid-strap-left { left: 18%; }
-.lid-strap-right { right: 18%; }
-/* Замок — поверх всего */
-.chest-lock {
-  position: absolute;
-  top: 6%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 36px;
-  height: 32px;
-  background: linear-gradient(180deg, #e8bc53 0%, #b8860b 50%, #7a5a1a 100%);
-  border: 2px solid #2a1808;
-  border-radius: 5px;
-  box-shadow:
-    inset 0 2px 0 rgba(255,255,255,0.4),
-    inset 0 -2px 0 rgba(0,0,0,0.35),
-    0 3px 6px rgba(0,0,0,0.5);
-  z-index: 20;
-}
-.chest-lock::before {
-  content: '';
-  position: absolute;
-  top: -5px; left: 50%;
-  transform: translateX(-50%);
-  width: 8px; height: 6px;
-  background: linear-gradient(180deg, #e8bc53, #b8860b);
-  border: 2px solid #2a1808;
-  border-bottom: none;
-  border-radius: 4px 4px 0 0;
-}
-.chest-lock::after {
-  content: '';
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 6px;
-  height: 11px;
-  background: radial-gradient(circle at 50% 25%, #000 0 2px, #0a0400 3px);
-  border-radius: 50% 50% 2px 2px;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.15),
-    0 0 2px rgba(0,0,0,0.6);
-}
-.chest-key {
-  position: absolute;
-  top: -14px;
-  left: 50%;
-  transform: translateX(-50%) rotate(0deg);
-  transform-origin: 50% 13px;
-  transition: transform 1.0s cubic-bezier(0.45, 0.05, 0.55, 0.95);
-  z-index: 21;
-}
-.chest-key.turned {
-  transform: translateX(-50%) rotate(90deg);
-}
-.key-head {
-  width: 26px;
-  height: 26px;
-  background: radial-gradient(circle at 40% 35%, #f8d878 0%, #d4a843 45%, #7a5a1a 100%);
-  border: 2px solid #2a1808;
-  border-radius: 50%;
-  box-shadow:
-    inset 0 2px 0 rgba(255,255,255,0.45),
-    inset 0 -2px 4px rgba(0,0,0,0.3),
-    0 2px 4px rgba(0,0,0,0.55);
-  position: relative;
-}
-.key-head::before {
-  content: '';
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 10px; height: 10px;
-  background: radial-gradient(circle at 40% 35%, #7a5a1a 0%, #2a1808 100%);
-  border-radius: 50%;
-  box-shadow: inset 0 1px 0 rgba(0,0,0,0.7);
-}
-.key-head::after {
-  content: '';
-  position: absolute;
-  top: -3px; left: 50%;
-  transform: translateX(-50%);
-  width: 4px; height: 6px;
-  background: #d4a843;
-  border-radius: 2px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
-}
-/* ===== КНИГА + ПОЛКА ===== */
-.book-shelf {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  min-height: 0;
-  min-width: 0;
-  padding: 0 4px;
-}
-.book {
-  position: relative;
-  width: 100%;
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  min-height: 0;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
-}
-.book-open { position: relative; width: 100%; height: 78%; display: flex; flex-direction: column; }
-.book-cover {
-  position: absolute;
-  top: -4px; left: -4px; right: -4px; bottom: -4px;
-  background-color: #1a2a4a;
-  border-radius: 4px;
-  z-index: 1;
-}
-.book-pages-edge-top, .book-pages-edge-bottom {
-  position: absolute;
-  left: 3px; right: 3px;
-  height: 4px;
-  background: repeating-linear-gradient(to bottom, #e0d4b8, #e0d4b8 1px, #d4c8a8 1px, #d4c8a8 2px);
-  z-index: 2;
-}
-.book-pages-edge-top { top: 0; border-radius: 2px 2px 0 0; }
-.book-pages-edge-bottom { bottom: 0; border-radius: 0 0 2px 2px; }
-.book-spread {
-  position: relative;
-  z-index: 3;
-  display: flex;
-  height: 100%;
-  margin: 4px 3px;
-  border-radius: 2px;
-  perspective: 1600px;
-}
-.page {
-  flex: 1;
-  min-width: 0;
-  background-color: #e0d4b8;
-  background-image:
-    radial-gradient(circle at 20% 30%, rgba(184, 92, 56, 0.1) 0.5px, transparent 1px),
-    radial-gradient(circle at 70% 60%, rgba(166, 138, 58, 0.1) 0.5px, transparent 1px);
-  padding: 14px 8px;
-  display: grid;
-  grid-template-rows: repeat(4, minmax(0, 1fr));
-  gap: 14px;
-  position: relative;
-}
-.book-fold {
-  width: 6px;
-  flex-shrink: 0;
-  background: linear-gradient(to right, #d4c8a8 0%, #c8bc9c 30%, #b8ac8c 50%, #c8bc9c 70%, #d4c8a8 100%);
-  position: relative;
-}
-.book-fold::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 50%;
-  transform: translateX(-50%);
-  width: 2px;
-  height: 100%;
-  background: rgba(0,0,0,0.15);
-}
-.book-pair {
-  display: flex;
-  flex-direction: row;
-  gap: 4px;
-  align-items: center;
-  min-width: 0;
-  min-height: 0;
-}
-.book-pair .pair-phrase {
-  flex: 0 0 45%;
-  min-width: 0;
-  padding: 1px 1px;
-  color: #152040;
-  text-align: left;
-  font-family: 'EB Garamond', Georgia, serif;
-  font-weight: 700;
-  font-size: 0.61rem;
-  position: relative;
-}
-.pair-content {
-  display: block;
-  width: 100%;
-  text-align: left;
-  line-height: 1.15;
-  overflow-wrap: normal;
-  word-break: keep-all;
-  hyphens: none;
-  -webkit-hyphens: none;
-}
-.book-pair .pair-phrase .lamp-inline {
-  font-size: 0.7rem;
-  margin-left: 2px;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-.book-pair .pair-dash {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  color: #152040;
-  font-weight: 700;
-  padding: 0 1px;
-  font-size: 0.61rem;
-}
-.book-pair .pair-meaning {
-  flex: 1;
-  min-width: 0;
-  padding: 1px 1px;
-  color: #152040;
-  text-align: left;
-  font-size: 0.61rem;
-  font-weight: 400;
-}
-.book-pair .pair-meaning .second { color: #2a4a7a; }
-.book-pair .pair-meaning .third { color: #3a6a9a; }
-.shelf {
-  position: relative;
-  width: 100%;
-  height: 14px;
-  margin-top: 4px;
-  background: linear-gradient(180deg, #a0552a 0%, #8b3a1a 15%, #6e2410 50%, #4a1408 85%, #2a0800 100%);
-  border-radius: 3px 3px 4px 4px;
-  box-shadow:
-    0 2px 0 rgba(255,180,120,0.25) inset,
-    0 -2px 4px rgba(0,0,0,0.4) inset,
-    0 5px 10px rgba(0,0,0,0.45),
-    0 1px 0 rgba(160,85,42,0.4);
-}
-.shelf::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 6px; right: 6px;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(255,200,150,0.5), transparent);
-  border-radius: 1px;
-}
-.shelf::after {
-  content: '';
-  position: absolute;
-  bottom: -3px; left: 3px; right: 3px;
-  height: 3px;
-  background: linear-gradient(180deg, #3a0e04 0%, #1a0400 100%);
-  border-radius: 0 0 3px 3px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-}
-@keyframes flipPage {
-  0% { transform: rotateY(0deg); }
-  100% { transform: rotateY(-180deg); }
-}
-.flip-clone {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 50%;
-  height: 100%;
-  transform-origin: left center;
-  transform-style: preserve-3d;
-  animation: flipPage 1.3s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
-  z-index: 10;
-  background-color: #e0d4b8;
-  background-image:
-    radial-gradient(circle at 20% 30%, rgba(184, 92, 56, 0.1) 0.5px, transparent 1px),
-    radial-gradient(circle at 70% 60%, rgba(166, 138, 58, 0.1) 0.5px, transparent 1px);
-  border-radius: 2px;
-  box-shadow: 0 0 12px rgba(0,0,0,0.3);
-}
-.flip-clone-front {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  padding: 14px 8px;
-  display: grid;
-  grid-template-rows: repeat(4, minmax(0, 1fr));
-  gap: 14px;
-}
-.footer {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 4px 16px;
-}
-.footer-buttons { display: flex; gap: 6px; }
-.btn {
-  font-family: 'EB Garamond', Georgia, serif;
-  font-weight: 600;
-  background-color: #1a2a4a;
-  color: #e0d4b8;
-  border: 1px solid #b8860b;
-  border-radius: 5px;
-  padding: 4px 10px;
-  font-size: 0.7rem;
-  cursor: pointer;
-}
-.btn:hover { background-color: #2a3a5a; }
-.btn.muted { opacity: 0.6; }
-.watermark {
-  color: rgba(224, 212, 184, 0.9);
-  font-size: 0.65rem;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
-}
-.pause-overlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(26, 42, 74, 0.7);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  z-index: 1000;
-}
-.pause-overlay.active { display: flex; }
-.pause-overlay .coffee { font-size: 5rem; margin-bottom: 20px; }
-.pause-overlay .btn { font-size: 1rem; padding: 10px 30px; }
-.tooltip {
-  position: absolute;
-  background-color: #f5f0e1;
-  border: 2.5px solid #1a2a4a;
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 0.75rem;
-  color: #1a2a4a;
-  z-index: 100;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.35);
-  max-width: 240px;
-  line-height: 1.4;
-}
-.tooltip .example { font-style: italic; color: #1a2a4a; font-weight: 600; }
-.tooltip .warning { display: block; margin-top: 3px; }
-.final-overlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #346a48;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  z-index: 1500;
-}
-.final-overlay.active { display: flex; }
-.final-book {
-  width: 220px;
-  height: 300px;
-  background: linear-gradient(135deg, #1a2a4a 0%, #0d1b3e 100%);
-  border-radius: 6px;
-  border: 3px solid #b8860b;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.5), inset 0 0 40px rgba(184, 134, 11, 0.15);
-  position: relative;
-  cursor: pointer;
-  animation: bookAppear 0.8s ease-out;
-}
-@keyframes bookAppear {
-  0% { transform: scale(0.3); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-.final-book::before {
-  content: '';
-  position: absolute;
-  left: 6px; top: 6px; bottom: 6px;
-  width: 3px;
-  background: rgba(184, 134, 11, 0.3);
-  border-radius: 2px;
-}
-.final-book-title {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-weight: 900;
-  font-size: 1.2rem;
-  color: #b8860b;
-  text-align: center;
-  padding: 20px;
-  letter-spacing: 1px;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-}
-.final-btn {
-  margin-top: 24px;
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 1rem;
-  padding: 12px 36px;
-  background-color: #4caf50;
-  color: #fff;
-  border: 2px solid #2e7d32;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0 4px 0 #2e7d32, 0 6px 12px rgba(0,0,0,0.3);
-}
-.final-btn:hover { background-color: #66bb6a; }
-.final-btn:active { transform: translateY(2px); }
-.final-header { position: absolute; top: 20px; left: 0; right: 0; text-align: center; }
-.final-header h1 {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 1.8rem;
-  font-weight: 900;
-  color: #e6b800;
-  letter-spacing: 2px;
-}
-.final-footer {
-  position: absolute;
-  bottom: 20px; left: 0; right: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-}
-.dict-overlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(26, 42, 74, 0.9);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-}
-.dict-overlay.active { display: flex; }
-.dict-container {
-  width: 92%;
-  max-width: 820px;
-  height: 88%;
-  background-color: #e0d4b8;
-  border-radius: 8px;
-  border: 4px solid #1a2a4a;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  position: relative;
-}
-.dict-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6px 14px;
-  background-color: #1a2a4a;
-  color: #e0d4b8;
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 0.95rem;
-}
-.dict-close {
-  font-size: 1.2rem;
-  cursor: pointer;
-  color: #e0d4b8;
-  background: none;
-  border: none;
-}
-.dict-pages { flex: 1; display: flex; overflow: hidden; position: relative; }
-.dict-page {
-  flex: 1;
-  position: relative;
-  padding: 14px 18px 44px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  background-color: #e0d4b8;
-  background-image:
-    radial-gradient(circle at 20% 30%, rgba(184, 92, 56, 0.1) 0.5px, transparent 1px),
-    radial-gradient(circle at 70% 60%, rgba(166, 138, 58, 0.1) 0.5px, transparent 1px);
-}
-.dict-page-content { flex: 1; }
-.dict-fold {
-  width: 6px;
-  flex-shrink: 0;
-  background: linear-gradient(to right, #d4c8a8 0%, #c8bc9c 30%, #b8ac8c 50%, #c8bc9c 70%, #d4c8a8 100%);
-  position: relative;
-}
-.dict-fold::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 50%;
-  transform: translateX(-50%);
-  width: 2px;
-  height: 100%;
-  background: rgba(0,0,0,0.15);
-}
-.dict-page .arrow {
-  position: absolute;
-  bottom: 10px;
-  font-size: 1.6rem;
-  font-weight: 600;
-  color: #c0392b;
-  cursor: pointer;
-  user-select: none;
-  line-height: 1;
-}
-.dict-page .arrow:hover { color: #e74c3c; }
-.dict-page .arrow.disabled { color: #d0a0a0; cursor: default; }
-.dict-page .arrow.back { left: 16px; }
-.dict-page .arrow.forward { right: 16px; }
-.dict-entry {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  padding: 4px 0;
-  border-bottom: 1px dotted rgba(0,0,0,0.1);
-}
-.dict-entry .lock { font-size: 0.85rem; flex-shrink: 0; width: 20px; }
-.dict-entry .entry-phrase {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: #5a2a2a;
-  flex: 0 0 auto;
-  max-width: 45%;
-}
-.dict-entry .entry-phrase .lamp-inline {
-  font-size: 0.95rem;
-  margin-left: 3px;
-  cursor: pointer;
-}
-.dict-entry .entry-dash { color: #1a2a4a; padding: 0 4px; }
-.dict-entry .entry-meaning {
-  font-family: 'EB Garamond', Georgia, serif;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #152040;
-  flex: 1;
-}
-.dict-entry.empty .entry-phrase,
-.dict-entry.empty .entry-dash,
-.dict-entry.empty .entry-meaning { visibility: hidden; }
-@media (orientation: portrait) and (min-width: 600px) and (max-width: 1100px) {
-  .main {
-    flex-direction: column;
-    padding: 0 12px 5px 12px;
-    gap: 6px;
-  }
-  .top-part {
-    flex: 0 0 35%;
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
-    min-height: 0;
-    min-width: 0;
-  }
-  .top-part .chest {
-    flex: 1;
-    min-width: 0;
-    height: 100%;
-  }
-  .top-part .book-shelf {
-    flex: 1;
-    min-width: 0;
-    padding: 0 4px;
-  }
-  .top-part .book-open { height: 92%; }
-  .main .left-part {
-    flex: 1;
-    width: 100%;
-  }
-  .game-field {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%;overflow:hidden;color:#1a2a4a}
+#rotateWrap{position:fixed;top:0;left:0;width:100%;height:100%;transform-origin:top left;background:#346a48;display:flex;flex-direction:column;overflow:hidden}
+.header{text-align:center;padding:6px 0 4px;flex-shrink:0}
+.header h1{font-family:'Playfair Display',Georgia,serif;font-size:1.6rem;font-weight:900;color:#e6b800;letter-spacing:2px;text-shadow:1px 1px 2px rgba(0,0,0,.3);margin-bottom:4px}
+.instruction{font-size:.85rem;color:#d4a843;display:flex;justify-content:center;align-items:center;gap:5px;flex-wrap:wrap}
+.label-phrase,.label-meaning{display:inline-block;padding:1px 7px;border-radius:4px;font-weight:700;font-size:.78rem}
+.label-phrase{background:linear-gradient(180deg,#c8d8ee,#B0C4DE);color:#1a2a4a;border:1px solid #5a7a9a}
+.label-meaning{background:linear-gradient(180deg,#fae8c8,#F5DEB3);color:#1a2a4a;border:1px solid #b8a060}
+.tabs-row{flex-shrink:0;display:flex;justify-content:flex-start;gap:6px;padding:2px 16px 4px 16px}
+.tabs-row.empty{display:none}
+.tab{font-family:'EB Garamond',Georgia,serif;font-size:.8rem;font-weight:600;padding:3px 14px;background:#1a2a4a;color:#e0d4b8;border:1px solid #b8860b;border-radius:4px;cursor:pointer}
+.tab.active{background:#b8860b;color:#1a2a4a}
+.tab:hover{background:#2a3a5a}
+.main{flex:1;display:flex;gap:10px;padding:0 16px 6px 16px;min-height:0}
+.left-part{flex:0 0 63%;min-height:0;min-width:0;display:flex}
+.game-field{flex:1;border:3px solid #b8860b;border-radius:8px;padding:var(--gap,5px);display:grid;grid-template-columns:repeat(var(--cols,5),minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:var(--gap,5px);min-height:0;min-width:0;position:relative;background:rgba(0,0,0,.05)}
+.game-field .start-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Playfair Display',Georgia,serif;font-size:1rem;padding:8px 24px;background:#2a4a6a;color:#e0d4b8;border:2px solid #b8860b;border-radius:6px;cursor:pointer;z-index:10}
+.game-field .start-btn:hover{background:#3a5a7a}
+.tile{--edge1:#7a90ac;--edge2:#6a80a0;width:100%;height:100%;min-width:0;min-height:0;border-radius:5px 8px 8px 5px;cursor:pointer;text-align:center;font-family:'EB Garamond',Georgia,serif;font-size:1.05rem;font-weight:700;line-height:1.1;user-select:none;display:flex;align-items:center;justify-content:center;padding:2px 4px 4px 4px;overflow:hidden;position:relative;transition:box-shadow .15s,transform .15s;box-shadow:inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(0,0,0,.12),0 2px 0 var(--edge1),0 4px 0 var(--edge2),0 6px 6px rgba(0,0,0,.3);border:1px solid rgba(0,0,0,.15);border-bottom:none}
+.tile-content{display:block;width:100%;text-align:center;line-height:1.1;overflow-wrap:normal;word-break:keep-all;hyphens:none;-webkit-hyphens:none}
+.tile-content .second{color:#2a4a7a}
+.tile-content .third{color:#3a6a9a}
+.tile.phrase{--edge1:#7a90ac;--edge2:#5a708c;background:linear-gradient(180deg,#cfddef,#B0C4DE 45%,#8aa0bc);color:#1a2a4a}
+.tile.meaning{--edge1:#b8a070;--edge2:#9a8458;background:linear-gradient(180deg,#f8e8c8,#F5DEB3 45%,#d8c090);color:#1a2a4a}
+.tile.selected{border:2px solid #b8860b;box-shadow:0 0 0 2px #b8860b,inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(0,0,0,.12),0 2px 0 var(--edge1),0 4px 0 var(--edge2),0 6px 6px rgba(0,0,0,.3);transform:translateY(-2px)}
+.tile.correct{background:linear-gradient(180deg,#c8e6c9,#a8d5a8) !important;border:2px solid #4caf50 !important;color:#1a2a4a !important;--edge1:#6a9a6a;--edge2:#4a7a4a}
+.tile.wrong{background:linear-gradient(180deg,#ffcdd2,#ef9a9a) !important;border:2px solid #c62828 !important;color:#1a2a4a !important;--edge1:#a04040;--edge2:#802020}
+.tile.hidden{visibility:hidden;pointer-events:none}
+@media (min-width:1100px){.tile{font-size:1.5rem}}
+@media (min-width:750px) and (max-width:1099px){.tile{font-size:1.2rem}}
+@media (max-width:749px){.tile{font-size:1.05rem}}
+.right-column{flex:0 0 37%;display:flex;flex-direction:column;gap:8px;min-height:0;min-width:0}
+/* ===== СУНДУК ===== */
+.chest{flex:0 0 38%;display:flex;justify-content:center;align-items:flex-end;padding:30px 6px 14px 6px;min-height:0}
+.chest-inner{position:relative;width:82%;height:44%;perspective:1200px}
+.chest-body{position:relative;width:100%;height:100%;background:linear-gradient(180deg,#8b5a2b,#5a3414 55%,#2e1808);border:2px solid #1a0f05;border-radius:3px 3px 7px 7px;box-shadow:inset 0 3px 0 rgba(255,200,150,.18),inset 0 -8px 14px rgba(0,0,0,.6),0 6px 14px rgba(0,0,0,.55);z-index:1}
+.body-wood{position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent 0,transparent 6px,rgba(0,0,0,.15) 6px,rgba(0,0,0,.15) 7px);pointer-events:none}
+.body-strap-left,.body-strap-right{position:absolute;top:-2px;bottom:-2px;width:16px;background:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='28' viewBox='0 0 16 28'%3E%3Cpath d='M8 0 L8 28 M3.5 7 Q8 3.5 12.5 7 M3.5 21 Q8 24.5 12.5 21' stroke='%232a1808' fill='none' stroke-width='1.2'/%3E%3Ccircle cx='8' cy='14' r='1.4' fill='%232a1808'/%3E%3C/svg%3E"),linear-gradient(90deg,#6a4a1a,#d4a843 50%,#6a4a1a);background-repeat:repeat-y,no-repeat;background-size:100% auto,100% 100%;box-shadow:inset 0 0 0 1px rgba(40,25,5,.7),0 0 4px rgba(0,0,0,.5);border-radius:2px;z-index:2}
+.body-strap-left{left:18%}.body-strap-right{right:18%}
+.body-strap-bottom{position:absolute;left:-2px;right:-2px;bottom:12px;height:11px;background:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='11' viewBox='0 0 26 11'%3E%3Cpath d='M0 5.5 L26 5.5 M6 2.5 Q13 0.5 20 2.5 M6 8.5 Q13 10.5 20 8.5' stroke='%232a1808' fill='none' stroke-width='1.1'/%3E%3Ccircle cx='13' cy='5.5' r='1.3' fill='%232a1808'/%3E%3C/svg%3E"),linear-gradient(180deg,#6a4a1a,#d4a843 50%,#6a4a1a);background-repeat:repeat-x,no-repeat;background-size:auto 100%,100% 100%;box-shadow:inset 0 0 0 1px rgba(40,25,5,.7),0 0 4px rgba(0,0,0,.5);border-radius:2px;z-index:2}
+.chest-contents{position:absolute;top:2px;left:5px;right:5px;height:7px;display:none;justify-content:space-between;gap:2px;z-index:3;pointer-events:none}
+.chest-contents.visible{display:flex}
+.chest-tile{flex:1;border-radius:1px;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 1px 1px rgba(0,0,0,.4)}
+.chest-tile.blue{background:linear-gradient(180deg,#a8bcd4,#6a80a0)}
+.chest-tile.yellow{background:linear-gradient(180deg,#f0d8a0,#b8a070)}
+.chest-lid{position:absolute;bottom:100%;left:-2px;right:-2px;height:42%;background:linear-gradient(180deg,#a06a35,#6a3e18 60%,#3a2008);border:2px solid #1a0f05;border-bottom:none;border-radius:55% 55% 0 0/100% 100% 0 0;transform-origin:center bottom;transform:rotateX(0deg);transition:transform 1.4s cubic-bezier(.45,.05,.55,.95);box-shadow:inset 0 6px 0 rgba(255,200,150,.22),inset 0 -2px 8px rgba(0,0,0,.45);z-index:5}
+.chest-lid.open{transform:rotateX(-80deg)}
+.lid-wood{position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent 0,transparent 5px,rgba(0,0,0,.12) 5px,rgba(0,0,0,.12) 6px);border-radius:55% 55% 0 0/100% 100% 0 0}
+.lid-strap-left,.lid-strap-right{position:absolute;top:-2px;bottom:-2px;width:16px;background:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='28' viewBox='0 0 16 28'%3E%3Cpath d='M8 0 L8 28 M3.5 7 Q8 3.5 12.5 7 M3.5 21 Q8 24.5 12.5 21' stroke='%232a1808' fill='none' stroke-width='1.2'/%3E%3Ccircle cx='8' cy='14' r='1.4' fill='%232a1808'/%3E%3C/svg%3E"),linear-gradient(90deg,#6a4a1a,#d4a843 50%,#6a4a1a);background-repeat:repeat-y,no-repeat;background-size:100% auto,100% 100%;box-shadow:inset 0 0 0 1px rgba(40,25,5,.7),0 0 4px rgba(0,0,0,.5);border-radius:2px}
+.lid-strap-left{left:18%}.lid-strap-right{right:18%}
+.chest-lock{position:absolute;top:6%;left:50%;transform:translateX(-50%);width:36px;height:32px;background:linear-gradient(180deg,#e8bc53,#b8860b 50%,#7a5a1a);border:2px solid #2a1808;border-radius:5px;box-shadow:inset 0 2px 0 rgba(255,255,255,.4),inset 0 -2px 0 rgba(0,0,0,.35),0 3px 6px rgba(0,0,0,.5);z-index:20}
+.chest-lock::before{content:'';position:absolute;top:-5px;left:50%;transform:translateX(-50%);width:8px;height:6px;background:linear-gradient(180deg,#e8bc53,#b8860b);border:2px solid #2a1808;border-bottom:none;border-radius:4px 4px 0 0}
+.chest-lock::after{content:'';position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:6px;height:11px;background:radial-gradient(circle at 50% 25%,#000 0 2px,#0a0400 3px);border-radius:50% 50% 2px 2px;box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 0 2px rgba(0,0,0,.6)}
+.chest-key{position:absolute;top:-14px;left:50%;transform:translateX(-50%) rotate(0deg);transform-origin:50% 13px;transition:transform 1s cubic-bezier(.45,.05,.55,.95);z-index:21}
+.chest-key.turned{transform:translateX(-50%) rotate(90deg)}
+.key-head{width:26px;height:26px;background:radial-gradient(circle at 40% 35%,#f8d878,#d4a843 45%,#7a5a1a);border:2px solid #2a1808;border-radius:50%;box-shadow:inset 0 2px 0 rgba(255,255,255,.45),inset 0 -2px 4px rgba(0,0,0,.3),0 2px 4px rgba(0,0,0,.55);position:relative}
+.key-head::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:10px;height:10px;background:radial-gradient(circle at 40% 35%,#7a5a1a,#2a1808);border-radius:50%;box-shadow:inset 0 1px 0 rgba(0,0,0,.7)}
+.key-head::after{content:'';position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:4px;height:6px;background:#d4a843;border-radius:2px;box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+/* ===== КНИГА ===== */
+.book-shelf{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;min-height:0;min-width:0;padding:0 4px}
+.book{position:relative;width:100%;flex:1;display:flex;justify-content:center;align-items:flex-end;min-height:0;filter:drop-shadow(0 4px 8px rgba(0,0,0,.4))}
+.book-open{position:relative;width:100%;height:78%;display:flex;flex-direction:column}
+.book-cover{position:absolute;top:-4px;left:-4px;right:-4px;bottom:-4px;background:#1a2a4a;border-radius:4px;z-index:1}
+.book-pages-edge-top,.book-pages-edge-bottom{position:absolute;left:3px;right:3px;height:4px;background:repeating-linear-gradient(to bottom,#e0d4b8,#e0d4b8 1px,#d4c8a8 1px,#d4c8a8 2px);z-index:2}
+.book-pages-edge-top{top:0;border-radius:2px 2px 0 0}
+.book-pages-edge-bottom{bottom:0;border-radius:0 0 2px 2px}
+.book-spread{position:relative;z-index:3;display:flex;height:100%;margin:4px 3px;border-radius:2px;perspective:1600px}
+.page{flex:1;min-width:0;background:#e0d4b8;background-image:radial-gradient(circle at 20% 30%,rgba(184,92,56,.1) .5px,transparent 1px),radial-gradient(circle at 70% 60%,rgba(166,138,58,.1) .5px,transparent 1px);padding:14px 8px;display:grid;grid-template-rows:repeat(4,minmax(0,1fr));gap:14px;position:relative}
+.book-fold{width:6px;flex-shrink:0;background:linear-gradient(to right,#d4c8a8,#c8bc9c 30%,#b8ac8c 50%,#c8bc9c 70%,#d4c8a8);position:relative}
+.book-fold::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:2px;height:100%;background:rgba(0,0,0,.15)}
+.book-pair{display:flex;flex-direction:row;gap:4px;align-items:center;min-width:0;min-height:0}
+.book-pair .pair-phrase{flex:0 0 45%;min-width:0;padding:1px;color:#152040;text-align:left;font-family:'EB Garamond',Georgia,serif;font-weight:700;font-size:.61rem;position:relative}
+.pair-content{display:block;width:100%;text-align:left;line-height:1.15;overflow-wrap:normal;word-break:keep-all;hyphens:none;-webkit-hyphens:none}
+.book-pair .pair-phrase .lamp-inline{font-size:.7rem;margin-left:2px;cursor:pointer;flex-shrink:0}
+.book-pair .pair-dash{flex:0 0 auto;display:flex;align-items:center;color:#152040;font-weight:700;padding:0 1px;font-size:.61rem}
+.book-pair .pair-meaning{flex:1;min-width:0;padding:1px;color:#152040;text-align:left;font-size:.61rem;font-weight:400}
+.book-pair .pair-meaning .second{color:#2a4a7a}
+.book-pair .pair-meaning .third{color:#3a6a9a}
+.shelf{position:relative;width:100%;height:14px;margin-top:4px;background:linear-gradient(180deg,#a0552a,#8b3a1a 15%,#6e2410 50%,#4a1408 85%,#2a0800);border-radius:3px 3px 4px 4px;box-shadow:0 2px 0 rgba(255,180,120,.25) inset,0 -2px 4px rgba(0,0,0,.4) inset,0 5px 10px rgba(0,0,0,.45),0 1px 0 rgba(160,85,42,.4)}
+.shelf::before{content:'';position:absolute;top:0;left:6px;right:6px;height:2px;background:linear-gradient(90deg,transparent,rgba(255,200,150,.5),transparent);border-radius:1px}
+.shelf::after{content:'';position:absolute;bottom:-3px;left:3px;right:3px;height:3px;background:linear-gradient(180deg,#3a0e04,#1a0400);border-radius:0 0 3px 3px;box-shadow:0 2px 5px rgba(0,0,0,.5)}
+@keyframes flipPage{0%{transform:rotateY(0)}100%{transform:rotateY(-180deg)}}
+.flip-clone{position:absolute;top:0;right:0;width:50%;height:100%;transform-origin:left center;transform-style:preserve-3d;animation:flipPage 1.3s cubic-bezier(.45,.05,.55,.95) forwards;z-index:10;background:#e0d4b8;background-image:radial-gradient(circle at 20% 30%,rgba(184,92,56,.1) .5px,transparent 1px),radial-gradient(circle at 70% 60%,rgba(166,138,58,.1) .5px,transparent 1px);border-radius:2px;box-shadow:0 0 12px rgba(0,0,0,.3)}
+.flip-clone-front{position:absolute;top:0;left:0;width:100%;height:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;padding:14px 8px;display:grid;grid-template-rows:repeat(4,minmax(0,1fr));gap:14px}
+.footer{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:4px 16px}
+.footer-buttons{display:flex;gap:6px}
+.btn{font-family:'EB Garamond',Georgia,serif;font-weight:600;background:#1a2a4a;color:#e0d4b8;border:1px solid #b8860b;border-radius:5px;padding:4px 10px;font-size:.7rem;cursor:pointer}
+.btn:hover{background:#2a3a5a}
+.btn.muted{opacity:.6}
+.watermark{color:rgba(224,212,184,.9);font-size:.65rem;text-shadow:0 1px 2px rgba(0,0,0,.4)}
+.pause-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(26,42,74,.7);display:none;align-items:center;justify-content:center;flex-direction:column;z-index:1000}
+.pause-overlay.active{display:flex}
+.pause-overlay .coffee{font-size:5rem;margin-bottom:20px}
+.pause-overlay .btn{font-size:1rem;padding:10px 30px}
+.tooltip{position:absolute;background:#f5f0e1;border:2.5px solid #1a2a4a;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#1a2a4a;z-index:100;box-shadow:0 3px 10px rgba(0,0,0,.35);max-width:240px;line-height:1.4}
+.tooltip .example{font-style:italic;color:#1a2a4a;font-weight:600}
+.tooltip .warning{display:block;margin-top:3px}
+.final-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:#346a48;display:none;align-items:center;justify-content:center;flex-direction:column;z-index:1500}
+.final-overlay.active{display:flex}
+.final-book{width:220px;height:300px;background:linear-gradient(135deg,#1a2a4a,#0d1b3e);border-radius:6px;border:3px solid #b8860b;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(0,0,0,.5),inset 0 0 40px rgba(184,134,11,.15);position:relative;cursor:pointer;animation:bookAppear .8s ease-out}
+@keyframes bookAppear{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+.final-book::before{content:'';position:absolute;left:6px;top:6px;bottom:6px;width:3px;background:rgba(184,134,11,.3);border-radius:2px}
+.final-book-title{font-family:'Playfair Display',Georgia,serif;font-weight:900;font-size:1.2rem;color:#b8860b;text-align:center;padding:20px;letter-spacing:1px;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+.final-btn{margin-top:24px;font-family:'Playfair Display',Georgia,serif;font-size:1rem;padding:12px 36px;background:#4caf50;color:#fff;border:2px solid #2e7d32;border-radius:8px;cursor:pointer;box-shadow:0 4px 0 #2e7d32,0 6px 12px rgba(0,0,0,.3)}
+.final-btn:hover{background:#66bb6a}
+.final-btn:active{transform:translateY(2px)}
+.final-header{position:absolute;top:20px;left:0;right:0;text-align:center}
+.final-header h1{font-family:'Playfair Display',Georgia,serif;font-size:1.8rem;font-weight:900;color:#e6b800;letter-spacing:2px}
+.final-footer{position:absolute;bottom:20px;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:0 20px}
+.dict-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(26,42,74,.9);display:none;align-items:center;justify-content:center;z-index:2000}
+.dict-overlay.active{display:flex}
+.dict-container{width:92%;max-width:820px;height:88%;background:#e0d4b8;border-radius:8px;border:4px solid #1a2a4a;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.dict-header{display:flex;justify-content:space-between;align-items:center;padding:6px 14px;background:#1a2a4a;color:#e0d4b8;font-family:'Playfair Display',Georgia,serif;font-size:.95rem}
+.dict-close{font-size:1.2rem;cursor:pointer;color:#e0d4b8;background:none;border:none}
+.dict-pages{flex:1;display:flex;overflow:hidden;position:relative}
+.dict-page{flex:1;position:relative;padding:14px 18px 44px;overflow-y:auto;display:flex;flex-direction:column;background:#e0d4b8;background-image:radial-gradient(circle at 20% 30%,rgba(184,92,56,.1) .5px,transparent 1px),radial-gradient(circle at 70% 60%,rgba(166,138,58,.1) .5px,transparent 1px)}
+.dict-page-content{flex:1}
+.dict-fold{width:6px;flex-shrink:0;background:linear-gradient(to right,#d4c8a8,#c8bc9c 30%,#b8ac8c 50%,#c8bc9c 70%,#d4c8a8);position:relative}
+.dict-fold::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:2px;height:100%;background:rgba(0,0,0,.15)}
+.dict-page .arrow{position:absolute;bottom:10px;font-size:1.6rem;font-weight:600;color:#c0392b;cursor:pointer;user-select:none;line-height:1}
+.dict-page .arrow:hover{color:#e74c3c}
+.dict-page .arrow.disabled{color:#d0a0a0;cursor:default}
+.dict-page .arrow.back{left:16px}
+.dict-page .arrow.forward{right:16px}
+.dict-entry{display:flex;align-items:baseline;gap:6px;padding:4px 0;border-bottom:1px dotted rgba(0,0,0,.1)}
+.dict-entry .lock{font-size:.85rem;flex-shrink:0;width:20px}
+.dict-entry .entry-phrase{font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:1.1rem;color:#5a2a2a;flex:0 0 auto;max-width:45%}
+.dict-entry .entry-phrase .lamp-inline{font-size:.95rem;margin-left:3px;cursor:pointer}
+.dict-entry .entry-dash{color:#1a2a4a;padding:0 4px}
+.dict-entry .entry-meaning{font-family:'EB Garamond',Georgia,serif;font-size:1rem;font-weight:600;color:#152040;flex:1}
+.dict-entry.empty .entry-phrase,.dict-entry.empty .entry-dash,.dict-entry.empty .entry-meaning{visibility:hidden}
+@media (orientation:portrait) and (min-width:600px) and (max-width:1100px){
+.main{flex-direction:column;padding:0 12px 5px 12px;gap:6px}
+.top-part{flex:0 0 35%;display:flex;flex-direction:row;gap:8px;min-height:0;min-width:0}
+.top-part .chest{flex:1;min-width:0;height:100%}
+.top-part .book-shelf{flex:1;min-width:0;padding:0 4px}
+.top-part .book-open{height:92%}
+.main .left-part{flex:1;width:100%}
+.game-field{grid-template-columns:repeat(5,minmax(0,1fr))}
 }
 </style>
 </head>
@@ -1317,866 +551,92 @@ const ALL_PAIRS = [
   { p: "язык не поворачивается", m: "не решаться что-либо сказать" }
 ];
 
-function isLandscape() { return window.innerWidth >= window.innerHeight; }
-function getDeviceType() {
-  const minSide = Math.min(window.innerWidth, window.innerHeight);
-  if (minSide < 600) return 'phone';
-  if (minSide < 900) return 'tablet';
-  return 'desktop';
-}
-function getParams() {
-  const device = getDeviceType();
-  if (device === 'phone') {
-    return { pairsPerRound: 6, tabs: 3, cols: 3, rows: 4, gap: 5, bookPairsPerPage: 4, totalTiles: 190 };
-  }
-  if (device === 'tablet') {
-    return { pairsPerRound: 15, tabs: 3, cols: 5, rows: 6, gap: 5, bookPairsPerPage: 4, totalTiles: 190 };
-  }
-  return { pairsPerRound: 20, tabs: 1, cols: 5, rows: 8, gap: 6, bookPairsPerPage: 4, totalTiles: 568 };
-}
-function normalizeMeaning(meaning) {
-  return meaning.toLowerCase().replace(/[;,.!?()]/g, ' ').split(/\s+/).filter(w => w.length > 2).sort().join(' ');
-}
-function meaningsAreSimilar(m1, m2) {
-  const n1 = normalizeMeaning(m1), n2 = normalizeMeaning(m2);
-  if (n1 === n2) return true;
-  const w1 = new Set(n1.split(' ')), w2 = new Set(n2.split(' '));
-  const inter = [...w1].filter(w => w2.has(w));
-  const minSize = Math.min(w1.size, w2.size);
-  return minSize > 0 && inter.length / minSize >= 0.6;
-}
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-function buildVariants() {
-  const params = getParams();
-  const shuffled = shuffle(ALL_PAIRS);
-  const total = shuffled.length;
-  const tabs = params.tabs;
-  const perRound = params.pairsPerRound;
-  const variantSize = Math.floor(total / tabs);
-  const variantArrays = [];
-  let start = 0;
-  for (let i = 0; i < tabs; i++) {
-    const size = (i === tabs - 1) ? (total - start) : variantSize;
-    variantArrays.push(shuffled.slice(start, start + size));
-    start += size;
-  }
-  return variantArrays.map(variant => {
-    const rounds = [];
-    const remaining = [...variant];
-    while (remaining.length > 0) {
-      const round = [];
-      const used = new Set();
-      for (let i = 0; i < remaining.length; i++) {
-        if (round.length >= perRound) break;
-        const candidate = remaining[i];
-        if (used.has(i)) continue;
-        let hasConflict = false;
-        for (const existing of round) {
-          if (meaningsAreSimilar(candidate.m, existing.m)) { hasConflict = true; break; }
-        }
-        if (!hasConflict) { round.push(candidate); used.add(i); }
-      }
-      if (round.length < perRound) {
-        for (let i = 0; i < remaining.length; i++) {
-          if (round.length >= perRound) break;
-          if (used.has(i)) continue;
-          round.push(remaining[i]); used.add(i);
-        }
-      }
-      const newRemaining = [];
-      remaining.forEach((item, i) => { if (!used.has(i)) newRemaining.push(item); });
-      rounds.push(round);
-      remaining.length = 0;
-      remaining.push(...newRemaining);
-    }
-    return rounds;
-  });
-}
+function isLandscape(){return window.innerWidth>=window.innerHeight;}
+function getDeviceType(){const m=Math.min(window.innerWidth,window.innerHeight);if(m<600)return 'phone';if(m<900)return 'tablet';return 'desktop';}
+function getParams(){const d=getDeviceType();if(d==='phone')return{pairsPerRound:6,tabs:3,cols:3,rows:4,gap:5,bookPairsPerPage:4,totalTiles:190};if(d==='tablet')return{pairsPerRound:15,tabs:3,cols:5,rows:6,gap:5,bookPairsPerPage:4,totalTiles:190};return{pairsPerRound:20,tabs:1,cols:5,rows:8,gap:6,bookPairsPerPage:4,totalTiles:568};}
+function normalizeMeaning(m){return m.toLowerCase().replace(/[;,.!?()]/g,' ').split(/\s+/).filter(w=>w.length>2).sort().join(' ');}
+function meaningsAreSimilar(a,b){const n1=normalizeMeaning(a),n2=normalizeMeaning(b);if(n1===n2)return true;const w1=new Set(n1.split(' ')),w2=new Set(n2.split(' '));const i=[...w1].filter(w=>w2.has(w));const ms=Math.min(w1.size,w2.size);return ms>0&&i.length/ms>=.6;}
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function buildVariants(){const p=getParams();const s=shuffle(ALL_PAIRS);const t=s.length;const tabs=p.tabs;const pr=p.pairsPerRound;const vs=Math.floor(t/tabs);const va=[];let st=0;for(let i=0;i<tabs;i++){const sz=(i===tabs-1)?(t-st):vs;va.push(s.slice(st,st+sz));st+=sz;}return va.map(v=>{const r=[];const rem=[...v];while(rem.length>0){const round=[];const used=new Set();for(let i=0;i<rem.length;i++){if(round.length>=pr)break;const c=rem[i];if(used.has(i))continue;let hc=false;for(const e of round){if(meaningsAreSimilar(c.m,e.m)){hc=true;break;}}if(!hc){round.push(c);used.add(i);}}if(round.length<pr){for(let i=0;i<rem.length;i++){if(round.length>=pr)break;if(used.has(i))continue;round.push(rem[i]);used.add(i);}}const nr=[];rem.forEach((it,i)=>{if(!used.has(i))nr.push(it);});r.push(round);rem.length=0;rem.push(...nr);}return r;});}
 
-let variants = [];
-let currentVariant = 0;
-let currentRound = 0;
-let pairsOnField = [];
-let pairsInBook = [];
-let selectedPhrase = null, selectedMeaning = null;
-let soundOn = true, paused = false, gameStarted = false, isAnimating = false;
-let bookLeftPairs = 0, bookRightPairs = 0;
-let deviceParams = getParams();
-let collectedPhrases = new Set();
-let isFlipping = false;
-let stackRemaining = 0;
+let variants=[],currentVariant=0,currentRound=0,pairsOnField=[],pairsInBook=[];
+let selectedPhrase=null,selectedMeaning=null;
+let soundOn=true,paused=false,gameStarted=false,isAnimating=false;
+let bookLeftPairs=0,bookRightPairs=0;
+let deviceParams=getParams();
+let collectedPhrases=new Set();
+let isFlipping=false;
+let stackRemaining=0;
 
-let audioCtx = null;
-function getAudioCtx() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  return audioCtx;
-}
-function playWoodClick() {
-  if (!soundOn) return;
-  try {
-    const ctx = getAudioCtx();
-    const now = ctx.currentTime;
-    const nLen = Math.floor(ctx.sampleRate * 0.012);
-    const nBuf = ctx.createBuffer(1, nLen, ctx.sampleRate);
-    const nData = nBuf.getChannelData(0);
-    for (let i = 0; i < nLen; i++) {
-      const t = i / nLen;
-      nData[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 4);
-    }
-    const nSrc = ctx.createBufferSource();
-    nSrc.buffer = nBuf;
-    const nBp = ctx.createBiquadFilter();
-    nBp.type = 'bandpass';
-    nBp.frequency.value = 1500;
-    nBp.Q.value = 1.0;
-    const nGain = ctx.createGain();
-    nGain.gain.value = 0.28;
-    nSrc.connect(nBp); nBp.connect(nGain); nGain.connect(ctx.destination);
-    nSrc.start(now);
-    const osc = ctx.createOscillator();
-    const oGain = ctx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(340, now);
-    osc.frequency.exponentialRampToValueAtTime(180, now + 0.04);
-    oGain.gain.setValueAtTime(0.001, now);
-    oGain.gain.exponentialRampToValueAtTime(0.14, now + 0.003);
-    oGain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
-    osc.connect(oGain); oGain.connect(ctx.destination);
-    osc.start(now); osc.stop(now + 0.05);
-  } catch(e) {}
-}
-function playDiceDrop(count) {
-  if (!soundOn) return;
-  try {
-    const ctx = getAudioCtx();
-    const now = ctx.currentTime;
-    for (let k = 0; k < count; k++) {
-      const t = now + k * 0.14 + Math.random() * 0.015;
-      const freq = 900 + Math.random() * 600;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, t);
-      osc.frequency.exponentialRampToValueAtTime(freq * 0.55, t + 0.025);
-      gain.gain.setValueAtTime(0.001, t);
-      gain.gain.exponentialRampToValueAtTime(0.07, t + 0.002);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.035);
-      osc.connect(gain); gain.connect(ctx.destination);
-      osc.start(t); osc.stop(t + 0.04);
-    }
-  } catch(e) {}
-}
-function playFanfare() {
-  if (!soundOn) return;
-  try {
-    const ctx = getAudioCtx();
-    const notes = [523.25, 659.25, 783.99, 1046.50];
-    notes.forEach((freq, i) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0.1, ctx.currentTime + i * 0.15);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.15 + 0.4);
-      osc.connect(gain); gain.connect(ctx.destination);
-      osc.start(ctx.currentTime + i * 0.15);
-      osc.stop(ctx.currentTime + i * 0.15 + 0.4);
-    });
-  } catch(e) {}
-}
-function playKeyTurn() {
-  if (!soundOn) return;
-  try {
-    const ctx = getAudioCtx();
-    const notes = [880, 1108, 1318];
-    notes.forEach((freq, i) => {
-      const t = ctx.currentTime + i * 0.1;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0.001, t);
-      gain.gain.exponentialRampToValueAtTime(0.14, t + 0.008);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
-      osc.connect(gain); gain.connect(ctx.destination);
-      osc.start(t); osc.stop(t + 0.2);
-      const nLen = Math.floor(ctx.sampleRate * 0.01);
-      const nBuf = ctx.createBuffer(1, nLen, ctx.sampleRate);
-      const nd = nBuf.getChannelData(0);
-      for (let k = 0; k < nLen; k++) nd[k] = (Math.random() * 2 - 1) * Math.pow(1 - k / nLen, 3);
-      const nSrc = ctx.createBufferSource();
-      nSrc.buffer = nBuf;
-      const bp = ctx.createBiquadFilter();
-      bp.type = 'bandpass';
-      bp.frequency.value = 3500;
-      bp.Q.value = 3;
-      const ng = ctx.createGain();
-      ng.gain.value = 0.1;
-      nSrc.connect(bp); bp.connect(ng); ng.connect(ctx.destination);
-      nSrc.start(t);
-    });
-  } catch(e) {}
-}
-function playChestOpen() {
-  if (!soundOn) return;
-  try {
-    const ctx = getAudioCtx();
-    const now = ctx.currentTime;
-    const dur = 1.2;
-    const osc = ctx.createOscillator();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(180, now);
-    osc.frequency.linearRampToValueAtTime(200, now + dur * 0.5);
-    osc.frequency.linearRampToValueAtTime(170, now + dur);
-    const vib = ctx.createOscillator();
-    vib.frequency.value = 8;
-    const vibGain = ctx.createGain();
-    vibGain.gain.value = 25;
-    vib.connect(vibGain); vibGain.connect(osc.frequency);
-    const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0.001, now);
-    gain.gain.linearRampToValueAtTime(0.08, now + 0.15);
-    gain.gain.setValueAtTime(0.08, now + dur * 0.7);
-    gain.gain.linearRampToValueAtTime(0.001, now + dur);
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.value = 800;
-    filter.Q.value = 1.5;
-    osc.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
-    osc.start(now); osc.stop(now + dur);
-    vib.start(now); vib.stop(now + dur);
-  } catch(e) {}
-}
-function playChestClose() {
-  if (!soundOn) return;
-  try {
-    const ctx = getAudioCtx();
-    const now = ctx.currentTime;
-    const dur = 1.2;
-    const osc = ctx.createOscillator();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(150, now);
-    osc.frequency.linearRampToValueAtTime(170, now + dur * 0.5);
-    osc.frequency.linearRampToValueAtTime(140, now + dur);
-    const vib = ctx.createOscillator();
-    vib.frequency.value = 9;
-    const vibGain = ctx.createGain();
-    vibGain.gain.value = 22;
-    vib.connect(vibGain); vibGain.connect(osc.frequency);
-    const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0.001, now);
-    gain.gain.linearRampToValueAtTime(0.08, now + 0.15);
-    gain.gain.setValueAtTime(0.08, now + dur * 0.7);
-    gain.gain.linearRampToValueAtTime(0.001, now + dur);
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.value = 700;
-    filter.Q.value = 1.5;
-    osc.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
-    osc.start(now); osc.stop(now + dur);
-    vib.start(now); vib.stop(now + dur);
-    const thudTime = now + dur + 0.05;
-    const thudOsc = ctx.createOscillator();
-    thudOsc.type = 'sine';
-    thudOsc.frequency.setValueAtTime(90, thudTime);
-    thudOsc.frequency.exponentialRampToValueAtTime(45, thudTime + 0.15);
-    const thudGain = ctx.createGain();
-    thudGain.gain.setValueAtTime(0.001, thudTime);
-    thudGain.gain.exponentialRampToValueAtTime(0.35, thudTime + 0.005);
-    thudGain.gain.exponentialRampToValueAtTime(0.001, thudTime + 0.18);
-    thudOsc.connect(thudGain); thudGain.connect(ctx.destination);
-    thudOsc.start(thudTime); thudOsc.stop(thudTime + 0.2);
-  } catch(e) {}
-}
+let audioCtx=null;
+function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
+function playWoodClick(){if(!soundOn)return;try{const c=getAudioCtx(),n=c.currentTime;const nl=Math.floor(c.sampleRate*.012);const nb=c.createBuffer(1,nl,c.sampleRate);const nd=nb.getChannelData(0);for(let i=0;i<nl;i++){const t=i/nl;nd[i]=(Math.random()*2-1)*Math.pow(1-t,4);}const ns=c.createBufferSource();ns.buffer=nb;const bp=c.createBiquadFilter();bp.type='bandpass';bp.frequency.value=1500;bp.Q.value=1;const ng=c.createGain();ng.gain.value=.28;ns.connect(bp);bp.connect(ng);ng.connect(c.destination);ns.start(n);const o=c.createOscillator(),og=c.createGain();o.type='sine';o.frequency.setValueAtTime(340,n);o.frequency.exponentialRampToValueAtTime(180,n+.04);og.gain.setValueAtTime(.001,n);og.gain.exponentialRampToValueAtTime(.14,n+.003);og.gain.exponentialRampToValueAtTime(.001,n+.045);o.connect(og);og.connect(c.destination);o.start(n);o.stop(n+.05);}catch(e){}}
+function playDiceDrop(count){if(!soundOn)return;try{const c=getAudioCtx(),n=c.currentTime;for(let k=0;k<count;k++){const t=n+k*.14+Math.random()*.015;const f=900+Math.random()*600;const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(f*.55,t+.025);g.gain.setValueAtTime(.001,t);g.gain.exponentialRampToValueAtTime(.07,t+.002);g.gain.exponentialRampToValueAtTime(.001,t+.035);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+.04);}}catch(e){}}
+function playFanfare(){if(!soundOn)return;try{const c=getAudioCtx();[523.25,659.25,783.99,1046.5].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(.1,c.currentTime+i*.15);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+i*.15+.4);o.connect(g);g.connect(c.destination);o.start(c.currentTime+i*.15);o.stop(c.currentTime+i*.15+.4);});}catch(e){}}
+function playKeyTurn(){if(!soundOn)return;try{const c=getAudioCtx();[880,1108,1318].forEach((f,i)=>{const t=c.currentTime+i*.1;const o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(.001,t);g.gain.exponentialRampToValueAtTime(.14,t+.008);g.gain.exponentialRampToValueAtTime(.001,t+.18);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+.2);});}catch(e){}}
+function playChestOpen(){if(!soundOn)return;try{const c=getAudioCtx(),n=c.currentTime,d=1.2;const o=c.createOscillator();o.type='sawtooth';o.frequency.setValueAtTime(180,n);o.frequency.linearRampToValueAtTime(200,n+d*.5);o.frequency.linearRampToValueAtTime(170,n+d);const v=c.createOscillator();v.frequency.value=8;const vg=c.createGain();vg.gain.value=25;v.connect(vg);vg.connect(o.frequency);const g=c.createGain();g.gain.setValueAtTime(.001,n);g.gain.linearRampToValueAtTime(.08,n+.15);g.gain.setValueAtTime(.08,n+d*.7);g.gain.linearRampToValueAtTime(.001,n+d);const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=800;f.Q.value=1.5;o.connect(f);f.connect(g);g.connect(c.destination);o.start(n);o.stop(n+d);v.start(n);v.stop(n+d);}catch(e){}}
+function playChestClose(){if(!soundOn)return;try{const c=getAudioCtx(),n=c.currentTime,d=1.2;const o=c.createOscillator();o.type='sawtooth';o.frequency.setValueAtTime(150,n);o.frequency.linearRampToValueAtTime(170,n+d*.5);o.frequency.linearRampToValueAtTime(140,n+d);const v=c.createOscillator();v.frequency.value=9;const vg=c.createGain();vg.gain.value=22;v.connect(vg);vg.connect(o.frequency);const g=c.createGain();g.gain.setValueAtTime(.001,n);g.gain.linearRampToValueAtTime(.08,n+.15);g.gain.setValueAtTime(.08,n+d*.7);g.gain.linearRampToValueAtTime(.001,n+d);const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=700;f.Q.value=1.5;o.connect(f);f.connect(g);g.connect(c.destination);o.start(n);o.stop(n+d);v.start(n);v.stop(n+d);const tt=n+d+.05;const to=c.createOscillator(),tg=c.createGain();to.type='sine';to.frequency.setValueAtTime(90,tt);to.frequency.exponentialRampToValueAtTime(45,tt+.15);tg.gain.setValueAtTime(.001,tt);tg.gain.exponentialRampToValueAtTime(.35,tt+.005);tg.gain.exponentialRampToValueAtTime(.001,tt+.18);to.connect(tg);tg.connect(c.destination);to.start(tt);to.stop(tt+.2);}catch(e){}}
 
-const SHORT_WORDS = ['в','на','с','к','по','за','из','от','до','у','о','об','во','со','ко','под','над','при','про','без','для','через','между','перед','и','а','но','да','или','либо','что','как','то','же','бы','ли','не','ни'];
-function addNbsp(text) {
-  let result = text;
-  result = result.replace(/(\S)-(\S)/g, '$1\u2011$2');
-  result = result.replace(/один\u2011одинёшенек/g, 'один-одинёшенек');
-  SHORT_WORDS.forEach(word => {
-    const regex = new RegExp('(^|\\s)(' + word + ')\\s+', 'gi');
-    result = result.replace(regex, '$1$2&nbsp;');
-  });
-  return result;
-}
-function splitMeaning(meaning) { return meaning.split(';').map(s => s.trim()); }
+const SHORT_WORDS=['в','на','с','к','по','за','из','от','до','у','о','об','во','со','ко','под','над','при','про','без','для','через','между','перед','и','а','но','да','или','либо','что','как','то','же','бы','ли','не','ни'];
+function addNbsp(t){let r=t;r=r.replace(/(\S)-(\S)/g,'$1\u2011$2');r=r.replace(/один\u2011одинёшенек/g,'один-одинёшенек');SHORT_WORDS.forEach(w=>{const re=new RegExp('(^|\\s)('+w+')\\s+','gi');r=r.replace(re,'$1$2&nbsp;');});return r;}
+function splitMeaning(m){return m.split(';').map(s=>s.trim());}
+function renderMeaningHTMLStacked(m){const p=splitMeaning(m);const cl=['','second','third'];return p.map((part,i)=>{const cls=cl[i]||'third';const sep=i<p.length-1?';':'';return cls?`<span class="${cls}">${addNbsp(part)}${sep}</span>`:`<span>${addNbsp(part)}${sep}</span>`;}).join('<br>');}
 
-function renderMeaningHTMLStacked(meaning) {
-  const parts = splitMeaning(meaning);
-  const classes = ['', 'second', 'third'];
-  return parts.map((part, i) => {
-    const cls = classes[i] || 'third';
-    const sep = i < parts.length - 1 ? ';' : '';
-    return cls
-      ? `<span class="${cls}">${addNbsp(part)}${sep}</span>`
-      : `<span>${addNbsp(part)}${sep}</span>`;
-  }).join('<br>');
-}
+function fitTiles(){document.querySelectorAll('.tile').forEach(tile=>{tile.style.fontSize='';const cs=parseFloat(getComputedStyle(tile).fontSize);const mn=8;let s=cs,it=0;while((tile.scrollHeight>tile.clientHeight+1||tile.scrollWidth>tile.clientWidth+1)&&s>mn&&it<40){s-=.5;tile.style.fontSize=s+'px';it++;}});}
+function fitBook(){document.querySelectorAll('.pair-phrase, .pair-meaning').forEach(item=>{item.style.fontSize='';const cs=parseFloat(getComputedStyle(item).fontSize);const mn=6;let s=cs,it=0;while((item.scrollHeight>item.clientHeight+1||item.scrollWidth>item.clientWidth+1)&&s>mn&&it<40){s-=.3;item.style.fontSize=s+'px';it++;}});}
 
-function fitTiles() {
-  document.querySelectorAll('.tile').forEach(tile => {
-    tile.style.fontSize = '';
-    const computed = parseFloat(getComputedStyle(tile).fontSize);
-    const minSize = 8;
-    let size = computed, iteration = 0;
-    while ((tile.scrollHeight > tile.clientHeight + 1 || tile.scrollWidth > tile.clientWidth + 1) && size > minSize && iteration < 40) {
-      size -= 0.5;
-      tile.style.fontSize = size + 'px';
-      iteration++;
-    }
-  });
-}
-function fitBook() {
-  document.querySelectorAll('.pair-phrase, .pair-meaning').forEach(item => {
-    item.style.fontSize = '';
-    const computed = parseFloat(getComputedStyle(item).fontSize);
-    const minSize = 6;
-    let size = computed, iteration = 0;
-    while ((item.scrollHeight > item.clientHeight + 1 || item.scrollWidth > item.clientWidth + 1) && size > minSize && iteration < 40) {
-      size -= 0.3;
-      item.style.fontSize = size + 'px';
-      iteration++;
-    }
-  });
-}
+const LAMP_PHRASE='будь здоров';
+const TOOLTIP_TEXT='Например, <span class="example">Дела идут будь здоров!</span><span class="warning">Не путать с пожеланием здоровья</span>';
+let tooltipEl=null;
+function showTooltip(a){if(tooltipEl){tooltipEl.remove();tooltipEl=null;}const r=a.getBoundingClientRect();tooltipEl=document.createElement('div');tooltipEl.className='tooltip';tooltipEl.innerHTML=TOOLTIP_TEXT;tooltipEl.style.left=Math.min(r.left,window.innerWidth-260)+'px';tooltipEl.style.top=(r.bottom+6)+'px';document.body.appendChild(tooltipEl);setTimeout(()=>{document.addEventListener('click',hideTooltipOnce,{once:true});},100);}
+function hideTooltipOnce(){if(tooltipEl){tooltipEl.remove();tooltipEl=null;}}
 
-const LAMP_PHRASE = 'будь здоров';
-const TOOLTIP_TEXT = 'Например, <span class="example">Дела идут будь здоров!</span><span class="warning">Не путать с пожеланием здоровья</span>';
-let tooltipEl = null;
-function showTooltip(anchorEl) {
-  if (tooltipEl) { tooltipEl.remove(); tooltipEl = null; }
-  const rect = anchorEl.getBoundingClientRect();
-  tooltipEl = document.createElement('div');
-  tooltipEl.className = 'tooltip';
-  tooltipEl.innerHTML = TOOLTIP_TEXT;
-  tooltipEl.style.left = Math.min(rect.left, window.innerWidth - 260) + 'px';
-  tooltipEl.style.top = (rect.bottom + 6) + 'px';
-  document.body.appendChild(tooltipEl);
-  setTimeout(() => {
-    document.addEventListener('click', hideTooltipOnce, { once: true });
-  }, 100);
-}
-function hideTooltipOnce() {
-  if (tooltipEl) { tooltipEl.remove(); tooltipEl = null; }
-}
+function applyRotation(){const w=document.getElementById('rotateWrap');const ip=getDeviceType()==='phone';const pt=!isLandscape();if(ip&&pt){const wi=window.innerWidth,hi=window.innerHeight;w.style.width=hi+'px';w.style.height=wi+'px';w.style.transform=`translateX(${wi}px) rotate(90deg)`;}else{w.style.width='100%';w.style.height='100%';w.style.transform='';}}
+function applyPortraitTabletLayout(){const main=document.getElementById('mainArea'),lp=document.getElementById('leftPart'),rc=document.getElementById('rightColumn'),ch=document.getElementById('chest'),bs=document.getElementById('bookShelf');const tp=getDeviceType()==='tablet'&&!isLandscape();if(tp){let t=document.getElementById('topPart');if(!t){t=document.createElement('div');t.id='topPart';t.className='top-part';main.insertBefore(t,lp);}t.appendChild(ch);t.appendChild(bs);rc.style.display='none';}else{const t=document.getElementById('topPart');if(t){rc.style.display='flex';rc.appendChild(ch);rc.appendChild(bs);t.remove();}}}
 
-function applyRotation() {
-  const wrap = document.getElementById('rotateWrap');
-  const isPhone = getDeviceType() === 'phone';
-  const portrait = !isLandscape();
-  if (isPhone && portrait) {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    wrap.style.width = h + 'px';
-    wrap.style.height = w + 'px';
-    wrap.style.transform = `translateX(${w}px) rotate(90deg)`;
-  } else {
-    wrap.style.width = '100%';
-    wrap.style.height = '100%';
-    wrap.style.transform = '';
-  }
-}
+function renderStack(){const el=document.getElementById('chestContents');el.innerHTML='';const total=deviceParams.totalTiles;const ratio=stackRemaining/total;const count=stackRemaining===0?0:Math.max(1,Math.round(8*ratio));for(let i=0;i<count;i++){const t=document.createElement('div');t.className='chest-tile '+(Math.random()<.5?'blue':'yellow');el.appendChild(t);}}
 
-function applyPortraitTabletLayout() {
-  const main = document.getElementById('mainArea');
-  const leftPart = document.getElementById('leftPart');
-  const rightColumn = document.getElementById('rightColumn');
-  const chest = document.getElementById('chest');
-  const bookShelf = document.getElementById('bookShelf');
-  const isTabletPortrait = getDeviceType() === 'tablet' && !isLandscape();
+function initGame(){deviceParams=getParams();variants=buildVariants();currentVariant=0;currentRound=0;pairsInBook=[];collectedPhrases=new Set();gameStarted=false;paused=false;selectedPhrase=null;selectedMeaning=null;isAnimating=false;isFlipping=false;stackRemaining=deviceParams.totalTiles;document.getElementById('chestLid').classList.remove('open');document.getElementById('chestKey').classList.remove('turned');document.getElementById('chestContents').classList.remove('visible');const tr=document.getElementById('tabsRow');if(deviceParams.tabs>1)tr.classList.remove('empty');else tr.classList.add('empty');document.querySelectorAll('.tab').forEach((tab,i)=>{tab.style.display=i<deviceParams.tabs?'inline-block':'none';tab.classList.toggle('active',i===0);tab.onclick=()=>switchVariant(i);});const f=document.getElementById('gameField');f.style.setProperty('--cols',deviceParams.cols);f.style.setProperty('--gap',deviceParams.gap+'px');f.innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';document.getElementById('pageLeft').innerHTML='';document.getElementById('pageRight').innerHTML='';bookLeftPairs=0;bookRightPairs=0;renderStack();applyPortraitTabletLayout();document.getElementById('pauseOverlay').classList.remove('active');document.getElementById('dictOverlay').classList.remove('active');document.getElementById('finalOverlay').classList.remove('active');}
 
-  if (isTabletPortrait) {
-    let topPart = document.getElementById('topPart');
-    if (!topPart) {
-      topPart = document.createElement('div');
-      topPart.id = 'topPart';
-      topPart.className = 'top-part';
-      main.insertBefore(topPart, leftPart);
-    }
-    topPart.appendChild(chest);
-    topPart.appendChild(bookShelf);
-    rightColumn.style.display = 'none';
-  } else {
-    const topPart = document.getElementById('topPart');
-    if (topPart) {
-      rightColumn.style.display = 'flex';
-      rightColumn.appendChild(chest);
-      rightColumn.appendChild(bookShelf);
-      topPart.remove();
-    }
-  }
-}
+function switchVariant(i){currentVariant=i;currentRound=0;pairsInBook=[];collectedPhrases=new Set();gameStarted=false;isAnimating=false;isFlipping=false;selectedPhrase=null;selectedMeaning=null;stackRemaining=deviceParams.totalTiles;document.getElementById('chestLid').classList.remove('open');document.getElementById('chestKey').classList.remove('turned');document.getElementById('chestContents').classList.remove('visible');document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',j===i));const f=document.getElementById('gameField');f.innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';document.getElementById('pageLeft').innerHTML='';document.getElementById('pageRight').innerHTML='';bookLeftPairs=0;bookRightPairs=0;renderStack();}
 
-function renderStack() {
-  const contents = document.getElementById('chestContents');
-  contents.innerHTML = '';
-  const total = deviceParams.totalTiles;
-  const ratio = stackRemaining / total;
-  const count = stackRemaining === 0 ? 0 : Math.max(1, Math.round(8 * ratio));
-  for (let i = 0; i < count; i++) {
-    const tile = document.createElement('div');
-    tile.className = 'chest-tile ' + (Math.random() < 0.5 ? 'blue' : 'yellow');
-    contents.appendChild(tile);
-  }
-}
+function startGame(){gameStarted=true;const b=document.getElementById('startBtn');if(b)b.remove();playKeyTurn();document.getElementById('chestKey').classList.add('turned');setTimeout(()=>{playChestOpen();document.getElementById('chestLid').classList.add('open');setTimeout(()=>{document.getElementById('chestContents').classList.add('visible');},900);},700);setTimeout(()=>nextRound(),1800);}
 
-function initGame() {
-  deviceParams = getParams();
-  variants = buildVariants();
-  currentVariant = 0; currentRound = 0;
-  pairsInBook = []; collectedPhrases = new Set();
-  gameStarted = false; paused = false;
-  selectedPhrase = null; selectedMeaning = null;
-  isAnimating = false; isFlipping = false;
-  stackRemaining = deviceParams.totalTiles;
+function nextRound(){const r=variants[currentVariant];if(currentRound>=r.length){showFinal();return;}pairsOnField=[...r[currentRound]];const t=pairsOnField.length*2;stackRemaining=Math.max(0,stackRemaining-t);renderStack();renderField();currentRound++;}
 
-  document.getElementById('chestLid').classList.remove('open');
-  document.getElementById('chestKey').classList.remove('turned');
-  document.getElementById('chestContents').classList.remove('visible');
+function renderField(){const f=document.getElementById('gameField');f.innerHTML='';const tiles=[];pairsOnField.forEach(p=>{tiles.push({type:'phrase',text:p.p,pair:p});tiles.push({type:'meaning',text:p.m,pair:p});});tiles.sort(()=>Math.random()-.5);tiles.forEach(d=>{const tile=document.createElement('div');tile.className='tile '+d.type;const inner=document.createElement('div');inner.className='tile-content';if(d.type==='phrase')inner.innerHTML=addNbsp(d.text);else inner.innerHTML=renderMeaningHTMLStacked(d.text);tile.appendChild(inner);tile.dataset.type=d.type;tile.dataset.phrase=d.pair.p;tile.dataset.meaning=d.pair.m;tile.onclick=()=>selectTile(tile);f.appendChild(tile);});fitTiles();const chestEl=document.getElementById('chest');const cr=chestEl.getBoundingClientRect();const cx=cr.left+cr.width/2;const cy=cr.top+cr.height*.7;const all=f.querySelectorAll('.tile');all.forEach(tile=>{const r=tile.getBoundingClientRect();const dx=cx-(r.left+r.width/2);const dy=cy-(r.top+r.height/2);tile.style.transform=`translate(${dx}px, ${dy}px) scale(0.4)`;tile.style.opacity='0.9';tile.style.transition='none';tile.style.zIndex='500';tile.style.position='relative';});playDiceDrop(all.length);setTimeout(()=>{all.forEach((tile,i)=>{setTimeout(()=>{tile.style.transition='transform 0.9s cubic-bezier(0.2,0.7,0.3,1), opacity 0.5s ease-out';tile.style.transform='translate(0,0) scale(1)';tile.style.opacity='1';},i*140);});const tt=all.length*140+1000;setTimeout(()=>{all.forEach(tile=>{tile.style.transition='';tile.style.transform='';tile.style.opacity='';tile.style.zIndex='';tile.style.position='';});fitTiles();},tt);},60);}
 
-  const tabsRow = document.getElementById('tabsRow');
-  if (deviceParams.tabs > 1) tabsRow.classList.remove('empty');
-  else tabsRow.classList.add('empty');
+function selectTile(tile){if(paused||!gameStarted||isAnimating||isFlipping)return;if(tile.classList.contains('hidden'))return;playWoodClick();document.querySelectorAll('.tile').forEach(t=>t.classList.remove('selected'));tile.classList.add('selected');if(tile.dataset.type==='phrase')selectedPhrase=tile;else selectedMeaning=tile;if(selectedPhrase&&selectedMeaning)checkPair();}
 
-  document.querySelectorAll('.tab').forEach((tab, i) => {
-    tab.style.display = i < deviceParams.tabs ? 'inline-block' : 'none';
-    tab.classList.toggle('active', i === 0);
-    tab.onclick = () => switchVariant(i);
-  });
+function checkPair(){if(isAnimating)return;isAnimating=true;const p=selectedPhrase,m=selectedMeaning;if(p.dataset.phrase===m.dataset.phrase){p.classList.add('correct');m.classList.add('correct');p.classList.remove('selected');m.classList.remove('selected');selectedPhrase=null;selectedMeaning=null;animateToBook(p,m);}else{p.classList.add('wrong');m.classList.add('wrong');setTimeout(()=>{p.classList.remove('wrong','selected');m.classList.remove('wrong','selected');selectedPhrase=null;selectedMeaning=null;isAnimating=false;},500);}}
 
-  const field = document.getElementById('gameField');
-  field.style.setProperty('--cols', deviceParams.cols);
-  field.style.setProperty('--gap', deviceParams.gap + 'px');
-  field.innerHTML = '<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
+function animateToBook(p,m){const br=document.querySelector('.book').getBoundingClientRect();const pr=p.getBoundingClientRect();const mr=m.getBoundingClientRect();const pc=p.cloneNode(true);const mc=m.cloneNode(true);[pc,mc].forEach((cl,i)=>{const r=i===0?pr:mr;cl.style.position='fixed';cl.style.left=r.left+'px';cl.style.top=r.top+'px';cl.style.width=r.width+'px';cl.style.height=r.height+'px';cl.style.zIndex='9999';cl.style.transition='all .5s ease-in';cl.style.pointerEvents='none';document.body.appendChild(cl);});p.style.visibility='hidden';m.style.visibility='hidden';requestAnimationFrame(()=>{const tx=br.left+br.width/2,ty=br.top+br.height/2;pc.style.left=(tx-40)+'px';pc.style.top=(ty-15)+'px';pc.style.width='60px';pc.style.height='30px';pc.style.opacity='0';mc.style.left=(tx+5)+'px';mc.style.top=(ty-15)+'px';mc.style.width='60px';mc.style.height='30px';mc.style.opacity='0';});setTimeout(()=>{pc.remove();mc.remove();p.classList.add('hidden');m.classList.add('hidden');addPairToBook(p.dataset.phrase,p.dataset.meaning);collectedPhrases.add(p.dataset.phrase);isAnimating=false;const rem=document.querySelectorAll('.tile:not(.hidden)').length;if(rem===0)setTimeout(()=>nextRound(),800);},500);}
 
-  document.getElementById('pageLeft').innerHTML = '';
-  document.getElementById('pageRight').innerHTML = '';
-  bookLeftPairs = 0; bookRightPairs = 0;
+function addPairToBook(phrase,meaning){const pl=document.getElementById('pageLeft'),pr=document.getElementById('pageRight');const pp=deviceParams.bookPairsPerPage;const pd=document.createElement('div');pd.className='book-pair';const ph=document.createElement('div');ph.className='pair-phrase';const phI=document.createElement('div');phI.className='pair-content';phI.innerHTML=addNbsp(phrase);ph.appendChild(phI);if(phrase===LAMP_PHRASE){const l=document.createElement('span');l.className='lamp-inline';l.textContent='💡';l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};ph.appendChild(l);}const dh=document.createElement('div');dh.className='pair-dash';dh.textContent='—';const mh=document.createElement('div');mh.className='pair-meaning';const mhI=document.createElement('div');mhI.className='pair-content';mhI.innerHTML=renderMeaningHTMLStacked(meaning);mh.appendChild(mhI);pd.appendChild(ph);pd.appendChild(dh);pd.appendChild(mh);if(bookLeftPairs<pp){pl.appendChild(pd);bookLeftPairs++;}else if(bookRightPairs<pp){pr.appendChild(pd);bookRightPairs++;}pairsInBook.push({phrase,meaning});setTimeout(fitBook,30);if(bookLeftPairs>=pp&&bookRightPairs>=pp){isFlipping=true;setTimeout(()=>{flipBookPage(()=>{pl.innerHTML='';pr.innerHTML='';bookLeftPairs=0;bookRightPairs=0;isFlipping=false;});},700);}}
 
-  renderStack();
-  applyPortraitTabletLayout();
-  document.getElementById('pauseOverlay').classList.remove('active');
-  document.getElementById('dictOverlay').classList.remove('active');
-  document.getElementById('finalOverlay').classList.remove('active');
-}
+function flipBookPage(cb){const sp=document.getElementById('bookSpread'),rp=document.getElementById('pageRight');const rr=rp.getBoundingClientRect(),sr=sp.getBoundingClientRect();const cl=document.createElement('div');cl.className='flip-clone';cl.style.position='absolute';cl.style.left=(rr.left-sr.left)+'px';cl.style.top='0';cl.style.width=rr.width+'px';cl.style.height='100%';const fr=document.createElement('div');fr.className='flip-clone-front';fr.innerHTML=rp.innerHTML;cl.appendChild(fr);rp.innerHTML='';sp.appendChild(cl);setTimeout(()=>{cl.remove();if(cb)cb();},1300);}
 
-function switchVariant(index) {
-  currentVariant = index; currentRound = 0;
-  pairsInBook = []; collectedPhrases = new Set();
-  gameStarted = false; isAnimating = false; isFlipping = false;
-  selectedPhrase = null; selectedMeaning = null;
-  stackRemaining = deviceParams.totalTiles;
+function showFinal(){playChestClose();document.getElementById('chestLid').classList.remove('open');document.getElementById('chestKey').classList.remove('turned');document.getElementById('chestContents').classList.remove('visible');setTimeout(()=>{document.getElementById('rotateWrap').style.display='none';document.getElementById('finalOverlay').classList.add('active');playFanfare();},1500);}
 
-  document.getElementById('chestLid').classList.remove('open');
-  document.getElementById('chestKey').classList.remove('turned');
-  document.getElementById('chestContents').classList.remove('visible');
+let dictPages=[],dictCurrentPage=0;
+function buildDictPages(){const sorted=[...ALL_PAIRS].sort((a,b)=>a.p.localeCompare(b.p,'ru'));const g={};sorted.forEach(p=>{const l=p.p[0].toUpperCase();if(!g[l])g[l]=[];g[l].push(p);});const letters=Object.keys(g).sort((a,b)=>a.localeCompare(b,'ru'));const entries=[];letters.forEach(l=>{entries.push({type:'letter',letter:l});g[l].forEach(p=>entries.push({type:'pair',pair:p}));});const pages=[];let cp=[],cnt=0;entries.forEach(e=>{cp.push(e);cnt++;if(cnt>=20){pages.push(cp);cp=[];cnt=0;}});if(cp.length>0)pages.push(cp);dictPages=pages;}
+function capitalizeFirst(s){if(!s)return s;return s.charAt(0).toUpperCase()+s.slice(1);}
+function renderDictPage(){const lc=document.getElementById('dictPageLeftContent'),rc=document.getElementById('dictPageRightContent');lc.innerHTML='';rc.innerHTML='';const page=dictPages[dictCurrentPage];if(!page)return;const half=Math.ceil(page.length/2);const le=page.slice(0,half),re=page.slice(half);[le,re].forEach((entries,side)=>{const ct=side===0?lc:rc;entries.forEach(entry=>{if(entry.type==='letter'){const d=document.createElement('div');d.className='dict-section-title';d.textContent=entry.letter;ct.appendChild(d);}else{const pair=entry.pair;const collected=collectedPhrases.has(pair.p);const d=document.createElement('div');d.className='dict-entry'+(collected?'':' empty');const lk=document.createElement('span');lk.className='lock';lk.textContent=collected?'':'🔒';const ph=document.createElement('span');ph.className='entry-phrase';ph.innerHTML=addNbsp(capitalizeFirst(pair.p));if(collected&&pair.p===LAMP_PHRASE){const l=document.createElement('span');l.className='lamp-inline';l.textContent='💡';l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};ph.appendChild(l);}const dh=document.createElement('span');dh.className='entry-dash';dh.textContent=collected?'—':'';const mn=document.createElement('span');mn.className='entry-meaning';mn.innerHTML=collected?splitMeaning(pair.m).map((part,i)=>{const cls=['','second','third'][i]||'third';const sep=i<splitMeaning(pair.m).length-1?';':'';return `<span class="${cls}">${addNbsp(part)}${sep}</span>`;}).join(' '):'';d.appendChild(lk);d.appendChild(ph);d.appendChild(dh);d.appendChild(mn);ct.appendChild(d);}});});document.getElementById('dictArrowBack').classList.toggle('disabled',dictCurrentPage===0);document.getElementById('dictArrowForward').classList.toggle('disabled',dictCurrentPage>=dictPages.length-1);}
+function openDict(){buildDictPages();dictCurrentPage=0;renderDictPage();document.getElementById('dictOverlay').classList.add('active');}
+function closeDict(){document.getElementById('dictOverlay').classList.remove('active');}
+function dictPrevPage(){if(dictCurrentPage>0){dictCurrentPage--;renderDictPage();}}
+function dictNextPage(){if(dictCurrentPage<dictPages.length-1){dictCurrentPage++;renderDictPage();}}
 
-  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === index));
-  const field = document.getElementById('gameField');
-  field.innerHTML = '<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
-  document.getElementById('pageLeft').innerHTML = '';
-  document.getElementById('pageRight').innerHTML = '';
-  bookLeftPairs = 0; bookRightPairs = 0;
-  renderStack();
-}
-
-function startGame() {
-  gameStarted = true;
-  const btn = document.getElementById('startBtn');
-  if (btn) btn.remove();
-  playKeyTurn();
-  document.getElementById('chestKey').classList.add('turned');
-  setTimeout(() => {
-    playChestOpen();
-    document.getElementById('chestLid').classList.add('open');
-    setTimeout(() => {
-      document.getElementById('chestContents').classList.add('visible');
-    }, 900);
-  }, 700);
-  setTimeout(() => nextRound(), 1800);
-}
-
-function nextRound() {
-  const rounds = variants[currentVariant];
-  if (currentRound >= rounds.length) { showFinal(); return; }
-  pairsOnField = [...rounds[currentRound]];
-  const tilesThisRound = pairsOnField.length * 2;
-  stackRemaining = Math.max(0, stackRemaining - tilesThisRound);
-  renderStack();
-  renderField();
-  currentRound++;
-}
-
-function renderField() {
-  const field = document.getElementById('gameField');
-  field.innerHTML = '';
-  const tiles = [];
-  pairsOnField.forEach(pair => {
-    tiles.push({ type: 'phrase', text: pair.p, pair });
-    tiles.push({ type: 'meaning', text: pair.m, pair });
-  });
-  tiles.sort(() => Math.random() - 0.5);
-  tiles.forEach((data) => {
-    const tile = document.createElement('div');
-    tile.className = 'tile ' + data.type;
-    const inner = document.createElement('div');
-    inner.className = 'tile-content';
-    if (data.type === 'phrase') inner.innerHTML = addNbsp(data.text);
-    else inner.innerHTML = renderMeaningHTMLStacked(data.text);
-    tile.appendChild(inner);
-    tile.dataset.type = data.type;
-    tile.dataset.phrase = data.pair.p;
-    tile.dataset.meaning = data.pair.m;
-    tile.onclick = () => selectTile(tile);
-    field.appendChild(tile);
-  });
-
-  fitTiles();
-
-  const chestEl = document.getElementById('chest');
-  const chestRect = chestEl.getBoundingClientRect();
-  const chestCX = chestRect.left + chestRect.width / 2;
-  const chestCY = chestRect.top + chestRect.height * 0.35;
-  const allTiles = field.querySelectorAll('.tile');
-  allTiles.forEach(tile => {
-    const rect = tile.getBoundingClientRect();
-    const dx = chestCX - (rect.left + rect.width / 2);
-    const dy = chestCY - (rect.top + rect.height / 2);
-    tile.style.transform = `translate(${dx}px, ${dy}px) scale(0.4)`;
-    tile.style.opacity = '0.85';
-    tile.style.transition = 'none';
-  });
-  playDiceDrop(allTiles.length);
-  setTimeout(() => {
-    allTiles.forEach((tile, i) => {
-      setTimeout(() => {
-        tile.style.transition = 'transform 0.9s cubic-bezier(0.2, 0.7, 0.3, 1), opacity 0.5s ease-out';
-        tile.style.transform = 'translate(0, 0) scale(1)';
-        tile.style.opacity = '1';
-      }, i * 140);
-    });
-    const totalTime = allTiles.length * 140 + 1000;
-    setTimeout(() => {
-      allTiles.forEach(tile => {
-        tile.style.transition = '';
-        tile.style.transform = '';
-        tile.style.opacity = '';
-      });
-      fitTiles();
-    }, totalTime);
-  }, 60);
-}
-
-function selectTile(tile) {
-  if (paused || !gameStarted || isAnimating || isFlipping) return;
-  if (tile.classList.contains('hidden')) return;
-  playWoodClick();
-  document.querySelectorAll('.tile').forEach(t => t.classList.remove('selected'));
-  tile.classList.add('selected');
-  if (tile.dataset.type === 'phrase') selectedPhrase = tile;
-  else selectedMeaning = tile;
-  if (selectedPhrase && selectedMeaning) checkPair();
-}
-
-function checkPair() {
-  if (isAnimating) return;
-  isAnimating = true;
-  const p = selectedPhrase, m = selectedMeaning;
-  if (p.dataset.phrase === m.dataset.phrase) {
-    p.classList.add('correct'); m.classList.add('correct');
-    p.classList.remove('selected'); m.classList.remove('selected');
-    selectedPhrase = null; selectedMeaning = null;
-    animateToBook(p, m);
-  } else {
-    p.classList.add('wrong'); m.classList.add('wrong');
-    setTimeout(() => {
-      p.classList.remove('wrong', 'selected');
-      m.classList.remove('wrong', 'selected');
-      selectedPhrase = null; selectedMeaning = null;
-      isAnimating = false;
-    }, 500);
-  }
-}
-
-function animateToBook(p, m) {
-  const bookRect = document.querySelector('.book').getBoundingClientRect();
-  const pRect = p.getBoundingClientRect();
-  const mRect = m.getBoundingClientRect();
-  const pClone = p.cloneNode(true);
-  const mClone = m.cloneNode(true);
-  [pClone, mClone].forEach((clone, i) => {
-    const rect = i === 0 ? pRect : mRect;
-    clone.style.position = 'fixed';
-    clone.style.left = rect.left + 'px';
-    clone.style.top = rect.top + 'px';
-    clone.style.width = rect.width + 'px';
-    clone.style.height = rect.height + 'px';
-    clone.style.zIndex = '9999';
-    clone.style.transition = 'all 0.5s ease-in';
-    clone.style.pointerEvents = 'none';
-    document.body.appendChild(clone);
-  });
-  p.style.visibility = 'hidden';
-  m.style.visibility = 'hidden';
-  requestAnimationFrame(() => {
-    const tx = bookRect.left + bookRect.width / 2;
-    const ty = bookRect.top + bookRect.height / 2;
-    pClone.style.left = (tx - 40) + 'px';
-    pClone.style.top = (ty - 15) + 'px';
-    pClone.style.width = '60px';
-    pClone.style.height = '30px';
-    pClone.style.opacity = '0';
-    mClone.style.left = (tx + 5) + 'px';
-    mClone.style.top = (ty - 15) + 'px';
-    mClone.style.width = '60px';
-    mClone.style.height = '30px';
-    mClone.style.opacity = '0';
-  });
-  setTimeout(() => {
-    pClone.remove(); mClone.remove();
-    p.classList.add('hidden'); m.classList.add('hidden');
-    addPairToBook(p.dataset.phrase, p.dataset.meaning);
-    collectedPhrases.add(p.dataset.phrase);
-    isAnimating = false;
-    const remaining = document.querySelectorAll('.tile:not(.hidden)').length;
-    if (remaining === 0) setTimeout(() => nextRound(), 800);
-  }, 500);
-}
-
-function addPairToBook(phrase, meaning) {
-  const pageLeft = document.getElementById('pageLeft');
-  const pageRight = document.getElementById('pageRight');
-  const perPage = deviceParams.bookPairsPerPage;
-  const pairDiv = document.createElement('div');
-  pairDiv.className = 'book-pair';
-  const phraseDiv = document.createElement('div');
-  phraseDiv.className = 'pair-phrase';
-  const phraseInner = document.createElement('div');
-  phraseInner.className = 'pair-content';
-  phraseInner.innerHTML = addNbsp(phrase);
-  phraseDiv.appendChild(phraseInner);
-  if (phrase === LAMP_PHRASE) {
-    const lamp = document.createElement('span');
-    lamp.className = 'lamp-inline';
-    lamp.textContent = '💡';
-    lamp.onclick = (e) => { e.stopPropagation(); showTooltip(lamp); };
-    phraseDiv.appendChild(lamp);
-  }
-  const dashDiv = document.createElement('div');
-  dashDiv.className = 'pair-dash';
-  dashDiv.textContent = '—';
-  const meaningDiv = document.createElement('div');
-  meaningDiv.className = 'pair-meaning';
-  const meaningInner = document.createElement('div');
-  meaningInner.className = 'pair-content';
-  meaningInner.innerHTML = renderMeaningHTMLStacked(meaning);
-  meaningDiv.appendChild(meaningInner);
-  pairDiv.appendChild(phraseDiv);
-  pairDiv.appendChild(dashDiv);
-  pairDiv.appendChild(meaningDiv);
-
-  if (bookLeftPairs < perPage) {
-    pageLeft.appendChild(pairDiv);
-    bookLeftPairs++;
-  } else if (bookRightPairs < perPage) {
-    pageRight.appendChild(pairDiv);
-    bookRightPairs++;
-  }
-  pairsInBook.push({ phrase, meaning });
-
-  setTimeout(fitBook, 30);
-
-  if (bookLeftPairs >= perPage && bookRightPairs >= perPage) {
-    isFlipping = true;
-    setTimeout(() => {
-      flipBookPage(() => {
-        pageLeft.innerHTML = '';
-        pageRight.innerHTML = '';
-        bookLeftPairs = 0;
-        bookRightPairs = 0;
-        isFlipping = false;
-      });
-    }, 700);
-  }
-}
-
-function flipBookPage(callback) {
-  const spread = document.getElementById('bookSpread');
-  const rightPage = document.getElementById('pageRight');
-  const rightRect = rightPage.getBoundingClientRect();
-  const spreadRect = spread.getBoundingClientRect();
-  const clone = document.createElement('div');
-  clone.className = 'flip-clone';
-  clone.style.position = 'absolute';
-  clone.style.left = (rightRect.left - spreadRect.left) + 'px';
-  clone.style.top = '0';
-  clone.style.width = rightRect.width + 'px';
-  clone.style.height = '100%';
-  const front = document.createElement('div');
-  front.className = 'flip-clone-front';
-  front.innerHTML = rightPage.innerHTML;
-  clone.appendChild(front);
-  rightPage.innerHTML = '';
-  spread.appendChild(clone);
-  setTimeout(() => { clone.remove(); if (callback) callback(); }, 1300);
-}
-
-function showFinal() {
-  playChestClose();
-  document.getElementById('chestLid').classList.remove('open');
-  document.getElementById('chestKey').classList.remove('turned');
-  document.getElementById('chestContents').classList.remove('visible');
-  setTimeout(() => {
-    document.getElementById('rotateWrap').style.display = 'none';
-    document.getElementById('finalOverlay').classList.add('active');
-    playFanfare();
-  }, 1500);
-}
-
-let dictPages = [];
-let dictCurrentPage = 0;
-function buildDictPages() {
-  const sorted = [...ALL_PAIRS].sort((a, b) => a.p.localeCompare(b.p, 'ru'));
-  const groups = {};
-  sorted.forEach(pair => {
-    const letter = pair.p[0].toUpperCase();
-    if (!groups[letter]) groups[letter] = [];
-    groups[letter].push(pair);
-  });
-  const letters = Object.keys(groups).sort((a, b) => a.localeCompare(b, 'ru'));
-  const entries = [];
-  letters.forEach(letter => {
-    entries.push({ type: 'letter', letter });
-    groups[letter].forEach(pair => entries.push({ type: 'pair', pair }));
-  });
-  const pages = [];
-  let currentPage = [], count = 0;
-  entries.forEach(entry => {
-    currentPage.push(entry); count++;
-    if (count >= 20) { pages.push(currentPage); currentPage = []; count = 0; }
-  });
-  if (currentPage.length > 0) pages.push(currentPage);
-  dictPages = pages;
-}
-function capitalizeFirst(str) {
-  if (!str) return str;
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-function renderDictPage() {
-  const leftContent = document.getElementById('dictPageLeftContent');
-  const rightContent = document.getElementById('dictPageRightContent');
-  leftContent.innerHTML = ''; rightContent.innerHTML = '';
-  const page = dictPages[dictCurrentPage];
-  if (!page) return;
-  const half = Math.ceil(page.length / 2);
-  const leftEntries = page.slice(0, half);
-  const rightEntries = page.slice(half);
-  [leftEntries, rightEntries].forEach((entries, side) => {
-    const content = side === 0 ? leftContent : rightContent;
-    entries.forEach(entry => {
-      if (entry.type === 'letter') {
-        const div = document.createElement('div');
-        div.className = 'dict-section-title';
-        div.textContent = entry.letter;
-        content.appendChild(div);
-      } else {
-        const pair = entry.pair;
-        const collected = collectedPhrases.has(pair.p);
-        const div = document.createElement('div');
-        div.className = 'dict-entry' + (collected ? '' : ' empty');
-        const lock = document.createElement('span');
-        lock.className = 'lock';
-        lock.textContent = collected ? '' : '🔒';
-        const phrase = document.createElement('span');
-        phrase.className = 'entry-phrase';
-        phrase.innerHTML = addNbsp(capitalizeFirst(pair.p));
-        if (collected && pair.p === LAMP_PHRASE) {
-          const lamp = document.createElement('span');
-          lamp.className = 'lamp-inline';
-          lamp.textContent = '💡';
-          lamp.onclick = (e) => { e.stopPropagation(); showTooltip(lamp); };
-          phrase.appendChild(lamp);
-        }
-        const dash = document.createElement('span');
-        dash.className = 'entry-dash';
-        dash.textContent = collected ? '—' : '';
-        const meaning = document.createElement('span');
-        meaning.className = 'entry-meaning';
-        meaning.innerHTML = collected ? splitMeaning(pair.m).map((part, i) => {
-          const cls = ['', 'second', 'third'][i] || 'third';
-          const sep = i < splitMeaning(pair.m).length - 1 ? ';' : '';
-          return `<span class="${cls}">${addNbsp(part)}${sep}</span>`;
-        }).join(' ') : '';
-        div.appendChild(lock); div.appendChild(phrase); div.appendChild(dash); div.appendChild(meaning);
-        content.appendChild(div);
-      }
-    });
-  });
-  const backArrow = document.getElementById('dictArrowBack');
-  const forwardArrow = document.getElementById('dictArrowForward');
-  backArrow.classList.toggle('disabled', dictCurrentPage === 0);
-  forwardArrow.classList.toggle('disabled', dictCurrentPage >= dictPages.length - 1);
-}
-function openDict() {
-  buildDictPages(); dictCurrentPage = 0; renderDictPage();
-  document.getElementById('dictOverlay').classList.add('active');
-}
-function closeDict() { document.getElementById('dictOverlay').classList.remove('active'); }
-function dictPrevPage() { if (dictCurrentPage > 0) { dictCurrentPage--; renderDictPage(); } }
-function dictNextPage() { if (dictCurrentPage < dictPages.length - 1) { dictCurrentPage++; renderDictPage(); } }
-
-function toggleSound() {
-  soundOn = !soundOn;
-  const btn1 = document.getElementById('soundBtn');
-  const btn2 = document.getElementById('soundBtnFinal');
-  const text = soundOn ? 'Звук 🔊' : 'Звук 🔇';
-  [btn1, btn2].forEach(b => {
-    if (b) {
-      b.textContent = text;
-      b.classList.toggle('muted', !soundOn);
-    }
-  });
-}
-function togglePause() {
-  paused = !paused;
-  const overlay = document.getElementById('pauseOverlay');
-  if (paused) overlay.classList.add('active');
-  else overlay.classList.remove('active');
-}
-function restartGame() {
-  document.getElementById('finalOverlay').classList.remove('active');
-  document.getElementById('rotateWrap').style.display = 'flex';
-  initGame();
-  applyRotation();
-}
+function toggleSound(){soundOn=!soundOn;const b1=document.getElementById('soundBtn'),b2=document.getElementById('soundBtnFinal');const t=soundOn?'Звук 🔊':'Звук 🔇';[b1,b2].forEach(b=>{if(b){b.textContent=t;b.classList.toggle('muted',!soundOn);}});}
+function togglePause(){paused=!paused;const o=document.getElementById('pauseOverlay');if(paused)o.classList.add('active');else o.classList.remove('active');}
+function restartGame(){document.getElementById('finalOverlay').classList.remove('active');document.getElementById('rotateWrap').style.display='flex';initGame();applyRotation();}
 
 applyRotation();
 initGame();
 
 let resizeTimeout;
-window.addEventListener('resize', () => {
-  clearTimeout(resizeTimeout);
-  resizeTimeout = setTimeout(() => {
-    applyRotation();
-    const newParams = getParams();
-    if (newParams.cols !== deviceParams.cols ||
-        newParams.rows !== deviceParams.rows ||
-        newParams.pairsPerRound !== deviceParams.pairsPerRound) {
-      initGame();
-    }
-  }, 300);
-});
-window.addEventListener('orientationchange', () => {
-  setTimeout(() => { applyRotation(); initGame(); }, 300);
-});
+window.addEventListener('resize',()=>{clearTimeout(resizeTimeout);resizeTimeout=setTimeout(()=>{applyRotation();const np=getParams();if(np.cols!==deviceParams.cols||np.rows!==deviceParams.rows||np.pairsPerRound!==deviceParams.pairsPerRound){initGame();}},300);});
+window.addEventListener('orientationchange',()=>{setTimeout(()=>{applyRotation();initGame();},300);});
 </script>
 </body>
 </html>
