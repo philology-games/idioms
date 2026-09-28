@@ -210,34 +210,36 @@ html, body {
   min-height: 0;
   min-width: 0;
 }
+/* ===== СУНДУК ===== */
 .chest {
   flex: 0 0 38%;
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  padding: 4px 4px 8px 4px;
-  perspective: 700px;
+  padding: 4px 4px 14px 4px;
+  perspective: 900px;
   min-height: 0;
 }
 .chest-inner {
   position: relative;
-  width: 92%;
-  height: 62%;
+  width: 68%;
+  height: 55%;
   display: flex;
   align-items: flex-end;
   justify-content: center;
   transform-style: preserve-3d;
+  margin-top: 30px;
 }
 .chest-body {
   position: relative;
   width: 100%;
   height: 100%;
-  background: linear-gradient(180deg, #6b4423 0%, #4a2e15 55%, #2a1a08 100%);
+  background: linear-gradient(180deg, #8b5a2b 0%, #5a3414 55%, #2e1808 100%);
   border: 2px solid #1a0f05;
-  border-radius: 3px 3px 6px 6px;
+  border-radius: 3px 3px 7px 7px;
   box-shadow:
-    inset 0 3px 0 rgba(255,200,150,0.12),
-    inset 0 -6px 10px rgba(0,0,0,0.6),
+    inset 0 3px 0 rgba(255,200,150,0.18),
+    inset 0 -8px 14px rgba(0,0,0,0.6),
     0 6px 14px rgba(0,0,0,0.55);
   z-index: 2;
 }
@@ -252,31 +254,54 @@ html, body {
       rgba(0,0,0,0.15) 6px,
       rgba(0,0,0,0.15) 7px
     );
-  border-radius: 3px 3px 6px 6px;
+  border-radius: 3px 3px 7px 7px;
   pointer-events: none;
 }
-.body-strap-left, .body-strap-right {
+
+/* Оковка вертикальная с узором */
+.body-strap-left, .body-strap-right,
+.lid-strap-left, .lid-strap-right {
   position: absolute;
-  top: 0; bottom: 0;
-  width: 8px;
-  background: linear-gradient(90deg, #6a4a1a 0%, #d4a843 50%, #6a4a1a 100%);
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.35);
+  top: -2px; bottom: -2px;
+  width: 18px;
+  background:
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='28' viewBox='0 0 18 28'%3E%3Cpath d='M9 0 L9 28 M4 7 Q9 3 14 7 M4 21 Q9 25 14 21' stroke='%232a1808' fill='none' stroke-width='1.3'/%3E%3Ccircle cx='9' cy='14' r='1.5' fill='%232a1808'/%3E%3C/svg%3E"),
+    linear-gradient(90deg, #6a4a1a 0%, #d4a843 50%, #6a4a1a 100%);
+  background-repeat: repeat-y, no-repeat;
+  background-size: 100% auto, 100% 100%;
+  box-shadow:
+    inset 0 0 0 1px rgba(40,25,5,0.7),
+    0 0 4px rgba(0,0,0,0.5);
+  border-radius: 2px;
 }
-.body-strap-left { left: 14%; }
-.body-strap-right { right: 14%; }
+.body-strap-left { left: 18%; }
+.body-strap-right { right: 18%; }
+.lid-strap-left { left: 18%; }
+.lid-strap-right { right: 18%; }
+
+/* Оковка горизонтальная с узором */
 .body-strap-bottom {
   position: absolute;
-  left: 0; right: 0;
-  bottom: 10px;
-  height: 8px;
-  background: linear-gradient(180deg, #6a4a1a 0%, #d4a843 50%, #6a4a1a 100%);
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.35);
+  left: -2px; right: -2px;
+  bottom: 12px;
+  height: 12px;
+  background:
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='12' viewBox='0 0 28 12'%3E%3Cpath d='M0 6 L28 6 M7 3 Q14 1 21 3 M7 9 Q14 11 21 9' stroke='%232a1808' fill='none' stroke-width='1.2'/%3E%3Ccircle cx='14' cy='6' r='1.4' fill='%232a1808'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, #6a4a1a 0%, #d4a843 50%, #6a4a1a 100%);
+  background-repeat: repeat-x, no-repeat;
+  background-size: auto 100%, 100% 100%;
+  box-shadow:
+    inset 0 0 0 1px rgba(40,25,5,0.7),
+    0 0 4px rgba(0,0,0,0.5);
+  border-radius: 2px;
 }
+
+/* Полоска костяшек в сундуке */
 .chest-contents {
   position: absolute;
   top: -3px;
-  left: 6px;
-  right: 6px;
+  left: 8px;
+  right: 8px;
   height: 7px;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -290,24 +315,30 @@ html, body {
 }
 .chest-tile.blue { background: linear-gradient(180deg, #a8bcd4, #6a80a0); }
 .chest-tile.yellow { background: linear-gradient(180deg, #f0d8a0, #b8a070); }
+
+/* Крышка сундука */
 .chest-lid {
   position: absolute;
-  top: -28%;
-  left: 0;
-  right: 0;
-  height: 28%;
-  background: linear-gradient(180deg, #7a5030 0%, #4a2e15 100%);
+  top: -48%;
+  left: -3px;
+  right: -3px;
+  height: 52%;
+  background: linear-gradient(180deg, #a06a35 0%, #6a3e18 60%, #3a2008 100%);
   border: 2px solid #1a0f05;
   border-bottom: none;
-  border-radius: 8px 8px 0 0;
+  border-radius: 55% 55% 0 0 / 100% 100% 0 0;
   transform-origin: bottom center;
   transform: rotateX(0deg);
-  transition: transform 1.2s cubic-bezier(0.4, 0.0, 0.6, 1.0);
-  box-shadow: inset 0 3px 0 rgba(255,200,150,0.18);
+  transition: transform 1.4s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  box-shadow:
+    inset 0 6px 0 rgba(255,200,150,0.22),
+    inset 0 -2px 8px rgba(0,0,0,0.45);
   z-index: 5;
+  overflow: hidden;
 }
+/* Откинута назад и остаётся слегка наклонённой */
 .chest-lid.open {
-  transform: rotateX(-115deg);
+  transform: rotateX(-100deg);
 }
 .lid-wood {
   position: absolute;
@@ -320,77 +351,75 @@ html, body {
       rgba(0,0,0,0.12) 5px,
       rgba(0,0,0,0.12) 6px
     );
-  border-radius: 8px 8px 0 0;
+  border-radius: 55% 55% 0 0 / 100% 100% 0 0;
 }
-.lid-strap-left, .lid-strap-right {
-  position: absolute;
-  top: 0; bottom: 0;
-  width: 8px;
-  background: linear-gradient(90deg, #6a4a1a 0%, #d4a843 50%, #6a4a1a 100%);
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.35);
-}
-.lid-strap-left { left: 14%; }
-.lid-strap-right { right: 14%; }
+
+/* Замок — выше, ближе к верхнему краю стенки */
 .chest-lock {
   position: absolute;
-  bottom: 30%;
+  top: 6%;
   left: 50%;
   transform: translateX(-50%);
-  width: 34px;
-  height: 30px;
-  background: linear-gradient(180deg, #d4a843 0%, #8a6a2a 100%);
-  border: 2px solid #3a2408;
-  border-radius: 4px;
+  width: 36px;
+  height: 32px;
+  background: linear-gradient(180deg, #e8bc53 0%, #b8860b 50%, #7a5a1a 100%);
+  border: 2px solid #2a1808;
+  border-radius: 5px;
   box-shadow:
-    inset 0 2px 0 rgba(255,255,255,0.35),
-    inset 0 -2px 0 rgba(0,0,0,0.25),
-    0 2px 4px rgba(0,0,0,0.5);
+    inset 0 2px 0 rgba(255,255,255,0.4),
+    inset 0 -2px 0 rgba(0,0,0,0.35),
+    0 3px 6px rgba(0,0,0,0.5);
   z-index: 3;
 }
 .chest-lock::before {
   content: '';
   position: absolute;
-  top: -4px; left: 50%;
+  top: -5px; left: 50%;
   transform: translateX(-50%);
-  width: 6px; height: 6px;
-  background: linear-gradient(180deg, #d4a843, #8a6a2a);
-  border: 2px solid #3a2408;
+  width: 8px; height: 6px;
+  background: linear-gradient(180deg, #e8bc53, #b8860b);
+  border: 2px solid #2a1808;
   border-bottom: none;
-  border-radius: 3px 3px 0 0;
+  border-radius: 4px 4px 0 0;
 }
 .chest-lock::after {
   content: '';
   position: absolute;
-  bottom: 8px;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  width: 5px;
-  height: 9px;
-  background: #0a0500;
+  width: 6px;
+  height: 11px;
+  background: radial-gradient(circle at 50% 25%, #000 0 2px, #0a0400 3px);
   border-radius: 50% 50% 2px 2px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    0 0 2px rgba(0,0,0,0.6);
 }
+
+/* Ключ — старинный, цельный */
 .chest-key {
   position: absolute;
-  bottom: 8px;
+  top: -16px;
   left: 50%;
   transform: translateX(-50%) rotate(0deg);
-  transform-origin: 50% 0%;
-  transition: transform 0.9s cubic-bezier(0.4, 0.0, 0.6, 1.0);
+  transform-origin: 50% 48px;
+  transition: transform 1.0s cubic-bezier(0.45, 0.05, 0.55, 0.95);
   z-index: 4;
 }
 .chest-key.turned {
   transform: translateX(-50%) rotate(90deg);
 }
 .key-head {
-  width: 22px;
-  height: 22px;
-  background: radial-gradient(circle at 40% 35%, #f0c860 0%, #d4a843 50%, #8a6a2a 100%);
-  border: 2px solid #3a2408;
+  width: 26px;
+  height: 26px;
+  background: radial-gradient(circle at 40% 35%, #f8d878 0%, #d4a843 45%, #7a5a1a 100%);
+  border: 2px solid #2a1808;
   border-radius: 50%;
   box-shadow:
-    inset 0 2px 0 rgba(255,255,255,0.4),
-    0 2px 3px rgba(0,0,0,0.5);
+    inset 0 2px 0 rgba(255,255,255,0.45),
+    inset 0 -2px 4px rgba(0,0,0,0.3),
+    0 2px 4px rgba(0,0,0,0.55);
   position: relative;
 }
 .key-head::before {
@@ -398,29 +427,43 @@ html, body {
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  width: 8px; height: 8px;
-  background: #3a2408;
+  width: 10px; height: 10px;
+  background: radial-gradient(circle at 40% 35%, #7a5a1a 0%, #2a1808 100%);
   border-radius: 50%;
-  box-shadow: inset 0 1px 0 rgba(0,0,0,0.5);
+  box-shadow: inset 0 1px 0 rgba(0,0,0,0.7);
 }
 .key-head::after {
   content: '';
   position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%) rotate(45deg);
-  width: 16px; height: 3px;
-  background: #3a2408;
+  top: -3px; left: 50%;
+  transform: translateX(-50%);
+  width: 4px; height: 6px;
+  background: #d4a843;
   border-radius: 2px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
 }
 .key-stem {
-  width: 5px;
-  height: 14px;
-  background: linear-gradient(90deg, #8a6a2a 0%, #d4a843 50%, #8a6a2a 100%);
-  margin: -2px auto 0;
-  border: 1px solid #3a2408;
+  width: 6px;
+  height: 22px;
+  background: linear-gradient(90deg, #6a4a1a 0%, #d4a843 50%, #6a4a1a 100%);
+  margin: -3px auto 0;
+  border: 1px solid #2a1808;
   border-top: none;
-  border-radius: 0 0 2px 2px;
-  box-shadow: 0 2px 3px rgba(0,0,0,0.4);
+  border-radius: 0 0 3px 3px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  position: relative;
+}
+.key-stem::after {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  left: 100%;
+  width: 7px;
+  height: 3px;
+  background: #d4a843;
+  border: 1px solid #2a1808;
+  border-left: none;
+  border-radius: 0 2px 2px 0;
 }
 .book-shelf {
   flex: 1;
