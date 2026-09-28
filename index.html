@@ -210,6 +210,7 @@ html, body {
   min-width: 0;
 }
 /* ===== СУНДУК v2 ===== */
+/* ===== СУНДУК v3 ===== */
 .chest {
   flex: 0 0 38%;
   display: flex;
@@ -225,7 +226,7 @@ html, body {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  perspective: 1100px;
+  perspective: 1200px;
 }
 .chest-body {
   position: relative;
@@ -238,7 +239,6 @@ html, body {
     inset 0 3px 0 rgba(255,200,150,0.18),
     inset 0 -8px 14px rgba(0,0,0,0.6),
     0 6px 14px rgba(0,0,0,0.55);
-  overflow: hidden;
   z-index: 1;
 }
 .body-wood {
@@ -267,6 +267,7 @@ html, body {
     inset 0 0 0 1px rgba(40,25,5,0.7),
     0 0 4px rgba(0,0,0,0.5);
   border-radius: 2px;
+  z-index: 2;
 }
 .body-strap-left { left: 18%; }
 .body-strap-right { right: 18%; }
@@ -284,28 +285,30 @@ html, body {
     inset 0 0 0 1px rgba(40,25,5,0.7),
     0 0 4px rgba(0,0,0,0.5);
   border-radius: 2px;
+  z-index: 2;
 }
+/* Полоска костяшек — изначально невидима */
 .chest-contents {
   position: absolute;
   top: 2px;
   left: 5px;
   right: 5px;
   height: 7px;
-  display: grid;
+  display: none;
   grid-template-columns: repeat(8, 1fr);
   gap: 2px;
-  z-index: 1;
+  z-index: 3;
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.4s;
 }
-.chest-contents.visible { opacity: 1; }
+.chest-contents.visible { display: grid; }
 .chest-tile {
   border-radius: 1px;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 1px 1px rgba(0,0,0,0.4);
 }
 .chest-tile.blue { background: linear-gradient(180deg, #a8bcd4, #6a80a0); }
 .chest-tile.yellow { background: linear-gradient(180deg, #f0d8a0, #b8a070); }
+
+/* Крышка — плоская, лежит на сундуке, поднимается назад */
 .chest-lid {
   position: absolute;
   bottom: 100%;
@@ -316,8 +319,8 @@ html, body {
   border: 2px solid #1a0f05;
   border-bottom: none;
   border-radius: 55% 55% 0 0 / 100% 100% 0 0;
-  transform-origin: bottom center;
-  transform: rotateX(0deg);
+  transform-origin: center top;
+  transform: rotateX(-85deg);
   transition: transform 1.4s cubic-bezier(0.45, 0.05, 0.55, 0.95);
   box-shadow:
     inset 0 6px 0 rgba(255,200,150,0.22),
@@ -326,7 +329,7 @@ html, body {
   overflow: hidden;
 }
 .chest-lid.open {
-  transform: rotateX(110deg);
+  transform: rotateX(-5deg);
 }
 .lid-wood {
   position: absolute;
@@ -357,6 +360,7 @@ html, body {
 }
 .lid-strap-left { left: 18%; }
 .lid-strap-right { right: 18%; }
+/* Замок — поверх всего */
 .chest-lock {
   position: absolute;
   top: 6%;
@@ -371,7 +375,7 @@ html, body {
     inset 0 2px 0 rgba(255,255,255,0.4),
     inset 0 -2px 0 rgba(0,0,0,0.35),
     0 3px 6px rgba(0,0,0,0.5);
-  z-index: 10;
+  z-index: 20;
 }
 .chest-lock::before {
   content: '';
@@ -405,7 +409,7 @@ html, body {
   transform: translateX(-50%) rotate(0deg);
   transform-origin: 50% 13px;
   transition: transform 1.0s cubic-bezier(0.45, 0.05, 0.55, 0.95);
-  z-index: 11;
+  z-index: 21;
 }
 .chest-key.turned {
   transform: translateX(-50%) rotate(90deg);
@@ -441,7 +445,7 @@ html, body {
   background: #d4a843;
   border-radius: 2px;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
-}
+} 
 /* ===== КНИГА + ПОЛКА ===== */
 .book-shelf {
   flex: 1;
