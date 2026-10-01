@@ -148,7 +148,6 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-page-content.distribute{justify-content:space-between}
 .dict-page-content.distribute .dict-entry{flex:0 0 auto}
 /* ===== МЕДИАЗАПРОСЫ ===== */
-/* Планшет портретная */
 @media (orientation:portrait) and (min-width:600px) and (max-width:1100px){
 .main{flex-direction:column;padding:0 12px 5px 12px;gap:6px}
 .top-part{flex:0 0 35%;display:flex;flex-direction:row;gap:8px;min-height:0;min-width:0}
@@ -164,17 +163,14 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-entry .entry-phrase{font-size:1rem}
 .dict-entry .entry-meaning{font-size:1rem}
 }
-/* Планшет альбомная */
 @media (orientation:landscape) and (min-width:750px) and (max-width:1400px){
-.chest{flex:0 0 55%;margin-top:-0.9cm}
+.chest{flex:0 0 55%;margin-top:calc(-0.9cm - 3mm)}
 .chest-inner{width:78%}
-.book-shelf{padding-top:10px}
 .book-open{height:calc(82% + 1.5cm)}
 .page{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
 .book-pair{padding:3px 0}
 .flip-clone-front{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
 }
-/* Смартфон */
 @media (max-width:900px) and (max-height:600px){
 .page{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:8px;align-content:space-between;padding:18px 10px}
 .flip-clone-front{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:8px;align-content:space-between;padding:18px 10px}
@@ -587,20 +583,8 @@ function getDeviceType(){const m=Math.min(window.innerWidth,window.innerHeight);
 function getParams(){
   const d=getDeviceType();
   const land=isLandscape();
-  if(d==='phone'){
-    return{pairsPerRound:6,tabs:3,cols:3,rows:4,gap:5,bookPairsPerPage:3,totalTiles:190};
-  }
-  if(d==='tablet'){
-    return{
-      pairsPerRound:15,
-      tabs:3,
-      cols: land?6:5,
-      rows: land?5:6,
-      gap:5,
-      bookPairsPerPage: land?3:4,
-      totalTiles:190
-    };
-  }
+  if(d==='phone'){return{pairsPerRound:6,tabs:3,cols:3,rows:4,gap:5,bookPairsPerPage:3,totalTiles:190};}
+  if(d==='tablet'){return{pairsPerRound:15,tabs:3,cols:land?6:5,rows:land?5:6,gap:5,bookPairsPerPage:land?3:4,totalTiles:190};}
   return{pairsPerRound:20,tabs:1,cols:5,rows:8,gap:6,bookPairsPerPage:4,totalTiles:568};
 }
 function normalizeMeaning(m){return m.toLowerCase().replace(/[;,.!?()]/g,' ').split(/\s+/).filter(w=>w.length>2).sort().join(' ');}
@@ -608,6 +592,7 @@ function meaningsAreSimilar(a,b){const n1=normalizeMeaning(a),n2=normalizeMeanin
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
 function buildVariants(){const p=getParams();const s=shuffle(ALL_PAIRS);const t=s.length;const tabs=p.tabs;const pr=p.pairsPerRound;const vs=Math.floor(t/tabs);const va=[];let st=0;for(let i=0;i<tabs;i++){const sz=(i===tabs-1)?(t-st):vs;va.push(s.slice(st,st+sz));st+=sz;}return va.map(v=>{const r=[];const rem=[...v];while(rem.length>0){const round=[];const used=new Set();for(let i=0;i<rem.length;i++){if(round.length>=pr)break;const c=rem[i];if(used.has(i))continue;let hc=false;for(const e of round){if(meaningsAreSimilar(c.m,e.m)){hc=true;break;}}if(!hc){round.push(c);used.add(i);}}if(round.length<pr){for(let i=0;i<rem.length;i++){if(round.length>=pr)break;if(used.has(i))continue;round.push(rem[i]);used.add(i);}}const nr=[];rem.forEach((it,i)=>{if(!used.has(i))nr.push(it);});r.push(round);rem.length=0;rem.push(...nr);}return r;});}
 
+// ===== СОСТОЯНИЕ =====
 let variants=[],currentVariant=0,pairsOnField=[],remainingPairs=[],pairsInBook=[];
 let selectedPhrase=null,selectedMeaning=null;
 let soundOn=true,paused=false,gameStarted=false,isAnimating=false;
@@ -615,10 +600,11 @@ let deviceParams=getParams();
 let collectedPhrases=new Set();
 let isFlipping=false;
 
+// состояние всех трёх вариантов
 let variantState=[
-  {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],remainingPairs:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:'',pairsOnField:[]},
-  {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],remainingPairs:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:'',pairsOnField:[]},
-  {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],remainingPairs:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:'',pairsOnField:[]}
+  {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],remainingPairs:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:''},
+  {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],remainingPairs:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:''},
+  {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],remainingPairs:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:''}
 ];
 let currentRoundRef=0;
 let stackRemainingRef=0;
@@ -628,6 +614,67 @@ Object.defineProperty(window,'currentRound',{get(){return currentRoundRef;},set(
 Object.defineProperty(window,'stackRemaining',{get(){return stackRemainingRef;},set(v){stackRemainingRef=v;}});
 Object.defineProperty(window,'bookLeftPairs',{get(){return bookLeftPairsRef;},set(v){bookLeftPairsRef=v;}});
 Object.defineProperty(window,'bookRightPairs',{get(){return bookRightPairsRef;},set(v){bookRightPairsRef=v;}});
+
+// ===== СОХРАНЕНИЕ В localStorage =====
+const STORAGE_KEY='frazeologizmy_state_v1';
+function saveToStorage(){
+  try{
+    const st={
+      currentVariant,
+      collectedPhrases:[...collectedPhrases],
+      variantState:variantState.map(s=>({
+        round:s.round,
+        stackRemaining:s.stackRemaining,
+        gameStarted:s.gameStarted,
+        pairsInBook:s.pairsInBook.map(p=>({p:p.phrase,m:p.meaning})),
+        remainingPairs:s.remainingPairs.map(p=>({p:p.p,m:p.m})),
+        pairsOnField:s.pairsOnField? s.pairsOnField.map(p=>({p:p.p,m:p.m})) : [],
+        bookLeftPairs:s.bookLeftPairs,
+        bookRightPairs:s.bookRightPairs,
+        pageLeftHTML:s.pageLeftHTML,
+        pageRightHTML:s.pageRightHTML
+      })),
+      // сохраняем сами variants, чтобы не пересобирать заново
+      variants:variants.map(v=>v.map(r=>r.map(p=>({p:p.p,m:p.m}))))
+    };
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(st));
+  }catch(e){}
+}
+function loadFromStorage(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw)return null;
+    return JSON.parse(raw);
+  }catch(e){return null;}
+}
+function clearStorage(){try{localStorage.removeItem(STORAGE_KEY);}catch(e){}}
+
+// ===== ВОССТАНОВЛЕНИЕ ПОСЛЕ ПЕРЕЗАГРУЗКИ =====
+function restoreFromStorageIfAny(){
+  const st=loadFromStorage();
+  if(!st)return false;
+  try{
+    currentVariant=st.currentVariant||0;
+    collectedPhrases=new Set(st.collectedPhrases||[]);
+    // variants — восстановить как есть
+    if(st.variants){
+      variants=st.variants.map(v=>v.map(r=>r.map(p=>({p:p.p,m:p.m}))));
+    }
+    variantState=st.variantState.map(s=>({
+      round:s.round||0,
+      stackRemaining:s.stackRemaining||0,
+      gameStarted:!!s.gameStarted,
+      pairsInBook:(s.pairsInBook||[]).map(p=>({phrase:p.p,meaning:p.m})),
+      remainingPairs:(s.remainingPairs||[]).map(p=>({p:p.p,m:p.m})),
+      pairsOnField:(s.pairsOnField||[]).map(p=>({p:p.p,m:p.m})),
+      bookLeftPairs:s.bookLeftPairs||0,
+      bookRightPairs:s.bookRightPairs||0,
+      pageLeftHTML:s.pageLeftHTML||'',
+      pageRightHTML:s.pageRightHTML||''
+    }));
+    return true;
+  }catch(e){return false;}
+}
 
 let audioCtx=null;
 function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
@@ -664,7 +711,7 @@ function hideTooltipOnce(){if(tooltipEl){tooltipEl.remove();tooltipEl=null;}}
 function applyRotation(){const w=document.getElementById('rotateWrap');const ip=getDeviceType()==='phone';const pt=!isLandscape();if(ip&&pt){const wi=window.innerWidth,hi=window.innerHeight;w.style.width=hi+'px';w.style.height=wi+'px';w.style.transform=`translateX(${wi}px) rotate(90deg)`;}else{w.style.width='100%';w.style.height='100%';w.style.transform='';}}
 function applyPortraitTabletLayout(){const main=document.getElementById('mainArea'),lp=document.getElementById('leftPart'),rc=document.getElementById('rightColumn'),ch=document.getElementById('chest'),bs=document.getElementById('bookShelf');const tp=getDeviceType()==='tablet'&&!isLandscape();if(tp){let t=document.getElementById('topPart');if(!t){t=document.createElement('div');t.id='topPart';t.className='top-part';main.insertBefore(t,lp);}t.appendChild(ch);t.appendChild(bs);rc.style.display='none';}else{const t=document.getElementById('topPart');if(t){rc.style.display='flex';rc.appendChild(ch);rc.appendChild(bs);t.remove();}}}
 
-function saveCurrentVariantState(){
+function syncGlobalToVariant(){
   const s=variantState[currentVariant];
   s.round=currentRoundRef;
   s.stackRemaining=stackRemainingRef;
@@ -675,9 +722,8 @@ function saveCurrentVariantState(){
   s.bookRightPairs=bookRightPairsRef;
   s.pageLeftHTML=document.getElementById('pageLeft').innerHTML;
   s.pageRightHTML=document.getElementById('pageRight').innerHTML;
-  s.pairsOnField=[...pairsOnField];
 }
-function restoreVariantState(i){
+function loadVariantToGlobal(i){
   const s=variantState[i];
   currentRoundRef=s.round;
   stackRemainingRef=s.stackRemaining;
@@ -688,10 +734,10 @@ function restoreVariantState(i){
   bookRightPairsRef=s.bookRightPairs;
   document.getElementById('pageLeft').innerHTML=s.pageLeftHTML;
   document.getElementById('pageRight').innerHTML=s.pageRightHTML;
-  pairsOnField=[...s.pairsOnField];
 }
 
 function initGame(){
+  clearStorage();
   deviceParams=getParams();
   variants=buildVariants();
   currentVariant=0;
@@ -709,7 +755,7 @@ function initGame(){
   variantState.forEach(s=>{
     s.round=0;s.stackRemaining=deviceParams.totalTiles;s.gameStarted=false;
     s.pairsInBook=[];s.remainingPairs=[];s.bookLeftPairs=0;s.bookRightPairs=0;
-    s.pageLeftHTML='';s.pageRightHTML='';s.pairsOnField=[];
+    s.pageLeftHTML='';s.pageRightHTML='';
   });
   document.getElementById('chestLid').classList.remove('open','closing');
   document.getElementById('chestKey').classList.remove('turned');
@@ -729,44 +775,54 @@ function initGame(){
   document.getElementById('mainArea').style.visibility='';
 }
 
-function relayoutForOrientation(){
-  saveCurrentVariantState();
-  document.querySelectorAll('.flip-clone').forEach(el=>el.remove());
-  isFlipping=false;
-  const bookOpen=document.querySelector('.book-open');
-  if(bookOpen)bookOpen.style.visibility='hidden';
+// восстановление после перезагрузки
+function restoreAfterReload(){
+  const ok=restoreFromStorageIfAny();
+  if(!ok){
+    initGame();
+    return;
+  }
   deviceParams=getParams();
+  // восстановить варианты (variants уже загружен)
+  if(!variants||!variants.length){
+    variants=buildVariants();
+  }
+  // восстановить активный вариант
+  loadVariantToGlobal(currentVariant);
+  // вкладки
+  const tr=document.getElementById('tabsRow');
+  if(deviceParams.tabs>1)tr.classList.remove('empty');else tr.classList.add('empty');
+  document.querySelectorAll('.tab').forEach((tab,i)=>{tab.style.display=i<deviceParams.tabs?'inline-block':'none';tab.classList.toggle('active',i===currentVariant);tab.onclick=()=>switchVariant(i);});
+  // поля
   const f=document.getElementById('gameField');
   f.style.setProperty('--cols',deviceParams.cols);
   f.style.setProperty('--gap',deviceParams.gap+'px');
-  applyPortraitTabletLayout();
-  restoreVariantState(currentVariant);
-  const fEl=document.getElementById('gameField');
-  fEl.innerHTML='';
+  f.innerHTML='';
   if(gameStarted && remainingPairs.length>0){
     renderField(true);
     document.getElementById('chestLid').classList.add('open');
     document.getElementById('chestKey').classList.add('turned');
   }else if(gameStarted){
-    fEl.innerHTML='';
+    f.innerHTML='';
     document.getElementById('chestLid').classList.add('open');
     document.getElementById('chestKey').classList.add('turned');
   }else{
-    fEl.innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
+    f.innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
+    document.getElementById('chestLid').classList.remove('open','closing');
+    document.getElementById('chestKey').classList.remove('turned');
   }
+  // книга
   document.getElementById('pageLeft').innerHTML=variantState[currentVariant].pageLeftHTML;
   document.getElementById('pageRight').innerHTML=variantState[currentVariant].pageRightHTML;
-  setTimeout(()=>{
-    fitBook();
-    if(bookOpen)bookOpen.style.visibility='';
-  },200);
+  applyPortraitTabletLayout();
+  setTimeout(fitBook,50);
 }
 
 function switchVariant(i){
-  saveCurrentVariantState();
+  syncGlobalToVariant();
   currentVariant=i;
   document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',j===i));
-  restoreVariantState(i);
+  loadVariantToGlobal(i);
   document.getElementById('finalOverlay').classList.remove('active');
   document.getElementById('dictOverlay').classList.remove('active');
   document.getElementById('mainArea').style.visibility='';
@@ -781,11 +837,12 @@ function switchVariant(i){
     document.getElementById('chestLid').classList.add('open');
     document.getElementById('chestKey').classList.add('turned');
   }
+  saveToStorage();
 }
 
-function startGame(){gameStarted=true;const b=document.getElementById('startBtn');if(b)b.remove();playKeyTurn();document.getElementById('chestKey').classList.add('turned');setTimeout(()=>{playChestOpen();document.getElementById('chestLid').classList.add('open');},700);setTimeout(()=>nextRound(),3200);}
+function startGame(){gameStarted=true;syncGlobalToVariant();saveToStorage();const b=document.getElementById('startBtn');if(b)b.remove();playKeyTurn();document.getElementById('chestKey').classList.add('turned');setTimeout(()=>{playChestOpen();document.getElementById('chestLid').classList.add('open');},700);setTimeout(()=>nextRound(),3200);}
 
-function nextRound(){const r=variants[currentVariant];if(currentRound>=r.length){showFinal();return;}pairsOnField=[...r[currentRound]];remainingPairs=[...pairsOnField];const t=pairsOnField.length*2;stackRemaining=Math.max(0,stackRemaining-t);renderField();currentRound++;}
+function nextRound(){const r=variants[currentVariant];if(currentRound>=r.length){showFinal();return;}pairsOnField=[...r[currentRound]];remainingPairs=[...pairsOnField];const t=pairsOnField.length*2;stackRemaining=Math.max(0,stackRemaining-t);renderField();currentRound++;syncGlobalToVariant();saveToStorage();}
 
 function renderField(skipAnimation){
   const f=document.getElementById('gameField');
@@ -887,9 +944,9 @@ function selectTile(tile){if(paused||!gameStarted||isAnimating||isFlipping)retur
 
 function checkPair(){if(isAnimating)return;isAnimating=true;const p=selectedPhrase,m=selectedMeaning;if(p.dataset.phrase===m.dataset.phrase){p.classList.add('correct');m.classList.add('correct');p.classList.remove('selected');m.classList.remove('selected');selectedPhrase=null;selectedMeaning=null;animateToBook(p,m);}else{p.classList.add('wrong');m.classList.add('wrong');setTimeout(()=>{p.classList.remove('wrong','selected');m.classList.remove('wrong','selected');selectedPhrase=null;selectedMeaning=null;isAnimating=false;},500);}}
 
-function animateToBook(p,m){const br=document.querySelector('.book').getBoundingClientRect();const pr=p.getBoundingClientRect();const mr=m.getBoundingClientRect();const pc=p.cloneNode(true);const mc=m.cloneNode(true);[pc,mc].forEach((cl,i)=>{const r=i===0?pr:mr;cl.style.position='fixed';cl.style.left=r.left+'px';cl.style.top=r.top+'px';cl.style.width=r.width+'px';cl.style.height=r.height+'px';cl.style.zIndex='9999';cl.style.transition='all .5s ease-in';cl.style.pointerEvents='none';document.body.appendChild(cl);});p.style.visibility='hidden';m.style.visibility='hidden';const matchedPhrase=p.dataset.phrase;requestAnimationFrame(()=>{const tx=br.left+br.width/2,ty=br.top+br.height/2;pc.style.left=(tx-40)+'px';pc.style.top=(ty-15)+'px';pc.style.width='60px';pc.style.height='30px';pc.style.opacity='0';mc.style.left=(tx+5)+'px';mc.style.top=(ty-15)+'px';mc.style.width='60px';mc.style.height='30px';mc.style.opacity='0';});setTimeout(()=>{pc.remove();mc.remove();p.classList.add('hidden');m.classList.add('hidden');addPairToBook(p.dataset.phrase,p.dataset.meaning);collectedPhrases.add(p.dataset.phrase);remainingPairs=remainingPairs.filter(x=>x.p!==matchedPhrase);isAnimating=false;const rem=document.querySelectorAll('.tile:not(.hidden)').length;if(rem===0){setTimeout(()=>nextRound(),800);}},500);}
+function animateToBook(p,m){const br=document.querySelector('.book').getBoundingClientRect();const pr=p.getBoundingClientRect();const mr=m.getBoundingClientRect();const pc=p.cloneNode(true);const mc=m.cloneNode(true);[pc,mc].forEach((cl,i)=>{const r=i===0?pr:mr;cl.style.position='fixed';cl.style.left=r.left+'px';cl.style.top=r.top+'px';cl.style.width=r.width+'px';cl.style.height=r.height+'px';cl.style.zIndex='9999';cl.style.transition='all .5s ease-in';cl.style.pointerEvents='none';document.body.appendChild(cl);});p.style.visibility='hidden';m.style.visibility='hidden';const matchedPhrase=p.dataset.phrase;requestAnimationFrame(()=>{const tx=br.left+br.width/2,ty=br.top+br.height/2;pc.style.left=(tx-40)+'px';pc.style.top=(ty-15)+'px';pc.style.width='60px';pc.style.height='30px';pc.style.opacity='0';mc.style.left=(tx+5)+'px';mc.style.top=(ty-15)+'px';mc.style.width='60px';mc.style.height='30px';mc.style.opacity='0';});setTimeout(()=>{pc.remove();mc.remove();p.classList.add('hidden');m.classList.add('hidden');addPairToBook(p.dataset.phrase,p.dataset.meaning);collectedPhrases.add(p.dataset.phrase);remainingPairs=remainingPairs.filter(x=>x.p!==matchedPhrase);isAnimating=false;syncGlobalToVariant();saveToStorage();const rem=document.querySelectorAll('.tile:not(.hidden)').length;if(rem===0){setTimeout(()=>nextRound(),800);}},500);}
 
-function addPairToBook(phrase,meaning){const pl=document.getElementById('pageLeft'),pr=document.getElementById('pageRight');const pp=deviceParams.bookPairsPerPage;const pd=document.createElement('div');pd.className='book-pair';const ph=document.createElement('div');ph.className='pair-phrase';const phI=document.createElement('div');phI.className='pair-content';phI.innerHTML=addNbsp(phrase);ph.appendChild(phI);if(phrase===LAMP_PHRASE){const l=document.createElement('span');l.className='lamp-inline';l.textContent='💡';l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};ph.appendChild(l);}const dh=document.createElement('div');dh.className='pair-dash';dh.textContent='—';const mh=document.createElement('div');mh.className='pair-meaning';const mhI=document.createElement('div');mhI.className='pair-content';mhI.innerHTML=renderMeaningHTMLStacked(meaning);mh.appendChild(mhI);pd.appendChild(ph);pd.appendChild(dh);pd.appendChild(mh);if(bookLeftPairs<pp){pl.appendChild(pd);bookLeftPairs++;}else if(bookRightPairs<pp){pr.appendChild(pd);bookRightPairs++;}pairsInBook.push({phrase,meaning});setTimeout(fitBook,30);if(bookLeftPairs>=pp&&bookRightPairs>=pp){isFlipping=true;setTimeout(()=>{flipBookPage(()=>{pl.innerHTML='';pr.innerHTML='';bookLeftPairs=0;bookRightPairs=0;isFlipping=false;});},700);}}
+function addPairToBook(phrase,meaning){const pl=document.getElementById('pageLeft'),pr=document.getElementById('pageRight');const pp=deviceParams.bookPairsPerPage;const pd=document.createElement('div');pd.className='book-pair';const ph=document.createElement('div');ph.className='pair-phrase';const phI=document.createElement('div');phI.className='pair-content';phI.innerHTML=addNbsp(phrase);ph.appendChild(phI);if(phrase===LAMP_PHRASE){const l=document.createElement('span');l.className='lamp-inline';l.textContent='💡';l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};ph.appendChild(l);}const dh=document.createElement('div');dh.className='pair-dash';dh.textContent='—';const mh=document.createElement('div');mh.className='pair-meaning';const mhI=document.createElement('div');mhI.className='pair-content';mhI.innerHTML=renderMeaningHTMLStacked(meaning);mh.appendChild(mhI);pd.appendChild(ph);pd.appendChild(dh);pd.appendChild(mh);if(bookLeftPairs<pp){pl.appendChild(pd);bookLeftPairs++;}else if(bookRightPairs<pp){pr.appendChild(pd);bookRightPairs++;}pairsInBook.push({phrase,meaning});setTimeout(fitBook,30);syncGlobalToVariant();saveToStorage();if(bookLeftPairs>=pp&&bookRightPairs>=pp){isFlipping=true;setTimeout(()=>{flipBookPage(()=>{pl.innerHTML='';pr.innerHTML='';bookLeftPairs=0;bookRightPairs=0;isFlipping=false;syncGlobalToVariant();saveToStorage();});},700);}}
 
 function flipBookPage(cb){const sp=document.getElementById('bookSpread'),rp=document.getElementById('pageRight');const rr=rp.getBoundingClientRect(),sr=sp.getBoundingClientRect();const cl=document.createElement('div');cl.className='flip-clone';cl.style.position='absolute';cl.style.left=(rr.left-sr.left)+'px';cl.style.top='0';cl.style.width=rr.width+'px';cl.style.height='100%';const fr=document.createElement('div');fr.className='flip-clone-front';fr.innerHTML=rp.innerHTML;cl.appendChild(fr);rp.innerHTML='';sp.appendChild(cl);setTimeout(()=>{cl.remove();if(cb)cb();},1300);}
 
@@ -912,7 +969,7 @@ function showFinal(){
   variantState[currentVariant].bookRightPairs=0;
   variantState[currentVariant].pageLeftHTML='';
   variantState[currentVariant].pageRightHTML='';
-  variantState[currentVariant].pairsOnField=[];
+  saveToStorage();
 }
 
 let dictPages=[],dictCurrentPage=0;
@@ -1002,14 +1059,38 @@ function dictNextPage(){if(dictCurrentPage<dictPages.length-1){dictCurrentPage++
 
 function toggleSound(){soundOn=!soundOn;const b1=document.getElementById('soundBtn');const t=soundOn?'Звук 🔊':'Звук 🔇';if(b1){b1.textContent=t;b1.classList.toggle('muted',!soundOn);}}
 function togglePause(){paused=!paused;const o=document.getElementById('pauseOverlay');if(paused)o.classList.add('active');else o.classList.remove('active');}
-function restartGame(){document.getElementById('finalOverlay').classList.remove('active');document.getElementById('mainArea').style.visibility='';document.getElementById('rotateWrap').style.display='flex';initGame();applyRotation();}
+function restartGame(){clearStorage();document.getElementById('finalOverlay').classList.remove('active');document.getElementById('mainArea').style.visibility='';document.getElementById('rotateWrap').style.display='flex';initGame();applyRotation();}
 
 applyRotation();
-initGame();
 
-let resizeTimeout;
-window.addEventListener('resize',()=>{clearTimeout(resizeTimeout);resizeTimeout=setTimeout(()=>{applyRotation();const np=getParams();if(np.cols!==deviceParams.cols||np.rows!==deviceParams.rows||np.pairsPerRound!==deviceParams.pairsPerRound||np.bookPairsPerPage!==deviceParams.bookPairsPerPage){relayoutForOrientation();}},300);});
-window.addEventListener('orientationchange',()=>{setTimeout(()=>{applyRotation();relayoutForOrientation();},300);});
+// при загрузке: если есть сохранение — восстановить, иначе начать новую игру
+(function boot(){
+  const hadSave=!!loadFromStorage();
+  if(hadSave){
+    restoreAfterReload();
+  }else{
+    initGame();
+  }
+})();
+
+// ===== ПОВОРОТ: сохранить и перезагрузить =====
+let lastOrientation=isLandscape();
+function handleOrientationChange(){
+  const now=isLandscape();
+  if(now===lastOrientation)return;
+  lastOrientation=now;
+  // сохранить текущий вариант перед перезагрузкой
+  syncGlobalToVariant();
+  saveToStorage();
+  // небольшая задержка, чтобы браузер успел завершить анимацию поворота и записать storage
+  setTimeout(()=>{location.reload();},150);
+}
+window.addEventListener('orientationchange',()=>{setTimeout(handleOrientationChange,250);});
+window.addEventListener('resize',()=>{
+  // на планшете resize при повороте приходит тоже
+  clearTimeout(window._rotT);
+  window._rotT=setTimeout(handleOrientationChange,300);
+});
 </script>
 </body>
 </html>
