@@ -22,15 +22,17 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .tab{font-family:'EB Garamond',Georgia,serif;font-size:.8rem;font-weight:600;padding:3px 14px;background:#1a2a4a;color:#e0d4b8;border:1px solid #b8860b;border-radius:4px;cursor:pointer}
 .tab.active{background:#b8860b;color:#1a2a4a}
 .tab:hover{background:#2a3a5a}
+.tab.active:hover{background:#c8960b;color:#1a2a4a}
 .main{flex:1;display:flex;gap:10px;padding:0 16px 6px 16px;min-height:0}
 .left-part{flex:0 0 63%;min-height:0;min-width:0;display:flex}
-.game-field{flex:1;border:3px solid #b8860b;border-radius:8px;padding:var(--gap,5px);padding-bottom:calc(var(--gap,5px) + 6px);display:grid;grid-template-columns:repeat(var(--cols,5),minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:var(--gap,5px);min-height:0;min-width:0;position:relative;background:rgba(0,0,0,.05)}
+.game-field{flex:1;border:3px solid #b8860b;border-radius:8px;padding:var(--gap,5px);padding-bottom:calc(var(--gap,5px) + 6px);display:grid;grid-template-columns:repeat(var(--cols,5),minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:var(--gap,5px);min-height:0;min-width:0;position:relative;background:rgba(0,0,0,.05);align-content:start}
 .game-field .start-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Playfair Display',Georgia,serif;font-size:1rem;padding:8px 24px;background:#2a4a6a;color:#e0d4b8;border:2px solid #b8860b;border-radius:6px;cursor:pointer;z-index:10}
 .game-field .start-btn:hover{background:#3a5a7a}
 .tile{--edge1:#7a90ac;--edge2:#6a80a0;width:100%;height:100%;min-width:0;min-height:0;border-radius:5px 8px 8px 5px;cursor:pointer;text-align:center;font-family:'EB Garamond',Georgia,serif;font-size:1.05rem;font-weight:700;line-height:1.1;user-select:none;display:flex;align-items:center;justify-content:center;padding:2px 4px 4px 4px;overflow:hidden;position:relative;transition:box-shadow .15s,transform .15s;box-shadow:inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(0,0,0,.12),0 2px 0 var(--edge1),0 4px 0 var(--edge2),0 6px 6px rgba(0,0,0,.3);border:1px solid rgba(0,0,0,.15);border-bottom:none}
 .tile-content{display:block;width:100%;text-align:center;line-height:1.1;overflow-wrap:normal;word-break:keep-all;hyphens:none;-webkit-hyphens:none}
 .tile-content .second{color:#2a4a7a}
 .tile-content .third{color:#3a6a9a}
+.tile-content i{font-style:italic;font-weight:400;opacity:.85}
 .tile.phrase{--edge1:#7a90ac;--edge2:#5a708c;background:linear-gradient(180deg,#cfddef,#B0C4DE 45%,#8aa0bc);color:#1a2a4a}
 .tile.meaning{--edge1:#b8a070;--edge2:#9a8458;background:linear-gradient(180deg,#f8e8c8,#F5DEB3 45%,#d8c090);color:#1a2a4a}
 .tile.selected{border:2px solid #b8860b;box-shadow:0 0 0 2px #b8860b,inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(0,0,0,.12),0 2px 0 var(--edge1),0 4px 0 var(--edge2),0 6px 6px rgba(0,0,0,.3);transform:translateY(-2px)}
@@ -79,6 +81,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .book-pair{display:flex;flex-direction:row;gap:4px;align-items:center;min-width:0;min-height:0;padding:2px 0}
 .book-pair .pair-phrase{flex:0 0 45%;min-width:0;padding:1px;color:#152040;text-align:left;font-family:'EB Garamond',Georgia,serif;font-weight:700;font-size:.61rem;position:relative}
 .pair-content{display:block;width:100%;text-align:left;line-height:1.15;overflow-wrap:normal;word-break:keep-all;hyphens:none;-webkit-hyphens:none}
+.pair-content i{font-style:italic;font-weight:400;opacity:.85}
 .book-pair .pair-phrase .lamp-inline{font-size:.7rem;margin-left:2px;cursor:pointer;flex-shrink:0}
 .book-pair .pair-dash{flex:0 0 auto;display:flex;align-items:center;color:#152040;font-weight:700;padding:0 1px;font-size:.61rem}
 .book-pair .pair-meaning{flex:1;min-width:0;padding:1px;color:#152040;text-align:left;font-size:.61rem;font-weight:400}
@@ -103,26 +106,26 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .tooltip{position:absolute;background:#f5f0e1;border:2.5px solid #1a2a4a;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#1a2a4a;z-index:100;box-shadow:0 3px 10px rgba(0,0,0,.35);max-width:240px;line-height:1.4}
 .tooltip .example{font-style:italic;color:#1a2a4a;font-weight:600}
 .tooltip .warning{display:block;margin-top:3px}
+/* ===== ФИНАЛ: сундук исчезает, книга превращается в словарь, вкладки остаются ===== */
 .final-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:#346a48;display:none;align-items:center;justify-content:center;flex-direction:column;z-index:1500}
 .final-overlay.active{display:flex}
-.final-book{width:190px;height:300px;background:linear-gradient(135deg,#1a2a4a,#0d1b3e);border-radius:6px;border:3px solid #b8860b;border-left:none;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(0,0,0,.5),inset 0 0 40px rgba(184,134,11,.15);position:relative;cursor:pointer;animation:bookAppear .8s ease-out;margin-left:22px}
-.final-book::before{content:'';position:absolute;left:-22px;top:-3px;bottom:-3px;width:24px;background:linear-gradient(90deg,#0a1428,#1a2a4a 55%,#25406a);border:3px solid #b8860b;border-right:none;border-radius:6px 0 0 6px;box-shadow:inset -6px 0 10px rgba(0,0,0,.5),inset 0 0 6px rgba(184,134,11,.2)}
-.final-book::after{content:'';position:absolute;left:-16px;top:14px;bottom:14px;width:3px;background:repeating-linear-gradient(to bottom,rgba(224,212,184,.55) 0 1px,transparent 1px 4px);border-radius:2px}
+.final-center{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
+.final-book{width:280px;height:400px;background:linear-gradient(135deg,#1a2a4a,#0d1b3e);border-radius:6px;border:3px solid #b8860b;border-left:none;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(0,0,0,.5),inset 0 0 40px rgba(184,134,11,.15);position:relative;cursor:pointer;animation:bookAppear .8s ease-out;margin-left:28px}
+.final-book::before{content:'';position:absolute;left:-28px;top:-3px;bottom:-3px;width:30px;background:linear-gradient(90deg,#0a1428,#1a2a4a 55%,#25406a);border:3px solid #b8860b;border-right:none;border-radius:6px 0 0 6px;box-shadow:inset -6px 0 10px rgba(0,0,0,.5),inset 0 0 6px rgba(184,134,11,.2)}
+.final-book::after{content:'';position:absolute;left:-20px;top:16px;bottom:16px;width:3px;background:repeating-linear-gradient(to bottom,rgba(224,212,184,.55) 0 1px,transparent 1px 4px);border-radius:2px}
 @keyframes bookAppear{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
-.final-book-title{font-family:'Playfair Display',Georgia,serif;font-weight:900;font-size:1.2rem;color:#b8860b;text-align:center;padding:20px;letter-spacing:1px;text-shadow:0 1px 2px rgba(0,0,0,.5)}
-.final-btn{margin-top:24px;font-family:'Playfair Display',Georgia,serif;font-size:1rem;padding:12px 36px;background:#4caf50;color:#fff;border:2px solid #2e7d32;border-radius:8px;cursor:pointer;box-shadow:0 4px 0 #2e7d32,0 6px 12px rgba(0,0,0,.3)}
+.final-book-title{font-family:'Playfair Display',Georgia,serif;font-weight:900;font-size:1.5rem;color:#b8860b;text-align:center;padding:24px;letter-spacing:1px;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+.final-btn{font-family:'Playfair Display',Georgia,serif;font-size:1rem;padding:12px 36px;background:#4caf50;color:#fff;border:2px solid #2e7d32;border-radius:8px;cursor:pointer;box-shadow:0 4px 0 #2e7d32,0 6px 12px rgba(0,0,0,.3)}
 .final-btn:hover{background:#66bb6a}
 .final-btn:active{transform:translateY(2px)}
-.final-header{position:absolute;top:20px;left:0;right:0;text-align:center}
-.final-header h1{font-family:'Playfair Display',Georgia,serif;font-size:1.8rem;font-weight:900;color:#e6b800;letter-spacing:2px}
-.final-footer{position:absolute;bottom:20px;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:0 20px}
+/* ===== СЛОВАРЬ ===== */
 .dict-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(26,42,74,.9);display:none;align-items:center;justify-content:center;z-index:2000}
 .dict-overlay.active{display:flex}
-.dict-container{width:92%;max-width:820px;height:88%;background:#e0d4b8;border-radius:8px;border:4px solid #1a2a4a;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.dict-container{width:94%;max-width:900px;height:88%;background:#e0d4b8;border-radius:8px;border:4px solid #1a2a4a;display:flex;flex-direction:column;overflow:hidden;position:relative}
 .dict-header{display:flex;justify-content:space-between;align-items:center;padding:6px 14px;background:#1a2a4a;color:#e0d4b8;font-family:'Playfair Display',Georgia,serif;font-size:.95rem}
 .dict-close{font-size:1.2rem;cursor:pointer;color:#e0d4b8;background:none;border:none}
 .dict-pages{flex:1;display:flex;overflow:visible;position:relative}
-.dict-page{flex:1;position:relative;padding:14px 18px 44px;overflow-y:auto;overflow-x:visible;display:flex;flex-direction:column;background:#e0d4b8;background-image:radial-gradient(circle at 20% 30%,rgba(184,92,56,.1) .5px,transparent 1px),radial-gradient(circle at 70% 60%,rgba(166,138,58,.1) .5px,transparent 1px)}
+.dict-page{flex:1;position:relative;padding:14px 24px 44px 18px;overflow-y:auto;overflow-x:visible;display:flex;flex-direction:column;background:#e0d4b8;background-image:radial-gradient(circle at 20% 30%,rgba(184,92,56,.1) .5px,transparent 1px),radial-gradient(circle at 70% 60%,rgba(166,138,58,.1) .5px,transparent 1px)}
 .dict-page-content{flex:1;display:flex;flex-direction:column}
 .dict-fold{width:6px;flex-shrink:0;background:linear-gradient(to right,#d4c8a8,#c8bc9c 30%,#b8ac8c 50%,#c8bc9c 70%,#d4c8a8);position:relative}
 .dict-fold::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:2px;height:100%;background:rgba(0,0,0,.15)}
@@ -134,10 +137,11 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-page .arrow.forward{right:16px}
 .dict-entry{display:flex;align-items:center;gap:6px;padding:4px 0;min-height:2rem;flex:0 0 auto}
 .dict-entry .lock{font-size:.85rem;flex-shrink:0;width:20px;text-align:center}
-.dict-entry .entry-phrase{font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:1.05rem;color:#5a2a2a;flex:0 0 42%;line-height:1.15}
+.dict-entry .entry-phrase{font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:1.05rem;color:#5a2a2a;flex:0 0 40%;line-height:1.15}
+.dict-entry .entry-phrase i{font-style:italic;font-weight:400;opacity:.85}
 .dict-entry .entry-phrase .lamp-inline{font-size:.95rem;margin-left:3px;cursor:pointer}
 .dict-entry .entry-dash{color:#1a2a4a;padding:0 4px;flex-shrink:0}
-.dict-entry .entry-meaning{font-family:'EB Garamond',Georgia,serif;font-size:.98rem;font-weight:600;color:#152040;flex:1;line-height:1.15}
+.dict-entry .entry-meaning{font-family:'EB Garamond',Georgia,serif;font-size:.98rem;font-weight:600;color:#152040;flex:1;line-height:1.15;padding-right:14px}
 .dict-entry .entry-meaning .second{color:#2a4a7a}
 .dict-entry .entry-meaning .third{color:#3a6a9a}
 .dict-entry.empty .entry-phrase,.dict-entry.empty .entry-dash,.dict-entry.empty .entry-meaning{visibility:hidden}
@@ -153,8 +157,21 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .game-field{grid-template-columns:repeat(5,minmax(0,1fr))}
 }
 @media (orientation:landscape) and (min-width:750px) and (max-width:1400px){
-.page{padding:22px 12px;gap:12px}
-.book-open{height:78%}
+.chest{flex:0 0 calc(55% + 1cm)}
+.page{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
+.book-pair{padding:3px 0}
+.flip-clone-front{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
+}
+@media (orientation:portrait){
+.final-book{width:220px;height:340px}
+.final-book-title{font-size:1.3rem}
+.dict-container{width:96%;height:92%}
+.dict-entry .entry-phrase{font-size:1rem}
+.dict-entry .entry-meaning{font-size:.92rem}
+}
+@media (max-width:480px){
+.final-book{width:180px;height:280px}
+.final-book-title{font-size:1.05rem}
 }
 </style>
 </head>
@@ -230,17 +247,11 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 </div>
 
 <div class="final-overlay" id="finalOverlay">
-  <div class="final-header"><h1>Фразеологизмы. Знаток</h1></div>
-  <div class="final-book" onclick="openDict()">
-    <div class="final-book-title">Словарь<br>фразеологизмов</div>
-  </div>
-  <button class="final-btn" onclick="openDict()">Открыть словарь</button>
-  <div class="final-footer">
-    <div class="footer-buttons">
-      <button class="btn" id="soundBtnFinal" onclick="toggleSound()">Звук 🔊</button>
-      <button class="btn" onclick="restartGame()">Играть снова</button>
+  <div class="final-center">
+    <div class="final-book" onclick="openDict()">
+      <div class="final-book-title">Словарь<br>фразеологизмов</div>
     </div>
-    <div class="watermark">© Анна Сазонова, 2026</div>
+    <button class="final-btn" onclick="openDict()">Открыть словарь</button>
   </div>
 </div>
 
@@ -396,7 +407,7 @@ const ALL_PAIRS = [
   { p: "как миленький", m: "о беспрекословном подчинении" },
   { p: "как назло", m: "как будто нарочно" },
   { p: "как правило", m: "обычно" },
-  { p: "как раз", m: "совершенно точно" },
+  { p: "как раз", m: "точно; именно; впору" },
   { p: "как следует", m: "как нужно; в полной мере" },
   { p: "камень на сердце", m: "тревога, тяжесть" },
   { p: "каши не сваришь", m: "о невозможности договориться" },
@@ -459,7 +470,7 @@ const ALL_PAIRS = [
   { p: "одно время", m: "когда-то в прошлом" },
   { p: "опустить руки", m: "сдаться, отчаяться" },
   { p: "остаться в памяти", m: "запомниться" },
-  { p: "отвести глаза", m: "умышленно отвлечь внимание" },
+  { p: "отвести глаза (кому-то)", m: "умышленно отвлечь внимание" },
   { p: "отдавать должное", m: "признавать достоинства" },
   { p: "открыть глаза", m: "избавить от заблуждения" },
   { p: "от нечего делать", m: "от скуки, от безделья" },
@@ -584,7 +595,16 @@ function playChestOpen(){if(!soundOn)return;try{const c=getAudioCtx(),n=c.curren
 function playChestClose(){if(!soundOn)return;try{const c=getAudioCtx(),n=c.currentTime,d=1.2;const o=c.createOscillator();o.type='sawtooth';o.frequency.setValueAtTime(150,n);o.frequency.linearRampToValueAtTime(170,n+d*.5);o.frequency.linearRampToValueAtTime(140,n+d);const v=c.createOscillator();v.frequency.value=9;const vg=c.createGain();vg.gain.value=22;v.connect(vg);vg.connect(o.frequency);const g=c.createGain();g.gain.setValueAtTime(.001,n);g.gain.linearRampToValueAtTime(.08,n+.15);g.gain.setValueAtTime(.08,n+d*.7);g.gain.linearRampToValueAtTime(.001,n+d);const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=700;f.Q.value=1.5;o.connect(f);f.connect(g);g.connect(c.destination);o.start(n);o.stop(n+d);v.start(n);v.stop(n+d);const tt=n+d+.05;const to=c.createOscillator(),tg=c.createGain();to.type='sine';to.frequency.setValueAtTime(90,tt);to.frequency.exponentialRampToValueAtTime(45,tt+.15);tg.gain.setValueAtTime(.001,tt);tg.gain.exponentialRampToValueAtTime(.35,tt+.005);tg.gain.exponentialRampToValueAtTime(.001,tt+.18);to.connect(tg);tg.connect(c.destination);to.start(tt);to.stop(tt+.2);}catch(e){}}
 
 const SHORT_WORDS=['в','на','с','к','по','за','из','от','до','у','о','об','во','со','ко','под','над','при','про','без','для','через','между','перед','и','а','но','да','или','либо','что','как','то','же','бы','ли','не','ни'];
-function addNbsp(t){let r=t;r=r.replace(/(\S)-(\S)/g,'$1\u2011$2');r=r.replace(/один\u2011одинёшенек/g,'один-одинёшенек');SHORT_WORDS.forEach(w=>{const re=new RegExp('(^|\\s)('+w+')\\s+','gi');r=r.replace(re,'$1$2&nbsp;');});return r;}
+function addNbsp(t){
+  // выделяем фрагменты в скобках — оборачиваем в курсив
+  t=t.replace(/\(([^)]*)\)/g,'(<i>$1</i>)');
+  // неразрывные пробелы для коротких слов (внутри тегов <i> тоже сработает)
+  t=t.replace(/(\S)-(\S)/g,'$1\u2011$2');
+  t=t.replace(/один\u2011одинёшенек/g,'один-одинёшенек');
+  t=t.replace(/ни\s+стало/g,'ни&nbsp;стало');
+  SHORT_WORDS.forEach(w=>{const re=new RegExp('(^|\\s)('+w+')\\s+','gi');t=t.replace(re,'$1$2&nbsp;');});
+  return t;
+}
 function splitMeaning(m){return m.split(';').map(s=>s.trim());}
 function renderMeaningHTMLStacked(m){const p=splitMeaning(m);const cl=['','second','third'];return p.map((part,i)=>{const cls=cl[i]||'third';const sep=i<p.length-1?';':'';return cls?`<span class="${cls}">${addNbsp(part)}${sep}</span>`:`<span>${addNbsp(part)}${sep}</span>`;}).join('<br>');}
 
@@ -602,7 +622,29 @@ function applyPortraitTabletLayout(){const main=document.getElementById('mainAre
 
 function initGame(){deviceParams=getParams();variants=buildVariants();currentVariant=0;currentRound=0;pairsInBook=[];collectedPhrases=new Set();gameStarted=false;paused=false;selectedPhrase=null;selectedMeaning=null;isAnimating=false;isFlipping=false;stackRemaining=deviceParams.totalTiles;document.getElementById('chestLid').classList.remove('open');document.getElementById('chestLid').classList.remove('closing');document.getElementById('chestKey').classList.remove('turned');const tr=document.getElementById('tabsRow');if(deviceParams.tabs>1)tr.classList.remove('empty');else tr.classList.add('empty');document.querySelectorAll('.tab').forEach((tab,i)=>{tab.style.display=i<deviceParams.tabs?'inline-block':'none';tab.classList.toggle('active',i===0);tab.onclick=()=>switchVariant(i);});const f=document.getElementById('gameField');f.style.setProperty('--cols',deviceParams.cols);f.style.setProperty('--gap',deviceParams.gap+'px');f.innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';document.getElementById('pageLeft').innerHTML='';document.getElementById('pageRight').innerHTML='';bookLeftPairs=0;bookRightPairs=0;applyPortraitTabletLayout();document.getElementById('pauseOverlay').classList.remove('active');document.getElementById('dictOverlay').classList.remove('active');document.getElementById('finalOverlay').classList.remove('active');}
 
-function switchVariant(i){currentVariant=i;currentRound=0;pairsInBook=[];collectedPhrases=new Set();gameStarted=false;isAnimating=false;isFlipping=false;selectedPhrase=null;selectedMeaning=null;stackRemaining=deviceParams.totalTiles;document.getElementById('chestLid').classList.remove('open');document.getElementById('chestLid').classList.remove('closing');document.getElementById('chestKey').classList.remove('turned');document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',j===i));const f=document.getElementById('gameField');f.innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';document.getElementById('pageLeft').innerHTML='';document.getElementById('pageRight').innerHTML='';bookLeftPairs=0;bookRightPairs=0;}
+function switchVariant(i){
+  currentVariant=i;
+  currentRound=0;
+  // collectedPhrases НЕ сбрасываем — замки должны постепенно исчезать
+  pairsInBook=[];
+  gameStarted=false;
+  isAnimating=false;
+  isFlipping=false;
+  selectedPhrase=null;
+  selectedMeaning=null;
+  stackRemaining=deviceParams.totalTiles;
+  document.getElementById('chestLid').classList.remove('open');
+  document.getElementById('chestLid').classList.remove('closing');
+  document.getElementById('chestKey').classList.remove('turned');
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',j===i));
+  const f=document.getElementById('gameField');
+  f.innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
+  document.getElementById('pageLeft').innerHTML='';
+  document.getElementById('pageRight').innerHTML='';
+  bookLeftPairs=0;bookRightPairs=0;
+  document.getElementById('finalOverlay').classList.remove('active');
+  document.getElementById('dictOverlay').classList.remove('active');
+}
 
 function startGame(){gameStarted=true;const b=document.getElementById('startBtn');if(b)b.remove();playKeyTurn();document.getElementById('chestKey').classList.add('turned');setTimeout(()=>{playChestOpen();document.getElementById('chestLid').classList.add('open');},700);setTimeout(()=>nextRound(),3200);}
 
@@ -629,8 +671,13 @@ function renderField(){
     f.appendChild(tile);
   });
   const cols=deviceParams.cols;
-  const rowCount=Math.ceil(tiles.length/cols);
-  f.style.gridTemplateRows=`repeat(${rowCount}, minmax(0, 1fr))`;
+  // высота ряда считается от ПОЛНОГО раунда (pairsPerRound), а не от фактического числа плиток
+  const fullRows=Math.ceil((deviceParams.pairsPerRound*2)/cols);
+  const gap=deviceParams.gap;
+  const fieldH=f.clientHeight-2*gap-(gap+6);
+  const rowH=Math.max(40,(fieldH-gap*(fullRows-1))/fullRows);
+  f.style.gridTemplateRows=`repeat(${fullRows}, ${rowH}px)`;
+  f.style.alignContent='start';
   fitTiles();
 
   const chestEl=document.getElementById('chest');
@@ -683,15 +730,38 @@ function addPairToBook(phrase,meaning){const pl=document.getElementById('pageLef
 
 function flipBookPage(cb){const sp=document.getElementById('bookSpread'),rp=document.getElementById('pageRight');const rr=rp.getBoundingClientRect(),sr=sp.getBoundingClientRect();const cl=document.createElement('div');cl.className='flip-clone';cl.style.position='absolute';cl.style.left=(rr.left-sr.left)+'px';cl.style.top='0';cl.style.width=rr.width+'px';cl.style.height='100%';const fr=document.createElement('div');fr.className='flip-clone-front';fr.innerHTML=rp.innerHTML;cl.appendChild(fr);rp.innerHTML='';sp.appendChild(cl);setTimeout(()=>{cl.remove();if(cb)cb();},1300);}
 
-function showFinal(){playChestClose();const lid=document.getElementById('chestLid');const key=document.getElementById('chestKey');lid.classList.remove('open');lid.classList.add('closing');key.classList.remove('turned');setTimeout(()=>{lid.classList.remove('closing');document.getElementById('rotateWrap').style.display='none';document.getElementById('finalOverlay').classList.add('active');playFanfare();},1500);}
+function showFinal(){
+  playChestClose();
+  const lid=document.getElementById('chestLid');
+  const key=document.getElementById('chestKey');
+  lid.classList.remove('open');
+  lid.classList.add('closing');
+  key.classList.remove('turned');
+  // показываем финальный оверлей (сундук исчезает вместе с rotateWrap, но вкладки остаются)
+  // вкладки у нас в rotateWrap — поэтому НЕ скрываем весь rotateWrap, а только игровые области
+  document.getElementById('mainArea').style.visibility='hidden';
+  document.getElementById('finalOverlay').classList.add('active');
+  playFanfare();
+  setTimeout(()=>{lid.classList.remove('closing');},1400);
+}
+
+function hideFinal(){
+  document.getElementById('mainArea').style.visibility='';
+  document.getElementById('finalOverlay').classList.remove('active');
+}
 
 let dictPages=[],dictCurrentPage=0;
+function sortKey(phrase){
+  // убираем пояснение в скобках для сортировки
+  return phrase.replace(/^\s*\([^)]*\)\s*/,'').trim();
+}
 function buildDictPages(){
-  const sorted=[...ALL_PAIRS].sort((a,b)=>a.p.localeCompare(b.p,'ru'));
+  const sorted=[...ALL_PAIRS].sort((a,b)=>sortKey(a.p).localeCompare(sortKey(b.p),'ru'));
   const entries=[];
   let lastLetter='';
   sorted.forEach(p=>{
-    const l=p.p[0].toUpperCase();
+    const k=sortKey(p.p);
+    const l=k[0].toUpperCase();
     if(l!==lastLetter){entries.push({type:'letter',letter:l});lastLetter=l;}
     entries.push({type:'pair',pair:p});
   });
@@ -755,9 +825,9 @@ function closeDict(){document.getElementById('dictOverlay').classList.remove('ac
 function dictPrevPage(){if(dictCurrentPage>0){dictCurrentPage--;renderDictPage();}}
 function dictNextPage(){if(dictCurrentPage<dictPages.length-1){dictCurrentPage++;renderDictPage();}}
 
-function toggleSound(){soundOn=!soundOn;const b1=document.getElementById('soundBtn'),b2=document.getElementById('soundBtnFinal');const t=soundOn?'Звук 🔊':'Звук 🔇';[b1,b2].forEach(b=>{if(b){b.textContent=t;b.classList.toggle('muted',!soundOn);}});}
+function toggleSound(){soundOn=!soundOn;const b1=document.getElementById('soundBtn');const t=soundOn?'Звук 🔊':'Звук 🔇';if(b1){b1.textContent=t;b1.classList.toggle('muted',!soundOn);}}
 function togglePause(){paused=!paused;const o=document.getElementById('pauseOverlay');if(paused)o.classList.add('active');else o.classList.remove('active');}
-function restartGame(){document.getElementById('finalOverlay').classList.remove('active');document.getElementById('rotateWrap').style.display='flex';initGame();applyRotation();}
+function restartGame(){document.getElementById('finalOverlay').classList.remove('active');document.getElementById('mainArea').style.visibility='';document.getElementById('rotateWrap').style.display='flex';initGame();applyRotation();}
 
 applyRotation();
 initGame();
