@@ -109,16 +109,12 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 /* ===== ФИНАЛ ===== */
 .final-overlay{position:fixed;top:0;left:0;right:0;bottom:0;display:none;flex-direction:column;z-index:1500;pointer-events:none}
 .final-overlay.active{display:flex}
-.final-spacer-top{flex-shrink:0;height:0}
-.final-spacer-bottom{flex-shrink:0;height:0}
-.final-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;pointer-events:auto}
-.final-book{width:360px;height:500px;background:linear-gradient(135deg,#1a2a4a,#0d1b3e);border-radius:8px;border:4px solid #b8860b;border-left:none;display:flex;align-items:center;justify-content:center;box-shadow:0 20px 50px rgba(0,0,0,.6),inset 0 0 60px rgba(184,134,11,.18);position:relative;cursor:pointer;animation:bookAppear .8s ease-out;margin-left:44px}
-.final-book::before{content:'';position:absolute;left:-44px;top:-4px;bottom:-4px;width:48px;background:linear-gradient(90deg,#0a1428,#1a2a4a 45%,#2a4a7a 55%,#1a2a4a 100%);border:4px solid #b8860b;border-right:none;border-radius:8px 0 0 8px;box-shadow:inset -8px 0 14px rgba(0,0,0,.6),inset 0 0 10px rgba(184,134,11,.25)}
-.final-book::after{content:'';position:absolute;left:-32px;top:24px;bottom:24px;width:4px;background:repeating-linear-gradient(to bottom,rgba(224,212,184,.6) 0 1px,transparent 1px 5px);border-radius:2px}
-.final-book .pages-slice-top{position:absolute;left:6px;right:6px;top:-4px;height:10px;background:repeating-linear-gradient(to bottom,#e0d4b8 0 1px,#c8bc9c 1px 2px,#b0a684 2px 3px);border-radius:4px 4px 0 0;box-shadow:inset 0 -2px 4px rgba(0,0,0,.25)}
-.final-book .pages-slice-bottom{position:absolute;left:6px;right:6px;bottom:-4px;height:10px;background:repeating-linear-gradient(to bottom,#b0a684 0 1px,#c8bc9c 1px 2px,#e0d4b8 2px 3px);border-radius:0 0 4px 4px;box-shadow:inset 0 2px 4px rgba(0,0,0,.25)}
+.final-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;pointer-events:auto}
+.final-book{width:400px;height:560px;background:linear-gradient(135deg,#1e3050,#0d1b3e);border-radius:10px;border:5px solid #b8860b;border-left:none;display:flex;align-items:center;justify-content:center;box-shadow:0 24px 60px rgba(0,0,0,.65),inset 0 0 80px rgba(184,134,11,.2);position:relative;cursor:pointer;animation:bookAppear .8s ease-out;margin-left:52px}
+.final-book::before{content:'';position:absolute;left:-52px;top:-5px;bottom:-5px;width:56px;background:linear-gradient(90deg,#060c1c,#1a2a4a 45%,#2e4a7a 55%,#1a2a4a 100%);border:5px solid #b8860b;border-right:none;border-radius:10px 0 0 10px;box-shadow:inset -10px 0 16px rgba(0,0,0,.7),inset 0 0 12px rgba(184,134,11,.3)}
+.final-book::after{content:'';position:absolute;left:-38px;top:32px;bottom:32px;width:5px;background:repeating-linear-gradient(to bottom,rgba(224,212,184,.6) 0 1px,transparent 1px 6px);border-radius:3px}
 @keyframes bookAppear{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
-.final-book-title{font-family:'Playfair Display',Georgia,serif;font-weight:900;font-size:1.9rem;color:#b8860b;text-align:center;padding:32px;letter-spacing:1.5px;text-shadow:0 2px 4px rgba(0,0,0,.6);line-height:1.2}
+.final-book-title{font-family:'Playfair Display',Georgia,serif;font-weight:900;font-size:2.1rem;color:#b8860b;text-align:center;padding:36px;letter-spacing:1.5px;text-shadow:0 2px 4px rgba(0,0,0,.6);line-height:1.2}
 .final-btn{font-family:'Playfair Display',Georgia,serif;font-size:1.15rem;padding:14px 42px;background:#4caf50;color:#fff;border:2px solid #2e7d32;border-radius:8px;cursor:pointer;box-shadow:0 4px 0 #2e7d32,0 8px 16px rgba(0,0,0,.35)}
 .final-btn:hover{background:#66bb6a}
 .final-btn:active{transform:translateY(2px)}
@@ -151,27 +147,44 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-entry.empty .entry-phrase,.dict-entry.empty .entry-dash,.dict-entry.empty .entry-meaning{visibility:hidden}
 .dict-page-content.distribute{justify-content:space-between}
 .dict-page-content.distribute .dict-entry{flex:0 0 auto}
+/* ===== МЕДИАЗАПРОСЫ ===== */
+/* Планшет портретная */
 @media (orientation:portrait) and (min-width:600px) and (max-width:1100px){
 .main{flex-direction:column;padding:0 12px 5px 12px;gap:6px}
 .top-part{flex:0 0 35%;display:flex;flex-direction:row;gap:8px;min-height:0;min-width:0}
-.top-part .chest{flex:1;min-width:0;height:100%}
+.top-part .chest{flex:1;min-width:0;height:100%;margin-top:0}
 .top-part .book-shelf{flex:1;min-width:0;padding:0 4px}
 .top-part .book-open{height:92%}
 .main .left-part{flex:1;width:100%}
 .game-field{grid-template-columns:repeat(5,minmax(0,1fr))}
+.final-book{width:340px;height:480px;margin-left:44px}
+.final-book::before{left:-44px;width:48px}
+.final-book::after{left:-32px;top:24px;bottom:24px}
+.final-book-title{font-size:1.7rem;padding:28px}
+.dict-container{width:96%;height:92%}
+.dict-entry .entry-phrase{font-size:1rem}
+.dict-entry .entry-meaning{font-size:1rem}
 }
+/* Планшет альбомная + смартфон (у нас смартфон принудительно в альбомной) */
+@media (orientation:landscape){
+  /* Сундук поднят и книга выше — только планшет */
+}
+/* Планшет альбомная */
 @media (orientation:landscape) and (min-width:750px) and (max-width:1400px){
-.chest{flex:0 0 calc(55% + 1cm)}
+.chest{flex:0 0 55%;margin-top:-1cm}
+.book-open{height:calc(82% + 1.5cm)}
 .page{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
 .book-pair{padding:3px 0}
 .flip-clone-front{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
 }
-/* Смартфон: только альбомная принудительно (поворот), поэтому особый медиазапрос не нужен, но подстрахуем размеры */
+/* Смартфон (принудительная альбомная) */
 @media (max-width:900px){
-.final-book{width:260px;height:370px;margin-left:34px}
-.final-book::before{left:-34px;width:38px}
-.final-book::after{left:-24px;top:18px;bottom:18px}
-.final-book-title{font-size:1.4rem;padding:22px}
+.page{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:8px;align-content:space-between;padding:18px 10px}
+.flip-clone-front{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:8px;align-content:space-between;padding:18px 10px}
+.final-book{width:280px;height:400px;margin-left:36px}
+.final-book::before{left:-36px;width:40px}
+.final-book::after{left:-26px;top:20px;bottom:20px}
+.final-book-title{font-size:1.5rem;padding:24px}
 .final-btn{font-size:1rem;padding:12px 34px}
 .dict-container{width:96%;height:92%}
 .dict-entry .entry-phrase{font-size:.98rem}
@@ -253,8 +266,6 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 <div class="final-overlay" id="finalOverlay">
   <div class="final-center">
     <div class="final-book" onclick="openDict()">
-      <div class="pages-slice-top"></div>
-      <div class="pages-slice-bottom"></div>
       <div class="final-book-title">Словарь<br>фразеологизмов</div>
     </div>
     <button class="final-btn" onclick="openDict()">Открыть словарь</button>
@@ -463,7 +474,7 @@ const ALL_PAIRS = [
   { p: "не подать виду", m: "не показывать своих чувств" },
   { p: "не по себе", m: "внутренний дискомфорт" },
   { p: "не сводить глаз", m: "внимательно смотреть" },
-  { p: "несмотря <br>ни на что", m: "вопреки" },
+  { p: "несмотря ни на что", m: "вопреки" },
   { p: "нести крест", m: "переносить испытания" },
   { p: "нести на своих плечах", m: "без помощи, без содействия" },
   { p: "нет дела", m: "всё равно" },
@@ -576,20 +587,44 @@ const ALL_PAIRS = [
 
 function isLandscape(){return window.innerWidth>=window.innerHeight;}
 function getDeviceType(){const m=Math.min(window.innerWidth,window.innerHeight);if(m<600)return 'phone';if(m<900)return 'tablet';return 'desktop';}
-function getParams(){const d=getDeviceType();if(d==='phone')return{pairsPerRound:6,tabs:3,cols:3,rows:4,gap:5,bookPairsPerPage:4,totalTiles:190};if(d==='tablet')return{pairsPerRound:15,tabs:3,cols:5,rows:6,gap:5,bookPairsPerPage:4,totalTiles:190};return{pairsPerRound:20,tabs:1,cols:5,rows:8,gap:6,bookPairsPerPage:4,totalTiles:568};}
+function getParams(){
+  const d=getDeviceType();
+  const land=isLandscape();
+  if(d==='phone'){
+    // смартфон — принудительная альбомная
+    return{pairsPerRound:6,tabs:3,cols:3,rows:4,gap:5,bookPairsPerPage:3,totalTiles:190};
+  }
+  if(d==='tablet'){
+    // планшет: в альбомной ориентации — 3 пары на странице книги, в портретной — 4
+    return{pairsPerRound:15,tabs:3,cols:5,rows:6,gap:5,bookPairsPerPage:(land?3:4),totalTiles:190};
+  }
+  return{pairsPerRound:20,tabs:1,cols:5,rows:8,gap:6,bookPairsPerPage:4,totalTiles:568};
+}
 function normalizeMeaning(m){return m.toLowerCase().replace(/[;,.!?()]/g,' ').split(/\s+/).filter(w=>w.length>2).sort().join(' ');}
 function meaningsAreSimilar(a,b){const n1=normalizeMeaning(a),n2=normalizeMeaning(b);if(n1===n2)return true;const w1=new Set(n1.split(' ')),w2=new Set(n2.split(' '));const i=[...w1].filter(w=>w2.has(w));const ms=Math.min(w1.size,w2.size);return ms>0&&i.length/ms>=.6;}
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
 function buildVariants(){const p=getParams();const s=shuffle(ALL_PAIRS);const t=s.length;const tabs=p.tabs;const pr=p.pairsPerRound;const vs=Math.floor(t/tabs);const va=[];let st=0;for(let i=0;i<tabs;i++){const sz=(i===tabs-1)?(t-st):vs;va.push(s.slice(st,st+sz));st+=sz;}return va.map(v=>{const r=[];const rem=[...v];while(rem.length>0){const round=[];const used=new Set();for(let i=0;i<rem.length;i++){if(round.length>=pr)break;const c=rem[i];if(used.has(i))continue;let hc=false;for(const e of round){if(meaningsAreSimilar(c.m,e.m)){hc=true;break;}}if(!hc){round.push(c);used.add(i);}}if(round.length<pr){for(let i=0;i<rem.length;i++){if(round.length>=pr)break;if(used.has(i))continue;round.push(rem[i]);used.add(i);}}const nr=[];rem.forEach((it,i)=>{if(!used.has(i))nr.push(it);});r.push(round);rem.length=0;rem.push(...nr);}return r;});}
 
-let variants=[],currentVariant=0,currentRound=0,pairsOnField=[],pairsInBook=[];
+let variants=[],currentVariant=0,pairsOnField=[],pairsInBook=[];
 let selectedPhrase=null,selectedMeaning=null;
 let soundOn=true,paused=false,gameStarted=false,isAnimating=false;
-let bookLeftPairs=0,bookRightPairs=0;
 let deviceParams=getParams();
 let collectedPhrases=new Set();
 let isFlipping=false;
-let stackRemaining=0;
+
+let variantState=[
+  {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:'',pairsOnField:[]},
+  {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:'',pairsOnField:[]},
+  {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:'',pairsOnField:[]}
+];
+let currentRoundRef=0;
+let stackRemainingRef=0;
+let bookLeftPairsRef=0;
+let bookRightPairsRef=0;
+Object.defineProperty(window,'currentRound',{get(){return currentRoundRef;},set(v){currentRoundRef=v;}});
+Object.defineProperty(window,'stackRemaining',{get(){return stackRemainingRef;},set(v){stackRemainingRef=v;}});
+Object.defineProperty(window,'bookLeftPairs',{get(){return bookLeftPairsRef;},set(v){bookLeftPairsRef=v;}});
+Object.defineProperty(window,'bookRightPairs',{get(){return bookRightPairsRef;},set(v){bookRightPairsRef=v;}});
 
 let audioCtx=null;
 function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
@@ -602,14 +637,12 @@ function playChestClose(){if(!soundOn)return;try{const c=getAudioCtx(),n=c.curre
 
 const SHORT_WORDS=['в','на','с','к','по','за','из','от','до','у','о','об','во','со','ко','под','над','при','про','без','для','через','между','перед','и','а','но','да','или','либо','что','как','то','же','бы','ли'];
 function addNbsp(t){
-  // 1) Скобки с содержимым — целиком курсивом (и сами скобки тоже)
   t=t.replace(/\(([^)]*)\)/g,'<i>($1)</i>');
-  // 2) Частицы НИ и НЕ — приклеиваем к следующему слову
+  t=t.replace(/во что бы то ни стало/gi,'во&nbsp;что&nbsp;бы&nbsp;то<br>ни&nbsp;стало');
+  t=t.replace(/несмотря ни на что/gi,'несмотря<br>ни&nbsp;на&nbsp;что');
   t=t.replace(/(^|\s)(ни|не)\s+/gi,'$1$2&nbsp;');
-  // 3) дефисы — неразрывный
   t=t.replace(/(\S)-(\S)/g,'$1\u2011$2');
   t=t.replace(/один\u2011одинёшенек/g,'один-одинёшенек');
-  // 4) короткие слова — приклеиваем к следующему
   SHORT_WORDS.forEach(w=>{const re=new RegExp('(^|\\s)('+w+')\\s+','gi');t=t.replace(re,'$1$2&nbsp;');});
   return t;
 }
@@ -628,44 +661,99 @@ function hideTooltipOnce(){if(tooltipEl){tooltipEl.remove();tooltipEl=null;}}
 function applyRotation(){const w=document.getElementById('rotateWrap');const ip=getDeviceType()==='phone';const pt=!isLandscape();if(ip&&pt){const wi=window.innerWidth,hi=window.innerHeight;w.style.width=hi+'px';w.style.height=wi+'px';w.style.transform=`translateX(${wi}px) rotate(90deg)`;}else{w.style.width='100%';w.style.height='100%';w.style.transform='';}}
 function applyPortraitTabletLayout(){const main=document.getElementById('mainArea'),lp=document.getElementById('leftPart'),rc=document.getElementById('rightColumn'),ch=document.getElementById('chest'),bs=document.getElementById('bookShelf');const tp=getDeviceType()==='tablet'&&!isLandscape();if(tp){let t=document.getElementById('topPart');if(!t){t=document.createElement('div');t.id='topPart';t.className='top-part';main.insertBefore(t,lp);}t.appendChild(ch);t.appendChild(bs);rc.style.display='none';}else{const t=document.getElementById('topPart');if(t){rc.style.display='flex';rc.appendChild(ch);rc.appendChild(bs);t.remove();}}}
 
-function initGame(){deviceParams=getParams();variants=buildVariants();currentVariant=0;currentRound=0;pairsInBook=[];collectedPhrases=new Set();gameStarted=false;paused=false;selectedPhrase=null;selectedMeaning=null;isAnimating=false;isFlipping=false;stackRemaining=deviceParams.totalTiles;document.getElementById('chestLid').classList.remove('open');document.getElementById('chestLid').classList.remove('closing');document.getElementById('chestKey').classList.remove('turned');const tr=document.getElementById('tabsRow');if(deviceParams.tabs>1)tr.classList.remove('empty');else tr.classList.add('empty');document.querySelectorAll('.tab').forEach((tab,i)=>{tab.style.display=i<deviceParams.tabs?'inline-block':'none';tab.classList.toggle('active',i===0);tab.onclick=()=>switchVariant(i);});const f=document.getElementById('gameField');f.style.setProperty('--cols',deviceParams.cols);f.style.setProperty('--gap',deviceParams.gap+'px');f.innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';document.getElementById('pageLeft').innerHTML='';document.getElementById('pageRight').innerHTML='';bookLeftPairs=0;bookRightPairs=0;applyPortraitTabletLayout();document.getElementById('pauseOverlay').classList.remove('active');document.getElementById('dictOverlay').classList.remove('active');document.getElementById('finalOverlay').classList.remove('active');document.getElementById('mainArea').style.visibility='';}
+function saveCurrentVariantState(){
+  const s=variantState[currentVariant];
+  s.round=currentRoundRef;
+  s.stackRemaining=stackRemainingRef;
+  s.gameStarted=gameStarted;
+  s.pairsInBook=[...pairsInBook];
+  s.bookLeftPairs=bookLeftPairsRef;
+  s.bookRightPairs=bookRightPairsRef;
+  s.pageLeftHTML=document.getElementById('pageLeft').innerHTML;
+  s.pageRightHTML=document.getElementById('pageRight').innerHTML;
+  s.pairsOnField=[...pairsOnField];
+}
+function restoreVariantState(i){
+  const s=variantState[i];
+  currentRoundRef=s.round;
+  stackRemainingRef=s.stackRemaining;
+  gameStarted=s.gameStarted;
+  pairsInBook=[...s.pairsInBook];
+  bookLeftPairsRef=s.bookLeftPairs;
+  bookRightPairsRef=s.bookRightPairs;
+  document.getElementById('pageLeft').innerHTML=s.pageLeftHTML;
+  document.getElementById('pageRight').innerHTML=s.pageRightHTML;
+  pairsOnField=[...s.pairsOnField];
+}
 
-function switchVariant(i){
-  currentVariant=i;
-  currentRound=0;
+function initGame(){
+  deviceParams=getParams();
+  variants=buildVariants();
+  currentVariant=0;
+  currentRoundRef=0;
+  stackRemainingRef=deviceParams.totalTiles;
   pairsInBook=[];
+  bookLeftPairsRef=0;bookRightPairsRef=0;
+  pairsOnField=[];
+  collectedPhrases=new Set();
   gameStarted=false;
-  isAnimating=false;
-  isFlipping=false;
-  selectedPhrase=null;
-  selectedMeaning=null;
-  stackRemaining=deviceParams.totalTiles;
-  document.getElementById('chestLid').classList.remove('open');
-  document.getElementById('chestLid').classList.remove('closing');
+  paused=false;
+  selectedPhrase=null;selectedMeaning=null;
+  isAnimating=false;isFlipping=false;
+  variantState.forEach(s=>{
+    s.round=0;s.stackRemaining=deviceParams.totalTiles;s.gameStarted=false;
+    s.pairsInBook=[];s.bookLeftPairs=0;s.bookRightPairs=0;
+    s.pageLeftHTML='';s.pageRightHTML='';s.pairsOnField=[];
+  });
+  document.getElementById('chestLid').classList.remove('open','closing');
   document.getElementById('chestKey').classList.remove('turned');
-  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',j===i));
+  const tr=document.getElementById('tabsRow');
+  if(deviceParams.tabs>1)tr.classList.remove('empty');else tr.classList.add('empty');
+  document.querySelectorAll('.tab').forEach((tab,i)=>{tab.style.display=i<deviceParams.tabs?'inline-block':'none';tab.classList.toggle('active',i===0);tab.onclick=()=>switchVariant(i);});
   const f=document.getElementById('gameField');
+  f.style.setProperty('--cols',deviceParams.cols);
+  f.style.setProperty('--gap',deviceParams.gap+'px');
   f.innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
   document.getElementById('pageLeft').innerHTML='';
   document.getElementById('pageRight').innerHTML='';
-  bookLeftPairs=0;bookRightPairs=0;
+  applyPortraitTabletLayout();
+  document.getElementById('pauseOverlay').classList.remove('active');
+  document.getElementById('dictOverlay').classList.remove('active');
+  document.getElementById('finalOverlay').classList.remove('active');
+  document.getElementById('mainArea').style.visibility='';
+}
+
+function switchVariant(i){
+  saveCurrentVariantState();
+  currentVariant=i;
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',j===i));
+  restoreVariantState(i);
   document.getElementById('finalOverlay').classList.remove('active');
   document.getElementById('dictOverlay').classList.remove('active');
   document.getElementById('mainArea').style.visibility='';
+  const f=document.getElementById('gameField');
+  f.innerHTML='';
+  if(!gameStarted){
+    f.innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
+    document.getElementById('chestLid').classList.remove('open','closing');
+    document.getElementById('chestKey').classList.remove('turned');
+  }else{
+    renderField(true);
+    document.getElementById('chestLid').classList.add('open');
+    document.getElementById('chestKey').classList.add('turned');
+  }
 }
 
 function startGame(){gameStarted=true;const b=document.getElementById('startBtn');if(b)b.remove();playKeyTurn();document.getElementById('chestKey').classList.add('turned');setTimeout(()=>{playChestOpen();document.getElementById('chestLid').classList.add('open');},700);setTimeout(()=>nextRound(),3200);}
 
 function nextRound(){const r=variants[currentVariant];if(currentRound>=r.length){showFinal();return;}pairsOnField=[...r[currentRound]];const t=pairsOnField.length*2;stackRemaining=Math.max(0,stackRemaining-t);renderField();currentRound++;}
 
-function renderField(){
+function renderField(skipAnimation){
   const f=document.getElementById('gameField');
   f.innerHTML='';
   const tiles=[];
   pairsOnField.forEach(p=>{tiles.push({type:'phrase',text:p.p,pair:p});tiles.push({type:'meaning',text:p.m,pair:p});});
-  // перемешиваем
   let arr=shuffle(tiles);
-  // антисоседство: фразеологизм и его значение не должны стоять рядом
   const cols=deviceParams.cols;
   function areNeighbors(i,j){
     const ri=Math.floor(i/cols),ci=i%cols;
@@ -683,7 +771,6 @@ function renderField(){
       }
     }
     if(bad<0)break;
-    // меняем плохую плитку с какой-нибудь далёкой
     let other=Math.floor(Math.random()*arr.length);
     [arr[bad],arr[other]]=[arr[other],arr[bad]];
     guard++;
@@ -702,7 +789,6 @@ function renderField(){
     tile.onclick=()=>selectTile(tile);
     f.appendChild(tile);
   });
-  // высота ряда считается от ПОЛНОГО раунда (pairsPerRound), а не от фактического числа плиток
   const fullRows=Math.ceil((deviceParams.pairsPerRound*2)/cols);
   const gap=deviceParams.gap;
   const fieldH=f.clientHeight-2*gap-(gap+6);
@@ -710,6 +796,8 @@ function renderField(){
   f.style.gridTemplateRows=`repeat(${fullRows}, ${rowH}px)`;
   f.style.alignContent='start';
   fitTiles();
+
+  if(skipAnimation)return;
 
   const chestEl=document.getElementById('chest');
   const bodyEl=chestEl.querySelector('.chest-body');
@@ -772,17 +860,18 @@ function showFinal(){
   document.getElementById('finalOverlay').classList.add('active');
   playFanfare();
   setTimeout(()=>{lid.classList.remove('closing');},1400);
-}
-
-function hideFinal(){
-  document.getElementById('mainArea').style.visibility='';
-  document.getElementById('finalOverlay').classList.remove('active');
+  variantState[currentVariant].gameStarted=false;
+  variantState[currentVariant].round=0;
+  variantState[currentVariant].pairsInBook=[];
+  variantState[currentVariant].bookLeftPairs=0;
+  variantState[currentVariant].bookRightPairs=0;
+  variantState[currentVariant].pageLeftHTML='';
+  variantState[currentVariant].pageRightHTML='';
+  variantState[currentVariant].pairsOnField=[];
 }
 
 let dictPages=[],dictCurrentPage=0;
-function sortKey(phrase){
-  return phrase.replace(/^\s*\([^)]*\)\s*/,'').trim();
-}
+function sortKey(phrase){return phrase.replace(/^\s*\([^)]*\)\s*/,'').trim();}
 function buildDictPages(){
   const sorted=[...ALL_PAIRS].sort((a,b)=>sortKey(a.p).localeCompare(sortKey(b.p),'ru'));
   const entries=[];
@@ -796,6 +885,19 @@ function buildDictPages(){
   const pages=[];let cp=[],cnt=0;
   entries.forEach(e=>{cp.push(e);cnt++;if(cnt>=22){pages.push(cp);cp=[];cnt=0;}});
   if(cp.length>0)pages.push(cp);
+  for(let i=0;i<pages.length-1;i++){
+    const page=pages[i];
+    for(let j=page.length-1;j>=0;j--){
+      if(page[j].type==='letter'){
+        const hasPairAfter=page.slice(j+1).some(e=>e.type==='pair');
+        if(!hasPairAfter){
+          const letterEntry=page.splice(j,1)[0];
+          pages[i+1].unshift(letterEntry);
+        }
+        break;
+      }
+    }
+  }
   dictPages=pages;
 }
 function capitalizeFirst(s){if(!s)return s;return s.charAt(0).toUpperCase()+s.slice(1);}
@@ -861,7 +963,7 @@ applyRotation();
 initGame();
 
 let resizeTimeout;
-window.addEventListener('resize',()=>{clearTimeout(resizeTimeout);resizeTimeout=setTimeout(()=>{applyRotation();const np=getParams();if(np.cols!==deviceParams.cols||np.rows!==deviceParams.rows||np.pairsPerRound!==deviceParams.pairsPerRound){initGame();}},300);});
+window.addEventListener('resize',()=>{clearTimeout(resizeTimeout);resizeTimeout=setTimeout(()=>{applyRotation();const np=getParams();if(np.cols!==deviceParams.cols||np.rows!==deviceParams.rows||np.pairsPerRound!==deviceParams.pairsPerRound||np.bookPairsPerPage!==deviceParams.bookPairsPerPage){initGame();}},300);});
 window.addEventListener('orientationchange',()=>{setTimeout(()=>{applyRotation();initGame();},300);});
 </script>
 </body>
