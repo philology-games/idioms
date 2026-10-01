@@ -43,7 +43,6 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 @media (min-width:750px) and (max-width:1099px){.tile{font-size:1.2rem}}
 @media (max-width:749px){.tile{font-size:1.05rem}}
 .right-column{flex:0 0 37%;display:flex;flex-direction:column;gap:8px;min-height:0;min-width:0}
-/* ===== СУНДУК ===== */
 .chest{flex:0 0 55%;display:flex;justify-content:center;align-items:stretch;padding:30px 4px 10px 4px;min-height:0}
 .chest-inner{position:relative;width:92%;height:100%;perspective:600px;perspective-origin:50% 100%;overflow:visible}
 .chest-body{position:absolute;bottom:0;left:0;right:0;height:75%;background:linear-gradient(180deg,#8b5a2b,#5a3414 55%,#2e1808);border:2px solid #1a0f05;border-radius:3px 3px 7px 7px;box-shadow:inset 0 3px 0 rgba(255,200,150,.18),inset 0 -8px 14px rgba(0,0,0,.6),0 6px 14px rgba(0,0,0,.55);z-index:1;overflow:hidden}
@@ -66,7 +65,6 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .key-head{width:22px;height:22px;background:radial-gradient(circle at 40% 35%,#f8d878,#d4a843 45%,#7a5a1a);border:2px solid #2a1808;border-radius:50%;box-shadow:inset 0 2px 0 rgba(255,255,255,.45),inset 0 -2px 4px rgba(0,0,0,.3),0 2px 4px rgba(0,0,0,.55);position:relative}
 .key-head::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:radial-gradient(circle at 40% 35%,#7a5a1a,#2a1808);border-radius:50%;box-shadow:inset 0 1px 0 rgba(0,0,0,.7)}
 .key-head::after{content:'';position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:3px;height:5px;background:#d4a843;border-radius:2px;box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
-/* ===== КНИГА ===== */
 .book-shelf{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;min-height:0;min-width:0;padding:0 4px}
 .book{position:relative;width:100%;flex:1;display:flex;justify-content:center;align-items:flex-end;min-height:0;filter:drop-shadow(0 4px 8px rgba(0,0,0,.4))}
 .book-open{position:relative;width:100%;height:82%;display:flex;flex-direction:column}
@@ -145,10 +143,6 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-entry.empty .entry-phrase,.dict-entry.empty .entry-dash,.dict-entry.empty .entry-meaning{visibility:hidden}
 .dict-page-content.distribute{justify-content:space-between}
 .dict-page-content.distribute .dict-entry{flex:0 0 auto}
-
-/* ===== ФИКСАЦИЯ ОРИЕНТАЦИИ =====
-   Все раскладки задаются классами на body: layout-portrait, layout-landscape, layout-phone, layout-tablet, layout-desktop.
-   Классы ставятся ОДИН РАЗ при загрузке и не меняются при повороте. */
 
 body.layout-tablet.layout-portrait .main{flex-direction:column;padding:0 12px 5px 12px;gap:6px}
 body.layout-tablet.layout-portrait .top-part{flex:0 0 35%;display:flex;flex-direction:row;gap:8px;min-height:0;min-width:0}
@@ -576,7 +570,6 @@ const ALL_PAIRS = [
   { p: "язык не поворачивается", m: "не решаться что-либо сказать" }
 ];
 
-// ===== ФИКСАЦИЯ ОРИЕНТАЦИИ ПРИ ЗАГРУЗКЕ =====
 let LOCKED_LANDSCAPE = null;
 function lockOrientation(){LOCKED_LANDSCAPE=(window.innerWidth>=window.innerHeight);}
 function getLockedIsLandscape(){if(LOCKED_LANDSCAPE===null)lockOrientation();return LOCKED_LANDSCAPE;}
@@ -589,26 +582,24 @@ function applyBodyClasses(){
   document.body.classList.add(getLockedIsLandscape()?'layout-landscape':'layout-portrait');
 }
 
-// ===== ПРИНУДИТЕЛЬНЫЙ ПОВОРОТ КОНТЕЙНЕРА =====
-// Если текущая ориентация не совпадает с зафиксированной — компенсируем поворот браузера.
+// Компенсация поворота браузера через трансформацию контейнера.
 function applyFixedRotation(){
   const w=document.getElementById('rotateWrap');
   if(!w)return;
   const currentIsLandscape=(window.innerWidth>=window.innerHeight);
   const lockedIsLandscape=getLockedIsLandscape();
   const wi=window.innerWidth, hi=window.innerHeight;
+  w.style.width='100%';
+  w.style.height='100%';
+  w.style.transformOrigin='top left';
   if(currentIsLandscape===lockedIsLandscape){
-    // Совпадает — никакого поворота
-    w.style.width='100%';
-    w.style.height='100%';
     w.style.transform='';
-    w.style.transformOrigin='';
-  } else {
-    // Не совпадает — поворачиваем контейнер на 90° по часовой
-    w.style.width=hi+'px';
-    w.style.height=wi+'px';
-    w.style.transformOrigin='top left';
-    w.style.transform=`translateX(${hi}px) rotate(90deg)`;
+  }else if(lockedIsLandscape){
+    // Зафиксирована альбомная, а сейчас портретная — крутим по часовой
+    w.style.transform=`translate(${hi}px, 0) rotate(90deg)`;
+  }else{
+    // Зафиксирована портретная, а сейчас альбомная — крутим против часовой
+    w.style.transform=`translate(0, ${wi}px) rotate(-90deg)`;
   }
 }
 
@@ -1001,7 +992,6 @@ function restartGame(){document.getElementById('finalOverlay').classList.remove(
 
 initGame();
 
-// Отслеживаем изменение ориентации: если текущая ≠ зафиксированной — поворачиваем контейнер
 const mqlPortrait=window.matchMedia('(orientation: portrait)');
 function onOrientationMaybeChanged(){setTimeout(applyFixedRotation,50);}
 if(mqlPortrait.addEventListener)mqlPortrait.addEventListener('change',onOrientationMaybeChanged);
