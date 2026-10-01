@@ -144,6 +144,22 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-page-content.distribute{justify-content:space-between}
 .dict-page-content.distribute .dict-entry{flex:0 0 auto}
 
+/* Анимация вылета плитки из сундука: по дуге, чуть отклоняясь в сторону */
+@keyframes tileFromChest{
+  0%{
+    transform:translate(var(--from-x), var(--from-y)) scale(0.15);
+    opacity:0;
+  }
+  40%{
+    transform:translate(calc(var(--from-x) * 0.55 + var(--arc-x)), calc(var(--from-y) * 0.55 - 40px)) scale(0.6);
+    opacity:1;
+  }
+  100%{
+    transform:translate(0, 0) scale(1);
+    opacity:1;
+  }
+}
+
 @media (orientation:portrait) and (min-width:600px) and (max-width:1100px){
 .main{flex-direction:column;padding:0 12px 5px 12px;gap:6px}
 .top-part{flex:0 0 35%;display:flex;flex-direction:row;gap:8px;min-height:0;min-width:0}
@@ -574,9 +590,6 @@ const ALL_PAIRS = [
   { p: "язык не поворачивается", m: "не решаться что-либо сказать" }
 ];
 
-// ===== ТИП УСТРОЙСТВА =====
-// Определяем по ДЛИННОЙ стороне: планшет всегда имеет длинную сторону >900 CSS-пикселей.
-// Даже если DPI большой и короткая сторона <600, длинная остаётся >900.
 const DEVICE_TYPE = (function(){
   const longSide = Math.max(window.innerWidth, window.innerHeight);
   if (longSide >= 900) return 'tablet';
@@ -590,10 +603,8 @@ function getParams(){
   if(DEVICE_TYPE === 'phone'){
     return { pairsPerRound:6, tabs:3, cols:3, rows:4, gap:5, bookPairsPerPage:3, totalTiles:190 };
   }
-  // tablet
   return { pairsPerRound:15, tabs:3, cols:land?6:5, rows:land?5:6, gap:5, bookPairsPerPage:land?3:4, totalTiles:190 };
 }
-
 function normalizeMeaning(m){return m.toLowerCase().replace(/[;,.!?()]/g,' ').split(/\s+/).filter(w=>w.length>2).sort().join(' ');}
 function meaningsAreSimilar(a,b){const n1=normalizeMeaning(a),n2=normalizeMeaning(b);if(n1===n2)return true;const w1=new Set(n1.split(' ')),w2=new Set(n2.split(' '));const i=[...w1].filter(w=>w2.has(w));const ms=Math.min(w1.size,w2.size);return ms>0&&i.length/ms>=.6;}
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
@@ -815,37 +826,37 @@ function renderField(skipAnimation){
   const bodyEl=chestEl.querySelector('.chest-body');
   const br=bodyEl.getBoundingClientRect();
   const openX=br.left+br.width/2;
-const openY=br.top + br.height * 0.15;
-  const spreadW=br.width*0.22;
+  const openY=br.top + br.height * 0.5;
+  const spreadW=br.width*0.25;
 
   const all=f.querySelectorAll('.tile');
   all.forEach(tile=>{
     const r=tile.getBoundingClientRect();
-    const jitter=(Math.random()-0.5)*spreadW;
-    const dx=(openX+jitter)-(r.left+r.width/2);
-    const dy=openY-(r.top+r.height/2);
-    tile.style.transform=`translate(${dx}px, ${dy}px) scale(0.12)`;
-    tile.style.opacity='0';
-    tile.style.transition='none';
+    const jitterX=(Math.random()-0.5)*spreadW;
+    const jitterY=(Math.random()-0.5)*spreadW*0.4;
+    const dx=(openX+jitterX)-(r.left+r.width/2);
+    const dy=(openY+jitterY)-(r.top+r.height/2);
+    const arcX=(Math.random()-0.5)*40;
+    tile.style.setProperty('--from-x', dx+'px');
+    tile.style.setProperty('--from-y', dy+'px');
+    tile.style.setProperty('--arc-x', arcX+'px');
+    tile.style.animation='none';
     tile.style.zIndex='500';
     tile.style.position='relative';
+    tile.style.opacity='0';
   });
   playDiceDrop(all.length);
 
   const total=all.length;
-  const stagger=Math.max(90, Math.min(220, 2400/Math.max(1,total)));
-  const dur=1.35;
+  const stagger=Math.max(120, Math.min(300, 3000/Math.max(1,total)));
+  const dur=1.8;
   setTimeout(()=>{
     all.forEach((tile,i)=>{
-      setTimeout(()=>{
-        tile.style.transition=`transform ${dur}s cubic-bezier(0.18,0.72,0.35,1), opacity 0.3s ease-out`;
-        tile.style.transform='translate(0,0) scale(1)';
-        tile.style.opacity='1';
-      }, i*stagger);
+      tile.style.animation = `tileFromChest ${dur}s cubic-bezier(0.22,0.75,0.3,1) ${i*stagger}ms forwards`;
     });
-    const totalTime=total*stagger+dur*1000+250;
+    const totalTime=total*stagger+dur*1000+400;
     setTimeout(()=>{
-      all.forEach(tile=>{tile.style.transition='';tile.style.transform='';tile.style.opacity='';tile.style.zIndex='';tile.style.position='';});
+      all.forEach(tile=>{tile.style.animation='';tile.style.transform='';tile.style.opacity='';tile.style.zIndex='';tile.style.position='';});
       fitTiles();
     }, totalTime);
   }, 150);
@@ -971,7 +982,6 @@ function toggleSound(){soundOn=!soundOn;const b1=document.getElementById('soundB
 function togglePause(){paused=!paused;const o=document.getElementById('pauseOverlay');if(paused)o.classList.add('active');else o.classList.remove('active');}
 function restartGame(){document.getElementById('finalOverlay').classList.remove('active');document.getElementById('mainArea').style.visibility='';document.getElementById('rotateWrap').style.display='flex';initGame();}
 
-// ===== СМЕНА ОРИЕНТАЦИИ =====
 let orientationTimer = null;
 function onOrientationChanged(){
   document.querySelectorAll('.flip-clone').forEach(el=>el.remove());
@@ -1001,7 +1011,6 @@ function scheduleOrientationCheck(){
 if (mqlPortrait.addEventListener) mqlPortrait.addEventListener('change', scheduleOrientationCheck);
 else if (mqlPortrait.addListener) mqlPortrait.addListener(scheduleOrientationCheck);
 
-// Старт
 initGame();
 </script>
 </body>
