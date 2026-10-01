@@ -148,7 +148,6 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-page-content.distribute{justify-content:space-between}
 .dict-page-content.distribute .dict-entry{flex:0 0 auto}
 /* ===== МЕДИАЗАПРОСЫ ===== */
-/* Планшет портретная */
 @media (orientation:portrait) and (min-width:600px) and (max-width:1100px){
 .main{flex-direction:column;padding:0 12px 5px 12px;gap:6px}
 .top-part{flex:0 0 35%;display:flex;flex-direction:row;gap:8px;min-height:0;min-width:0}
@@ -165,19 +164,14 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-entry .entry-phrase{font-size:1rem}
 .dict-entry .entry-meaning{font-size:1rem}
 }
-/* Планшет альбомная + смартфон (у нас смартфон принудительно в альбомной) */
-@media (orientation:landscape){
-  /* Сундук поднят и книга выше — только планшет */
-}
-/* Планшет альбомная */
 @media (orientation:landscape) and (min-width:750px) and (max-width:1400px){
-.chest{flex:0 0 55%;margin-top:-1cm}
+.chest{flex:0 0 55%;margin-top:-0.9cm}
+.chest-inner{width:78%}
 .book-open{height:calc(82% + 1.5cm)}
 .page{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
 .book-pair{padding:3px 0}
 .flip-clone-front{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
 }
-/* Смартфон (принудительная альбомная) */
 @media (max-width:900px){
 .page{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:8px;align-content:space-between;padding:18px 10px}
 .flip-clone-front{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:8px;align-content:space-between;padding:18px 10px}
@@ -590,14 +584,8 @@ function getDeviceType(){const m=Math.min(window.innerWidth,window.innerHeight);
 function getParams(){
   const d=getDeviceType();
   const land=isLandscape();
-  if(d==='phone'){
-    // смартфон — принудительная альбомная
-    return{pairsPerRound:6,tabs:3,cols:3,rows:4,gap:5,bookPairsPerPage:3,totalTiles:190};
-  }
-  if(d==='tablet'){
-    // планшет: в альбомной ориентации — 3 пары на странице книги, в портретной — 4
-    return{pairsPerRound:15,tabs:3,cols:5,rows:6,gap:5,bookPairsPerPage:(land?3:4),totalTiles:190};
-  }
+  if(d==='phone'){return{pairsPerRound:6,tabs:3,cols:3,rows:4,gap:5,bookPairsPerPage:3,totalTiles:190};}
+  if(d==='tablet'){return{pairsPerRound:15,tabs:3,cols:5,rows:6,gap:5,bookPairsPerPage:(land?3:4),totalTiles:190};}
   return{pairsPerRound:20,tabs:1,cols:5,rows:8,gap:6,bookPairsPerPage:4,totalTiles:568};
 }
 function normalizeMeaning(m){return m.toLowerCase().replace(/[;,.!?()]/g,' ').split(/\s+/).filter(w=>w.length>2).sort().join(' ');}
@@ -613,9 +601,9 @@ let collectedPhrases=new Set();
 let isFlipping=false;
 
 let variantState=[
-  {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:'',pairsOnField:[]},
-  {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:'',pairsOnField:[]},
-  {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:'',pairsOnField:[]}
+  {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:'',pairsOnField:[],collectedInVariant:new Set()},
+  {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:'',pairsOnField:[],collectedInVariant:new Set()},
+  {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:'',pairsOnField:[],collectedInVariant:new Set()}
 ];
 let currentRoundRef=0;
 let stackRemainingRef=0;
@@ -721,6 +709,37 @@ function initGame(){
   document.getElementById('dictOverlay').classList.remove('active');
   document.getElementById('finalOverlay').classList.remove('active');
   document.getElementById('mainArea').style.visibility='';
+}
+
+function relayoutForOrientation(){
+  // сохранить текущее состояние текущего варианта
+  saveCurrentVariantState();
+  // пересобрать параметры под новую ориентацию
+  deviceParams=getParams();
+  const f=document.getElementById('gameField');
+  f.style.setProperty('--cols',deviceParams.cols);
+  f.style.setProperty('--gap',deviceParams.gap+'px');
+  applyPortraitTabletLayout();
+  // восстановить прогресс (текущий вариант)
+  restoreVariantState(currentVariant);
+  // перерисовать поле и книгу
+  const fEl=document.getElementById('gameField');
+  fEl.innerHTML='';
+  if(gameStarted && pairsOnField.length>0){
+    // если раунд шёл — перерисовать те же плитки в новой сетке (без анимации)
+    renderField(true);
+    document.getElementById('chestLid').classList.add('open');
+    document.getElementById('chestKey').classList.add('turned');
+  }else if(gameStarted){
+    // игра шла, но между раундами — просто показать пустое поле
+    fEl.innerHTML='';
+  }else{
+    fEl.innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
+  }
+  // восстановить книгу
+  document.getElementById('pageLeft').innerHTML=variantState[currentVariant].pageLeftHTML;
+  document.getElementById('pageRight').innerHTML=variantState[currentVariant].pageRightHTML;
+  setTimeout(fitBook,30);
 }
 
 function switchVariant(i){
@@ -963,8 +982,8 @@ applyRotation();
 initGame();
 
 let resizeTimeout;
-window.addEventListener('resize',()=>{clearTimeout(resizeTimeout);resizeTimeout=setTimeout(()=>{applyRotation();const np=getParams();if(np.cols!==deviceParams.cols||np.rows!==deviceParams.rows||np.pairsPerRound!==deviceParams.pairsPerRound||np.bookPairsPerPage!==deviceParams.bookPairsPerPage){initGame();}},300);});
-window.addEventListener('orientationchange',()=>{setTimeout(()=>{applyRotation();initGame();},300);});
+window.addEventListener('resize',()=>{clearTimeout(resizeTimeout);resizeTimeout=setTimeout(()=>{applyRotation();const np=getParams();if(np.cols!==deviceParams.cols||np.rows!==deviceParams.rows||np.pairsPerRound!==deviceParams.pairsPerRound||np.bookPairsPerPage!==deviceParams.bookPairsPerPage){relayoutForOrientation();}},300);});
+window.addEventListener('orientationchange',()=>{setTimeout(()=>{applyRotation();relayoutForOrientation();},300);});
 </script>
 </body>
 </html>
