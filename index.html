@@ -146,31 +146,30 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-page-content.distribute{justify-content:space-between}
 .dict-page-content.distribute .dict-entry{flex:0 0 auto}
 
-/* ===== РАСКЛАДКИ ЧЕРЕЗ КЛАСС НА BODY ===== */
-/* Планшет портретная */
-body.layout-portrait.layout-tablet .main{flex-direction:column;padding:0 12px 5px 12px;gap:6px}
-body.layout-portrait.layout-tablet .top-part{flex:0 0 35%;display:flex;flex-direction:row;gap:8px;min-height:0;min-width:0}
-body.layout-portrait.layout-tablet .top-part .chest{flex:1;min-width:0;height:100%;margin-top:0}
-body.layout-portrait.layout-tablet .top-part .book-shelf{flex:1;min-width:0;padding:0 4px}
-body.layout-portrait.layout-tablet .top-part .book-open{height:92%}
-body.layout-portrait.layout-tablet .main .left-part{flex:1;width:100%}
-body.layout-portrait.layout-tablet .final-book{width:340px;height:480px;margin-left:44px}
-body.layout-portrait.layout-tablet .final-book::before{left:-44px;width:48px}
-body.layout-portrait.layout-tablet .final-book::after{left:-32px;top:24px;bottom:24px}
-body.layout-portrait.layout-tablet .final-book-title{font-size:1.7rem;padding:28px}
-body.layout-portrait.layout-tablet .dict-container{width:96%;height:92%}
-body.layout-portrait.layout-tablet .dict-entry .entry-phrase{font-size:1rem}
-body.layout-portrait.layout-tablet .dict-entry .entry-meaning{font-size:1rem}
-body.layout-portrait.layout-tablet .page{grid-template-rows:repeat(4,minmax(0,1fr));gap:10px;padding:20px 10px}
-body.layout-portrait.layout-tablet .flip-clone-front{grid-template-rows:repeat(4,minmax(0,1fr));gap:10px;padding:20px 10px}
+/* ===== РАСКЛАДКИ ЧЕРЕЗ КЛАССЫ НА BODY ===== */
 
-/* Планшет альбомная: сундук меньше по высоте на 5 мм, зазор с книгой */
-body.layout-landscape.layout-tablet .chest{flex:0 0 calc(55% - 5mm)}
-body.layout-landscape.layout-tablet .chest-inner{width:78%}
-body.layout-landscape.layout-tablet .book-open{height:calc(82% + 1.5cm)}
-body.layout-landscape.layout-tablet .page{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
-body.layout-landscape.layout-tablet .book-pair{padding:3px 0}
-body.layout-landscape.layout-tablet .flip-clone-front{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
+/* Планшет портретная: сундук и книга сверху, поле снизу */
+body.layout-tablet.layout-portrait .main{flex-direction:column;padding:0 12px 5px 12px;gap:6px}
+body.layout-tablet.layout-portrait .top-part{flex:0 0 35%;display:flex;flex-direction:row;gap:8px;min-height:0;min-width:0}
+body.layout-tablet.layout-portrait .top-part .chest{flex:1;min-width:0;height:100%;margin-top:0}
+body.layout-tablet.layout-portrait .top-part .book-shelf{flex:1;min-width:0;padding:0 4px}
+body.layout-tablet.layout-portrait .top-part .book-open{height:92%}
+body.layout-tablet.layout-portrait .main .left-part{flex:1;width:100%}
+body.layout-tablet.layout-portrait .final-book{width:340px;height:480px;margin-left:44px}
+body.layout-tablet.layout-portrait .final-book::before{left:-44px;width:48px}
+body.layout-tablet.layout-portrait .final-book::after{left:-32px;top:24px;bottom:24px}
+body.layout-tablet.layout-portrait .final-book-title{font-size:1.7rem;padding:28px}
+body.layout-tablet.layout-portrait .dict-container{width:96%;height:92%}
+body.layout-tablet.layout-portrait .dict-entry .entry-phrase{font-size:1rem}
+body.layout-tablet.layout-portrait .dict-entry .entry-meaning{font-size:1rem}
+
+/* Планшет альбомная: сундук сдвинут вверх, книга выше */
+body.layout-tablet.layout-landscape .chest{flex:0 0 55%;margin-top:calc(-1.2cm)}
+body.layout-tablet.layout-landscape .chest-inner{width:78%}
+body.layout-tablet.layout-landscape .book-open{height:calc(82% + 2.5cm)}
+body.layout-tablet.layout-landscape .page{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
+body.layout-tablet.layout-landscape .book-pair{padding:3px 0}
+body.layout-tablet.layout-landscape .flip-clone-front{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
 
 /* Смартфон (принудительно альбомная) */
 body.layout-phone .page{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:8px;align-content:space-between;padding:18px 10px}
@@ -458,7 +457,7 @@ const ALL_PAIRS = [
   { p: "на точке замерзания", m: "без развития" },
   { p: "на ходу", m: "во время движения; без усилий" },
   { p: "на худой конец", m: "в худшем случае" },
-  { p: "не верить глазам/ушам", m: "удивление, недоверие" },
+  { p: "не верить глаза/ушам", m: "удивление, недоверие" },
   { p: "не в силах", m: "о бессилии, об отсутствии возможностей" },
   { p: "не давать покоя", m: "постоянно тревожить" },
   { p: "не ко двору", m: "не соответствовать чьим-либо требованиям" },
@@ -579,20 +578,9 @@ const ALL_PAIRS = [
 ];
 
 // ===== ФИКСАЦИЯ ОРИЕНТАЦИИ ПРИ ЗАГРУЗКЕ =====
-// «Заморозим» ориентацию: запомним, какая была при старте, и дальше не меняем.
-// При перезапуске игры (restartGame) — пересчитается заново.
 let LOCKED_LANDSCAPE = null;
-
-function lockOrientation(){
-  LOCKED_LANDSCAPE = (window.innerWidth >= window.innerHeight);
-}
-
-function isLandscape(){
-  // Возвращает ЗАФИКСИРОВАННУЮ ориентацию, а не текущую.
-  if(LOCKED_LANDSCAPE === null) lockOrientation();
-  return LOCKED_LANDSCAPE;
-}
-
+function lockOrientation(){LOCKED_LANDSCAPE=(window.innerWidth>=window.innerHeight);}
+function isLandscape(){if(LOCKED_LANDSCAPE===null)lockOrientation();return LOCKED_LANDSCAPE;}
 function getDeviceType(){const m=Math.min(window.innerWidth,window.innerHeight);if(m<600)return 'phone';if(m<900)return 'tablet';return 'desktop';}
 
 function applyBodyClasses(){
@@ -653,7 +641,7 @@ function addNbsp(t){
   t=t.replace(/во что бы то ни стало/gi,'во&nbsp;что&nbsp;бы&nbsp;то<br>ни&nbsp;стало');
   t=t.replace(/несмотря ни на что/gi,'несмотря<br>ни&nbsp;на&nbsp;что');
   t=t.replace(/ни с того ни с сего/gi,'ни&nbsp;с&nbsp;того<br>ни&nbsp;с&nbsp;сего');
-  // 3) Короткие слова приклеиваем к следующему (до частиц — чтобы «с» приклеилось к «того»)
+  // 3) Короткие слова приклеиваем к следующему
   SHORT_WORDS.forEach(w=>{const re=new RegExp('(^|\\s)('+w+')\\s+','gi');t=t.replace(re,'$1$2&nbsp;');});
   // 4) Частицы НИ и НЕ — приклеиваем к следующему
   t=t.replace(/(^|\s)(ни|не)\s+/gi,'$1$2&nbsp;');
@@ -996,11 +984,7 @@ function toggleSound(){soundOn=!soundOn;const b1=document.getElementById('soundB
 function togglePause(){paused=!paused;const o=document.getElementById('pauseOverlay');if(paused)o.classList.add('active');else o.classList.remove('active');}
 function restartGame(){document.getElementById('finalOverlay').classList.remove('active');document.getElementById('mainArea').style.visibility='';document.getElementById('rotateWrap').style.display='flex';initGame();}
 
-// Старт
 initGame();
-
-// При повороте — НИЧЕГО НЕ ДЕЛАЕМ. Игра остаётся в исходной ориентации.
-// Слушатели orientationchange и resize не подключаем.
 </script>
 </body>
 </html>
