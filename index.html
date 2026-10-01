@@ -106,7 +106,6 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .tooltip{position:absolute;background:#f5f0e1;border:2.5px solid #1a2a4a;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#1a2a4a;z-index:3000;box-shadow:0 3px 10px rgba(0,0,0,.35);max-width:240px;line-height:1.4}
 .tooltip .example{font-style:italic;color:#1a2a4a;font-weight:600}
 .tooltip .warning{display:block;margin-top:3px}
-/* ===== ФИНАЛ ===== */
 .final-overlay{position:fixed;top:0;left:0;right:0;bottom:0;display:none;flex-direction:column;z-index:1500;pointer-events:none}
 .final-overlay.active{display:flex}
 .final-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;pointer-events:auto}
@@ -118,7 +117,6 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .final-btn{font-family:'Playfair Display',Georgia,serif;font-size:1.15rem;padding:14px 42px;background:#4caf50;color:#fff;border:2px solid #2e7d32;border-radius:8px;cursor:pointer;box-shadow:0 4px 0 #2e7d32,0 8px 16px rgba(0,0,0,.35)}
 .final-btn:hover{background:#66bb6a}
 .final-btn:active{transform:translateY(2px)}
-/* ===== СЛОВАРЬ ===== */
 .dict-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(26,42,74,.9);display:none;align-items:center;justify-content:center;z-index:2000}
 .dict-overlay.active{display:flex}
 .dict-container{width:94%;max-width:960px;height:88%;background:#e0d4b8;border-radius:8px;border:4px solid #1a2a4a;display:flex;flex-direction:column;overflow:hidden;position:relative}
@@ -147,7 +145,6 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-entry.empty .entry-phrase,.dict-entry.empty .entry-dash,.dict-entry.empty .entry-meaning{visibility:hidden}
 .dict-page-content.distribute{justify-content:space-between}
 .dict-page-content.distribute .dict-entry{flex:0 0 auto}
-/* ===== МЕДИАЗАПРОСЫ ===== */
 @media (orientation:portrait) and (min-width:600px) and (max-width:1100px){
 .main{flex-direction:column;padding:0 12px 5px 12px;gap:6px}
 .top-part{flex:0 0 35%;display:flex;flex-direction:row;gap:8px;min-height:0;min-width:0}
@@ -163,8 +160,9 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-entry .entry-phrase{font-size:1rem}
 .dict-entry .entry-meaning{font-size:1rem}
 }
+/* Планшет альбомная: сундук меньше по высоте на 5 мм, чтобы появился зазор с книгой */
 @media (orientation:landscape) and (min-width:750px) and (max-width:1400px){
-.chest{flex:0 0 55%;margin-top:calc(-0.9cm - 3mm)}
+.chest{flex:0 0 calc(55% - 5mm)}
 .chest-inner{width:78%}
 .book-open{height:calc(82% + 1.5cm)}
 .page{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
@@ -592,7 +590,6 @@ function meaningsAreSimilar(a,b){const n1=normalizeMeaning(a),n2=normalizeMeanin
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
 function buildVariants(){const p=getParams();const s=shuffle(ALL_PAIRS);const t=s.length;const tabs=p.tabs;const pr=p.pairsPerRound;const vs=Math.floor(t/tabs);const va=[];let st=0;for(let i=0;i<tabs;i++){const sz=(i===tabs-1)?(t-st):vs;va.push(s.slice(st,st+sz));st+=sz;}return va.map(v=>{const r=[];const rem=[...v];while(rem.length>0){const round=[];const used=new Set();for(let i=0;i<rem.length;i++){if(round.length>=pr)break;const c=rem[i];if(used.has(i))continue;let hc=false;for(const e of round){if(meaningsAreSimilar(c.m,e.m)){hc=true;break;}}if(!hc){round.push(c);used.add(i);}}if(round.length<pr){for(let i=0;i<rem.length;i++){if(round.length>=pr)break;if(used.has(i))continue;round.push(rem[i]);used.add(i);}}const nr=[];rem.forEach((it,i)=>{if(!used.has(i))nr.push(it);});r.push(round);rem.length=0;rem.push(...nr);}return r;});}
 
-// ===== СОСТОЯНИЕ =====
 let variants=[],currentVariant=0,pairsOnField=[],remainingPairs=[],pairsInBook=[];
 let selectedPhrase=null,selectedMeaning=null;
 let soundOn=true,paused=false,gameStarted=false,isAnimating=false;
@@ -600,7 +597,6 @@ let deviceParams=getParams();
 let collectedPhrases=new Set();
 let isFlipping=false;
 
-// состояние всех трёх вариантов
 let variantState=[
   {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],remainingPairs:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:''},
   {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],remainingPairs:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:''},
@@ -614,67 +610,6 @@ Object.defineProperty(window,'currentRound',{get(){return currentRoundRef;},set(
 Object.defineProperty(window,'stackRemaining',{get(){return stackRemainingRef;},set(v){stackRemainingRef=v;}});
 Object.defineProperty(window,'bookLeftPairs',{get(){return bookLeftPairsRef;},set(v){bookLeftPairsRef=v;}});
 Object.defineProperty(window,'bookRightPairs',{get(){return bookRightPairsRef;},set(v){bookRightPairsRef=v;}});
-
-// ===== СОХРАНЕНИЕ В localStorage =====
-const STORAGE_KEY='frazeologizmy_state_v1';
-function saveToStorage(){
-  try{
-    const st={
-      currentVariant,
-      collectedPhrases:[...collectedPhrases],
-      variantState:variantState.map(s=>({
-        round:s.round,
-        stackRemaining:s.stackRemaining,
-        gameStarted:s.gameStarted,
-        pairsInBook:s.pairsInBook.map(p=>({p:p.phrase,m:p.meaning})),
-        remainingPairs:s.remainingPairs.map(p=>({p:p.p,m:p.m})),
-        pairsOnField:s.pairsOnField? s.pairsOnField.map(p=>({p:p.p,m:p.m})) : [],
-        bookLeftPairs:s.bookLeftPairs,
-        bookRightPairs:s.bookRightPairs,
-        pageLeftHTML:s.pageLeftHTML,
-        pageRightHTML:s.pageRightHTML
-      })),
-      // сохраняем сами variants, чтобы не пересобирать заново
-      variants:variants.map(v=>v.map(r=>r.map(p=>({p:p.p,m:p.m}))))
-    };
-    localStorage.setItem(STORAGE_KEY,JSON.stringify(st));
-  }catch(e){}
-}
-function loadFromStorage(){
-  try{
-    const raw=localStorage.getItem(STORAGE_KEY);
-    if(!raw)return null;
-    return JSON.parse(raw);
-  }catch(e){return null;}
-}
-function clearStorage(){try{localStorage.removeItem(STORAGE_KEY);}catch(e){}}
-
-// ===== ВОССТАНОВЛЕНИЕ ПОСЛЕ ПЕРЕЗАГРУЗКИ =====
-function restoreFromStorageIfAny(){
-  const st=loadFromStorage();
-  if(!st)return false;
-  try{
-    currentVariant=st.currentVariant||0;
-    collectedPhrases=new Set(st.collectedPhrases||[]);
-    // variants — восстановить как есть
-    if(st.variants){
-      variants=st.variants.map(v=>v.map(r=>r.map(p=>({p:p.p,m:p.m}))));
-    }
-    variantState=st.variantState.map(s=>({
-      round:s.round||0,
-      stackRemaining:s.stackRemaining||0,
-      gameStarted:!!s.gameStarted,
-      pairsInBook:(s.pairsInBook||[]).map(p=>({phrase:p.p,meaning:p.m})),
-      remainingPairs:(s.remainingPairs||[]).map(p=>({p:p.p,m:p.m})),
-      pairsOnField:(s.pairsOnField||[]).map(p=>({p:p.p,m:p.m})),
-      bookLeftPairs:s.bookLeftPairs||0,
-      bookRightPairs:s.bookRightPairs||0,
-      pageLeftHTML:s.pageLeftHTML||'',
-      pageRightHTML:s.pageRightHTML||''
-    }));
-    return true;
-  }catch(e){return false;}
-}
 
 let audioCtx=null;
 function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
@@ -737,7 +672,6 @@ function loadVariantToGlobal(i){
 }
 
 function initGame(){
-  clearStorage();
   deviceParams=getParams();
   variants=buildVariants();
   currentVariant=0;
@@ -775,47 +709,36 @@ function initGame(){
   document.getElementById('mainArea').style.visibility='';
 }
 
-// восстановление после перезагрузки
-function restoreAfterReload(){
-  const ok=restoreFromStorageIfAny();
-  if(!ok){
-    initGame();
-    return;
-  }
+// ===== ПЕРЕСТРОЙКА ПРИ ПОВОРОТЕ — БЕЗ ПЕРЕЗАГРУЗКИ =====
+// Просто берём видимые плитки из DOM, удаляем их, и заново раскладываем
+// те же данные (remainingPairs уже не содержит отыгранных).
+function relayoutForOrientation(){
+  // сохранить состояние
+  syncGlobalToVariant();
+  document.querySelectorAll('.flip-clone').forEach(el=>el.remove());
+  isFlipping=false;
+  // отключить анимацию книги на время перестройки
+  const bookOpen=document.querySelector('.book-open');
+  if(bookOpen)bookOpen.style.visibility='hidden';
+  // обновить параметры устройства
   deviceParams=getParams();
-  // восстановить варианты (variants уже загружен)
-  if(!variants||!variants.length){
-    variants=buildVariants();
-  }
-  // восстановить активный вариант
-  loadVariantToGlobal(currentVariant);
-  // вкладки
-  const tr=document.getElementById('tabsRow');
-  if(deviceParams.tabs>1)tr.classList.remove('empty');else tr.classList.add('empty');
-  document.querySelectorAll('.tab').forEach((tab,i)=>{tab.style.display=i<deviceParams.tabs?'inline-block':'none';tab.classList.toggle('active',i===currentVariant);tab.onclick=()=>switchVariant(i);});
-  // поля
-  const f=document.getElementById('gameField');
-  f.style.setProperty('--cols',deviceParams.cols);
-  f.style.setProperty('--gap',deviceParams.gap+'px');
-  f.innerHTML='';
+  // перерисовать поле из remainingPairs (там только неотыгранные)
   if(gameStarted && remainingPairs.length>0){
     renderField(true);
     document.getElementById('chestLid').classList.add('open');
     document.getElementById('chestKey').classList.add('turned');
   }else if(gameStarted){
-    f.innerHTML='';
+    document.getElementById('gameField').innerHTML='';
     document.getElementById('chestLid').classList.add('open');
     document.getElementById('chestKey').classList.add('turned');
   }else{
-    f.innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
-    document.getElementById('chestLid').classList.remove('open','closing');
-    document.getElementById('chestKey').classList.remove('turned');
+    document.getElementById('gameField').innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
   }
-  // книга
+  // восстановить книгу
   document.getElementById('pageLeft').innerHTML=variantState[currentVariant].pageLeftHTML;
   document.getElementById('pageRight').innerHTML=variantState[currentVariant].pageRightHTML;
-  applyPortraitTabletLayout();
-  setTimeout(fitBook,50);
+  // включить книгу обратно и подстроить шрифты
+  setTimeout(()=>{fitBook();if(bookOpen)bookOpen.style.visibility='';},150);
 }
 
 function switchVariant(i){
@@ -837,12 +760,11 @@ function switchVariant(i){
     document.getElementById('chestLid').classList.add('open');
     document.getElementById('chestKey').classList.add('turned');
   }
-  saveToStorage();
 }
 
-function startGame(){gameStarted=true;syncGlobalToVariant();saveToStorage();const b=document.getElementById('startBtn');if(b)b.remove();playKeyTurn();document.getElementById('chestKey').classList.add('turned');setTimeout(()=>{playChestOpen();document.getElementById('chestLid').classList.add('open');},700);setTimeout(()=>nextRound(),3200);}
+function startGame(){gameStarted=true;syncGlobalToVariant();const b=document.getElementById('startBtn');if(b)b.remove();playKeyTurn();document.getElementById('chestKey').classList.add('turned');setTimeout(()=>{playChestOpen();document.getElementById('chestLid').classList.add('open');},700);setTimeout(()=>nextRound(),3200);}
 
-function nextRound(){const r=variants[currentVariant];if(currentRound>=r.length){showFinal();return;}pairsOnField=[...r[currentRound]];remainingPairs=[...pairsOnField];const t=pairsOnField.length*2;stackRemaining=Math.max(0,stackRemaining-t);renderField();currentRound++;syncGlobalToVariant();saveToStorage();}
+function nextRound(){const r=variants[currentVariant];if(currentRound>=r.length){showFinal();return;}pairsOnField=[...r[currentRound]];remainingPairs=[...pairsOnField];const t=pairsOnField.length*2;stackRemaining=Math.max(0,stackRemaining-t);renderField();currentRound++;syncGlobalToVariant();}
 
 function renderField(skipAnimation){
   const f=document.getElementById('gameField');
@@ -944,9 +866,9 @@ function selectTile(tile){if(paused||!gameStarted||isAnimating||isFlipping)retur
 
 function checkPair(){if(isAnimating)return;isAnimating=true;const p=selectedPhrase,m=selectedMeaning;if(p.dataset.phrase===m.dataset.phrase){p.classList.add('correct');m.classList.add('correct');p.classList.remove('selected');m.classList.remove('selected');selectedPhrase=null;selectedMeaning=null;animateToBook(p,m);}else{p.classList.add('wrong');m.classList.add('wrong');setTimeout(()=>{p.classList.remove('wrong','selected');m.classList.remove('wrong','selected');selectedPhrase=null;selectedMeaning=null;isAnimating=false;},500);}}
 
-function animateToBook(p,m){const br=document.querySelector('.book').getBoundingClientRect();const pr=p.getBoundingClientRect();const mr=m.getBoundingClientRect();const pc=p.cloneNode(true);const mc=m.cloneNode(true);[pc,mc].forEach((cl,i)=>{const r=i===0?pr:mr;cl.style.position='fixed';cl.style.left=r.left+'px';cl.style.top=r.top+'px';cl.style.width=r.width+'px';cl.style.height=r.height+'px';cl.style.zIndex='9999';cl.style.transition='all .5s ease-in';cl.style.pointerEvents='none';document.body.appendChild(cl);});p.style.visibility='hidden';m.style.visibility='hidden';const matchedPhrase=p.dataset.phrase;requestAnimationFrame(()=>{const tx=br.left+br.width/2,ty=br.top+br.height/2;pc.style.left=(tx-40)+'px';pc.style.top=(ty-15)+'px';pc.style.width='60px';pc.style.height='30px';pc.style.opacity='0';mc.style.left=(tx+5)+'px';mc.style.top=(ty-15)+'px';mc.style.width='60px';mc.style.height='30px';mc.style.opacity='0';});setTimeout(()=>{pc.remove();mc.remove();p.classList.add('hidden');m.classList.add('hidden');addPairToBook(p.dataset.phrase,p.dataset.meaning);collectedPhrases.add(p.dataset.phrase);remainingPairs=remainingPairs.filter(x=>x.p!==matchedPhrase);isAnimating=false;syncGlobalToVariant();saveToStorage();const rem=document.querySelectorAll('.tile:not(.hidden)').length;if(rem===0){setTimeout(()=>nextRound(),800);}},500);}
+function animateToBook(p,m){const br=document.querySelector('.book').getBoundingClientRect();const pr=p.getBoundingClientRect();const mr=m.getBoundingClientRect();const pc=p.cloneNode(true);const mc=m.cloneNode(true);[pc,mc].forEach((cl,i)=>{const r=i===0?pr:mr;cl.style.position='fixed';cl.style.left=r.left+'px';cl.style.top=r.top+'px';cl.style.width=r.width+'px';cl.style.height=r.height+'px';cl.style.zIndex='9999';cl.style.transition='all .5s ease-in';cl.style.pointerEvents='none';document.body.appendChild(cl);});p.style.visibility='hidden';m.style.visibility='hidden';const matchedPhrase=p.dataset.phrase;requestAnimationFrame(()=>{const tx=br.left+br.width/2,ty=br.top+br.height/2;pc.style.left=(tx-40)+'px';pc.style.top=(ty-15)+'px';pc.style.width='60px';pc.style.height='30px';pc.style.opacity='0';mc.style.left=(tx+5)+'px';mc.style.top=(ty-15)+'px';mc.style.width='60px';mc.style.height='30px';mc.style.opacity='0';});setTimeout(()=>{pc.remove();mc.remove();p.classList.add('hidden');m.classList.add('hidden');addPairToBook(p.dataset.phrase,p.dataset.meaning);collectedPhrases.add(p.dataset.phrase);remainingPairs=remainingPairs.filter(x=>x.p!==matchedPhrase);isAnimating=false;syncGlobalToVariant();const rem=document.querySelectorAll('.tile:not(.hidden)').length;if(rem===0){setTimeout(()=>nextRound(),800);}},500);}
 
-function addPairToBook(phrase,meaning){const pl=document.getElementById('pageLeft'),pr=document.getElementById('pageRight');const pp=deviceParams.bookPairsPerPage;const pd=document.createElement('div');pd.className='book-pair';const ph=document.createElement('div');ph.className='pair-phrase';const phI=document.createElement('div');phI.className='pair-content';phI.innerHTML=addNbsp(phrase);ph.appendChild(phI);if(phrase===LAMP_PHRASE){const l=document.createElement('span');l.className='lamp-inline';l.textContent='💡';l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};ph.appendChild(l);}const dh=document.createElement('div');dh.className='pair-dash';dh.textContent='—';const mh=document.createElement('div');mh.className='pair-meaning';const mhI=document.createElement('div');mhI.className='pair-content';mhI.innerHTML=renderMeaningHTMLStacked(meaning);mh.appendChild(mhI);pd.appendChild(ph);pd.appendChild(dh);pd.appendChild(mh);if(bookLeftPairs<pp){pl.appendChild(pd);bookLeftPairs++;}else if(bookRightPairs<pp){pr.appendChild(pd);bookRightPairs++;}pairsInBook.push({phrase,meaning});setTimeout(fitBook,30);syncGlobalToVariant();saveToStorage();if(bookLeftPairs>=pp&&bookRightPairs>=pp){isFlipping=true;setTimeout(()=>{flipBookPage(()=>{pl.innerHTML='';pr.innerHTML='';bookLeftPairs=0;bookRightPairs=0;isFlipping=false;syncGlobalToVariant();saveToStorage();});},700);}}
+function addPairToBook(phrase,meaning){const pl=document.getElementById('pageLeft'),pr=document.getElementById('pageRight');const pp=deviceParams.bookPairsPerPage;const pd=document.createElement('div');pd.className='book-pair';const ph=document.createElement('div');ph.className='pair-phrase';const phI=document.createElement('div');phI.className='pair-content';phI.innerHTML=addNbsp(phrase);ph.appendChild(phI);if(phrase===LAMP_PHRASE){const l=document.createElement('span');l.className='lamp-inline';l.textContent='💡';l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};ph.appendChild(l);}const dh=document.createElement('div');dh.className='pair-dash';dh.textContent='—';const mh=document.createElement('div');mh.className='pair-meaning';const mhI=document.createElement('div');mhI.className='pair-content';mhI.innerHTML=renderMeaningHTMLStacked(meaning);mh.appendChild(mhI);pd.appendChild(ph);pd.appendChild(dh);pd.appendChild(mh);if(bookLeftPairs<pp){pl.appendChild(pd);bookLeftPairs++;}else if(bookRightPairs<pp){pr.appendChild(pd);bookRightPairs++;}pairsInBook.push({phrase,meaning});setTimeout(fitBook,30);syncGlobalToVariant();if(bookLeftPairs>=pp&&bookRightPairs>=pp){isFlipping=true;setTimeout(()=>{flipBookPage(()=>{pl.innerHTML='';pr.innerHTML='';bookLeftPairs=0;bookRightPairs=0;isFlipping=false;syncGlobalToVariant();});},700);}}
 
 function flipBookPage(cb){const sp=document.getElementById('bookSpread'),rp=document.getElementById('pageRight');const rr=rp.getBoundingClientRect(),sr=sp.getBoundingClientRect();const cl=document.createElement('div');cl.className='flip-clone';cl.style.position='absolute';cl.style.left=(rr.left-sr.left)+'px';cl.style.top='0';cl.style.width=rr.width+'px';cl.style.height='100%';const fr=document.createElement('div');fr.className='flip-clone-front';fr.innerHTML=rp.innerHTML;cl.appendChild(fr);rp.innerHTML='';sp.appendChild(cl);setTimeout(()=>{cl.remove();if(cb)cb();},1300);}
 
@@ -969,7 +891,6 @@ function showFinal(){
   variantState[currentVariant].bookRightPairs=0;
   variantState[currentVariant].pageLeftHTML='';
   variantState[currentVariant].pageRightHTML='';
-  saveToStorage();
 }
 
 let dictPages=[],dictCurrentPage=0;
@@ -1059,38 +980,24 @@ function dictNextPage(){if(dictCurrentPage<dictPages.length-1){dictCurrentPage++
 
 function toggleSound(){soundOn=!soundOn;const b1=document.getElementById('soundBtn');const t=soundOn?'Звук 🔊':'Звук 🔇';if(b1){b1.textContent=t;b1.classList.toggle('muted',!soundOn);}}
 function togglePause(){paused=!paused;const o=document.getElementById('pauseOverlay');if(paused)o.classList.add('active');else o.classList.remove('active');}
-function restartGame(){clearStorage();document.getElementById('finalOverlay').classList.remove('active');document.getElementById('mainArea').style.visibility='';document.getElementById('rotateWrap').style.display='flex';initGame();applyRotation();}
+function restartGame(){document.getElementById('finalOverlay').classList.remove('active');document.getElementById('mainArea').style.visibility='';document.getElementById('rotateWrap').style.display='flex';initGame();applyRotation();}
 
 applyRotation();
+initGame();
 
-// при загрузке: если есть сохранение — восстановить, иначе начать новую игру
-(function boot(){
-  const hadSave=!!loadFromStorage();
-  if(hadSave){
-    restoreAfterReload();
-  }else{
-    initGame();
-  }
-})();
-
-// ===== ПОВОРОТ: сохранить и перезагрузить =====
 let lastOrientation=isLandscape();
-function handleOrientationChange(){
-  const now=isLandscape();
-  if(now===lastOrientation)return;
-  lastOrientation=now;
-  // сохранить текущий вариант перед перезагрузкой
-  syncGlobalToVariant();
-  saveToStorage();
-  // небольшая задержка, чтобы браузер успел завершить анимацию поворота и записать storage
-  setTimeout(()=>{location.reload();},150);
+let rotTimer=null;
+function onOrientationMaybeChanged(){
+  clearTimeout(rotTimer);
+  rotTimer=setTimeout(()=>{
+    const now=isLandscape();
+    if(now===lastOrientation)return;
+    lastOrientation=now;
+    relayoutForOrientation();
+  },300);
 }
-window.addEventListener('orientationchange',()=>{setTimeout(handleOrientationChange,250);});
-window.addEventListener('resize',()=>{
-  // на планшете resize при повороте приходит тоже
-  clearTimeout(window._rotT);
-  window._rotT=setTimeout(handleOrientationChange,300);
-});
+window.addEventListener('orientationchange',onOrientationMaybeChanged);
+window.addEventListener('resize',onOrientationMaybeChanged);
 </script>
 </body>
 </html>
