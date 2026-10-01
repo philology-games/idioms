@@ -815,7 +815,7 @@ function renderField(skipAnimation){
   const bodyEl=chestEl.querySelector('.chest-body');
   const br=bodyEl.getBoundingClientRect();
   const openX=br.left+br.width/2;
-  const openY=br.top+6;
+const openY=br.top + br.height * 0.35;
   const spreadW=br.width*0.22;
 
   const all=f.querySelectorAll('.tile');
