@@ -43,6 +43,7 @@
   <div class="bot">НИЗ</div>
 </div>
 
+
 <script>
 const box=document.getElementById('box');
 const info=document.getElementById('info');
@@ -51,59 +52,36 @@ const btn=document.getElementById('switchBtn');
 // Ориентация при загрузке — фиксируем
 let LOCKED_LANDSCAPE = window.innerWidth >= window.innerHeight;
 
-// Текущий вариант трансформации (0..3) — переключается кнопкой
-let variantIndex = 0;
-
-// Список вариантов. В каждом случае (W,H) — размеры контейнера после поворота.
-// Формулы подобраны так, чтобы компенсировать поворот браузера.
-const VARIANTS = [
-  // 1) translate(hi, 0) rotate(90deg)
-  (wi,hi)=>`translate(${hi}px, 0) rotate(90deg)`,
-  // 2) translate(0, wi) rotate(-90deg)
-  (wi,hi)=>`translate(0, ${wi}px) rotate(-90deg)`,
-  // 3) translate(hi, 0) rotate(-90deg)
-  (wi,hi)=>`translate(${hi}px, 0) rotate(-90deg)`,
-  // 4) translate(0, wi) rotate(90deg)
-  (wi,hi)=>`translate(0, ${wi}px) rotate(90deg)`,
-];
-
 function apply(){
   const wi = window.innerWidth;
   const hi = window.innerHeight;
   const currentIsLandscape = wi >= hi;
 
-  // Размеры контейнера всегда 100% — мы не трогаем
-  box.style.width = '100%';
-  box.style.height = '100%';
   box.style.transformOrigin = 'top left';
 
   if (currentIsLandscape === LOCKED_LANDSCAPE) {
-    // ориентация совпадает с зафиксированной — ничего не крутим
+    // ориентация совпадает — ничего не крутим
+    box.style.width = '100%';
+    box.style.height = '100%';
     box.style.transform = '';
     info.textContent =
-      'вар. ' + (variantIndex+1) + ' / 4   ориент.: ' +
-      (LOCKED_LANDSCAPE?'альбом':'портрет') + ' = текущей, БЕЗ поворота';
+      'без поворота, ориентация совпадает';
   } else {
-    // ориентация не совпадает — применяем выбранный вариант
-    box.style.transform = VARIANTS[variantIndex](wi,hi);
+    // ориентация не совпадает — поворачиваем и меняем местами размеры
+    box.style.width = hi + 'px';
+    box.style.height = wi + 'px';
+    box.style.transform = `translate(${hi}px, 0) rotate(90deg)`;
     info.textContent =
-      'вар. ' + (variantIndex+1) + ' / 4   зафикс.: ' +
-      (LOCKED_LANDSCAPE?'альбом':'портрет') + '  сейчас: ' +
-      (currentIsLandscape?'альбом':'портрет') + '  →  ' +
-      VARIANTS[variantIndex](wi,hi);
+      'translate(' + hi + ', 0) rotate(90deg)   wi=' + wi + '  hi=' + hi;
   }
 }
 
-btn.onclick = () => {
-  variantIndex = (variantIndex + 1) % VARIANTS.length;
-  apply();
-};
+btn.style.display = 'none';
 
 window.addEventListener('resize', apply);
 window.addEventListener('orientationchange', () => setTimeout(apply, 100));
 
 apply();
 </script>
-
 </body>
 </html>
