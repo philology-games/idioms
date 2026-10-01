@@ -146,9 +146,10 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-page-content.distribute{justify-content:space-between}
 .dict-page-content.distribute .dict-entry{flex:0 0 auto}
 
-/* ===== РАСКЛАДКИ ЧЕРЕЗ КЛАССЫ НА BODY ===== */
+/* ===== ФИКСАЦИЯ ОРИЕНТАЦИИ =====
+   Все раскладки задаются классами на body: layout-portrait, layout-landscape, layout-phone, layout-tablet, layout-desktop.
+   Классы ставятся ОДИН РАЗ при загрузке и не меняются при повороте. */
 
-/* Планшет портретная: сундук и книга сверху, поле снизу */
 body.layout-tablet.layout-portrait .main{flex-direction:column;padding:0 12px 5px 12px;gap:6px}
 body.layout-tablet.layout-portrait .top-part{flex:0 0 35%;display:flex;flex-direction:row;gap:8px;min-height:0;min-width:0}
 body.layout-tablet.layout-portrait .top-part .chest{flex:1;min-width:0;height:100%;margin-top:0}
@@ -163,7 +164,6 @@ body.layout-tablet.layout-portrait .dict-container{width:96%;height:92%}
 body.layout-tablet.layout-portrait .dict-entry .entry-phrase{font-size:1rem}
 body.layout-tablet.layout-portrait .dict-entry .entry-meaning{font-size:1rem}
 
-/* Планшет альбомная: сундук сдвинут вверх, книга выше */
 body.layout-tablet.layout-landscape .chest{flex:0 0 55%;margin-top:calc(-1.2cm)}
 body.layout-tablet.layout-landscape .chest-inner{width:78%}
 body.layout-tablet.layout-landscape .book-open{height:calc(82% + 2.5cm)}
@@ -171,7 +171,6 @@ body.layout-tablet.layout-landscape .page{grid-template-rows:repeat(3,minmax(0,1
 body.layout-tablet.layout-landscape .book-pair{padding:3px 0}
 body.layout-tablet.layout-landscape .flip-clone-front{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
 
-/* Смартфон (принудительно альбомная) */
 body.layout-phone .page{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:8px;align-content:space-between;padding:18px 10px}
 body.layout-phone .flip-clone-front{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:8px;align-content:space-between;padding:18px 10px}
 body.layout-phone .final-book{width:280px;height:400px;margin-left:36px}
@@ -457,7 +456,7 @@ const ALL_PAIRS = [
   { p: "на точке замерзания", m: "без развития" },
   { p: "на ходу", m: "во время движения; без усилий" },
   { p: "на худой конец", m: "в худшем случае" },
-  { p: "не верить глаза/ушам", m: "удивление, недоверие" },
+  { p: "не верить глазам/ушам", m: "удивление, недоверие" },
   { p: "не в силах", m: "о бессилии, об отсутствии возможностей" },
   { p: "не давать покоя", m: "постоянно тревожить" },
   { p: "не ко двору", m: "не соответствовать чьим-либо требованиям" },
@@ -580,19 +579,42 @@ const ALL_PAIRS = [
 // ===== ФИКСАЦИЯ ОРИЕНТАЦИИ ПРИ ЗАГРУЗКЕ =====
 let LOCKED_LANDSCAPE = null;
 function lockOrientation(){LOCKED_LANDSCAPE=(window.innerWidth>=window.innerHeight);}
-function isLandscape(){if(LOCKED_LANDSCAPE===null)lockOrientation();return LOCKED_LANDSCAPE;}
+function getLockedIsLandscape(){if(LOCKED_LANDSCAPE===null)lockOrientation();return LOCKED_LANDSCAPE;}
 function getDeviceType(){const m=Math.min(window.innerWidth,window.innerHeight);if(m<600)return 'phone';if(m<900)return 'tablet';return 'desktop';}
 
 function applyBodyClasses(){
   document.body.classList.remove('layout-portrait','layout-landscape','layout-phone','layout-tablet','layout-desktop');
   const d=getDeviceType();
   document.body.classList.add('layout-'+d);
-  document.body.classList.add(isLandscape()?'layout-landscape':'layout-portrait');
+  document.body.classList.add(getLockedIsLandscape()?'layout-landscape':'layout-portrait');
+}
+
+// ===== ПРИНУДИТЕЛЬНЫЙ ПОВОРОТ КОНТЕЙНЕРА =====
+// Если текущая ориентация не совпадает с зафиксированной — компенсируем поворот браузера.
+function applyFixedRotation(){
+  const w=document.getElementById('rotateWrap');
+  if(!w)return;
+  const currentIsLandscape=(window.innerWidth>=window.innerHeight);
+  const lockedIsLandscape=getLockedIsLandscape();
+  const wi=window.innerWidth, hi=window.innerHeight;
+  if(currentIsLandscape===lockedIsLandscape){
+    // Совпадает — никакого поворота
+    w.style.width='100%';
+    w.style.height='100%';
+    w.style.transform='';
+    w.style.transformOrigin='';
+  } else {
+    // Не совпадает — поворачиваем контейнер на 90° по часовой
+    w.style.width=hi+'px';
+    w.style.height=wi+'px';
+    w.style.transformOrigin='top left';
+    w.style.transform=`translateX(${hi}px) rotate(90deg)`;
+  }
 }
 
 function getParams(){
   const d=getDeviceType();
-  const land=isLandscape();
+  const land=getLockedIsLandscape();
   if(d==='phone'){return{pairsPerRound:6,tabs:3,cols:3,rows:4,gap:5,bookPairsPerPage:3,totalTiles:190};}
   if(d==='tablet'){return{pairsPerRound:15,tabs:3,cols:land?6:5,rows:land?5:6,gap:5,bookPairsPerPage:land?3:4,totalTiles:190};}
   return{pairsPerRound:20,tabs:1,cols:5,rows:8,gap:6,bookPairsPerPage:4,totalTiles:568};
@@ -635,17 +657,12 @@ function playChestClose(){if(!soundOn)return;try{const c=getAudioCtx(),n=c.curre
 const SHORT_WORDS=['в','на','с','к','по','за','из','от','до','у','о','об','во','со','ко','под','над','при','про','без','для','через','между','перед','и','а','но','да','или','либо','что','как','то','же','бы','ли'];
 
 function addNbsp(t){
-  // 1) Скобки целиком курсивом
   t=t.replace(/\(([^)]*)\)/g,'<i>($1)</i>');
-  // 2) Принудительные переносы
   t=t.replace(/во что бы то ни стало/gi,'во&nbsp;что&nbsp;бы&nbsp;то<br>ни&nbsp;стало');
   t=t.replace(/несмотря ни на что/gi,'несмотря<br>ни&nbsp;на&nbsp;что');
   t=t.replace(/ни с того ни с сего/gi,'ни&nbsp;с&nbsp;того<br>ни&nbsp;с&nbsp;сего');
-  // 3) Короткие слова приклеиваем к следующему
   SHORT_WORDS.forEach(w=>{const re=new RegExp('(^|\\s)('+w+')\\s+','gi');t=t.replace(re,'$1$2&nbsp;');});
-  // 4) Частицы НИ и НЕ — приклеиваем к следующему
   t=t.replace(/(^|\s)(ни|не)\s+/gi,'$1$2&nbsp;');
-  // 5) Дефисы — неразрывный
   t=t.replace(/(\S)-(\S)/g,'$1\u2011$2');
   t=t.replace(/один\u2011одинёшенек/g,'один-одинёшенек');
   return t;
@@ -662,11 +679,9 @@ let tooltipEl=null;
 function showTooltip(a){if(tooltipEl){tooltipEl.remove();tooltipEl=null;}const r=a.getBoundingClientRect();tooltipEl=document.createElement('div');tooltipEl.className='tooltip';tooltipEl.innerHTML=TOOLTIP_TEXT;tooltipEl.style.left=Math.min(r.left,window.innerWidth-260)+'px';tooltipEl.style.top=(r.bottom+6)+'px';document.body.appendChild(tooltipEl);setTimeout(()=>{document.addEventListener('click',hideTooltipOnce,{once:true});},100);}
 function hideTooltipOnce(){if(tooltipEl){tooltipEl.remove();tooltipEl=null;}}
 
-function applyRotation(){const w=document.getElementById('rotateWrap');const ip=getDeviceType()==='phone';const pt=!isLandscape();if(ip&&pt){const wi=window.innerWidth,hi=window.innerHeight;w.style.width=hi+'px';w.style.height=wi+'px';w.style.transform=`translateX(${wi}px) rotate(90deg)`;}else{w.style.width='100%';w.style.height='100%';w.style.transform='';}}
-
 function applyPortraitTabletLayout(){
   const main=document.getElementById('mainArea'),lp=document.getElementById('leftPart'),rc=document.getElementById('rightColumn'),ch=document.getElementById('chest'),bs=document.getElementById('bookShelf');
-  const tp=getDeviceType()==='tablet'&&!isLandscape();
+  const tp=getDeviceType()==='tablet'&&!getLockedIsLandscape();
   if(tp){
     let t=document.getElementById('topPart');
     if(!t){t=document.createElement('div');t.id='topPart';t.className='top-part';main.insertBefore(t,lp);}
@@ -705,7 +720,7 @@ function loadVariantToGlobal(i){
 function initGame(){
   lockOrientation();
   applyBodyClasses();
-  applyRotation();
+  applyFixedRotation();
   deviceParams=getParams();
   variants=buildVariants();
   currentVariant=0;
@@ -985,6 +1000,14 @@ function togglePause(){paused=!paused;const o=document.getElementById('pauseOver
 function restartGame(){document.getElementById('finalOverlay').classList.remove('active');document.getElementById('mainArea').style.visibility='';document.getElementById('rotateWrap').style.display='flex';initGame();}
 
 initGame();
+
+// Отслеживаем изменение ориентации: если текущая ≠ зафиксированной — поворачиваем контейнер
+const mqlPortrait=window.matchMedia('(orientation: portrait)');
+function onOrientationMaybeChanged(){setTimeout(applyFixedRotation,50);}
+if(mqlPortrait.addEventListener)mqlPortrait.addEventListener('change',onOrientationMaybeChanged);
+else if(mqlPortrait.addListener)mqlPortrait.addListener(onOrientationMaybeChanged);
+window.addEventListener('resize',onOrientationMaybeChanged);
+window.addEventListener('orientationchange',onOrientationMaybeChanged);
 </script>
 </body>
 </html>
