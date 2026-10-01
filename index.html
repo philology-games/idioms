@@ -162,7 +162,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 @media (orientation:landscape) and (min-width:750px) and (max-width:1400px){
 .chest{flex:0 0 55%;margin-top:calc(-1.2cm);margin-bottom:8px}
 .chest-inner{width:78%}
-.book-open{height:calc(82% + 1,0cm)}
+.book-open{height:calc(82% + 0.5cm)}
 .page{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
 .book-pair{padding:3px 0}
 .flip-clone-front{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
@@ -574,13 +574,13 @@ const ALL_PAIRS = [
   { p: "язык не поворачивается", m: "не решаться что-либо сказать" }
 ];
 
-// ===== ТИП УСТРОЙСТВА И ОРИЕНТАЦИЯ =====
-// Тип устройства определяется ОДИН РАЗ при загрузке и больше не пересчитывается.
+// ===== ТИП УСТРОЙСТВА =====
+// Определяем по ДЛИННОЙ стороне: планшет всегда имеет длинную сторону >900 CSS-пикселей.
+// Даже если DPI большой и короткая сторона <600, длинная остаётся >900.
 const DEVICE_TYPE = (function(){
-  const m = Math.min(window.innerWidth, window.innerHeight);
-  if(m < 600) return 'phone';
-  if(m < 900) return 'tablet';
-  return 'desktop';
+  const longSide = Math.max(window.innerWidth, window.innerHeight);
+  if (longSide >= 900) return 'tablet';
+  return 'phone';
 })();
 
 function isLandscape(){ return window.innerWidth >= window.innerHeight; }
@@ -590,10 +590,8 @@ function getParams(){
   if(DEVICE_TYPE === 'phone'){
     return { pairsPerRound:6, tabs:3, cols:3, rows:4, gap:5, bookPairsPerPage:3, totalTiles:190 };
   }
-  if(DEVICE_TYPE === 'tablet'){
-    return { pairsPerRound:15, tabs:3, cols:land?6:5, rows:land?5:6, gap:5, bookPairsPerPage:land?3:4, totalTiles:190 };
-  }
-  return { pairsPerRound:20, tabs:1, cols:5, rows:8, gap:6, bookPairsPerPage:4, totalTiles:568 };
+  // tablet
+  return { pairsPerRound:15, tabs:3, cols:land?6:5, rows:land?5:6, gap:5, bookPairsPerPage:land?3:4, totalTiles:190 };
 }
 
 function normalizeMeaning(m){return m.toLowerCase().replace(/[;,.!?()]/g,' ').split(/\s+/).filter(w=>w.length>2).sort().join(' ');}
@@ -974,28 +972,15 @@ function togglePause(){paused=!paused;const o=document.getElementById('pauseOver
 function restartGame(){document.getElementById('finalOverlay').classList.remove('active');document.getElementById('mainArea').style.visibility='';document.getElementById('rotateWrap').style.display='flex';initGame();}
 
 // ===== СМЕНА ОРИЕНТАЦИИ =====
-// Слушаем через matchMedia — самый надёжный способ на всех браузерах.
-// При смене ориентации: пересчитываем параметры, перестраиваем поле и книгу.
-// НЕ вызываем nextRound — игрок продолжает с того же места.
 let orientationTimer = null;
 function onOrientationChanged(){
-  // убираем временные клоны перелистывания
   document.querySelectorAll('.flip-clone').forEach(el=>el.remove());
   isFlipping = false;
-
-  // сохраняем состояние текущего варианта
   syncGlobalToVariant();
-
-  // пересчитываем параметры (cols зависит от ориентации)
   deviceParams = getParams();
-
-  // перестраиваем раскладку сундук/книга
   applyPortraitTabletLayout();
-
-  // обновляем поле
   const f = document.getElementById('gameField');
   f.style.gridTemplateColumns = `repeat(${deviceParams.cols}, minmax(0,1fr))`;
-
   if (gameStarted && remainingPairs.length > 0) {
     renderField(true);
     document.getElementById('chestLid').classList.add('open');
@@ -1003,12 +988,8 @@ function onOrientationChanged(){
   } else if (!gameStarted) {
     f.innerHTML = '<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
   }
-
-  // восстанавливаем книгу
   document.getElementById('pageLeft').innerHTML = variantState[currentVariant].pageLeftHTML;
   document.getElementById('pageRight').innerHTML = variantState[currentVariant].pageRightHTML;
-
-  // подстраиваем шрифты
   setTimeout(()=>{ fitTiles(); fitBook(); }, 50);
 }
 
