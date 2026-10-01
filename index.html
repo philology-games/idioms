@@ -2,1002 +2,108 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Фразеологизмы. Знаток</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Тест поворота</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%;overflow:hidden;color:#1a2a4a}
-#rotateWrap{position:fixed;top:0;left:0;width:100%;height:100%;transform-origin:top left;background:#346a48;display:flex;flex-direction:column;overflow:hidden}
-.header{text-align:center;padding:6px 0 4px;flex-shrink:0}
-.header h1{font-family:'Playfair Display',Georgia,serif;font-size:1.6rem;font-weight:900;color:#e6b800;letter-spacing:2px;text-shadow:1px 1px 2px rgba(0,0,0,.3);margin-bottom:4px}
-.instruction{font-size:.85rem;color:#d4a843;display:flex;justify-content:center;align-items:center;gap:5px;flex-wrap:wrap}
-.label-phrase,.label-meaning{display:inline-block;padding:1px 7px;border-radius:4px;font-weight:700;font-size:.78rem}
-.label-phrase{background:linear-gradient(180deg,#c8d8ee,#B0C4DE);color:#1a2a4a;border:1px solid #5a7a9a}
-.label-meaning{background:linear-gradient(180deg,#fae8c8,#F5DEB3);color:#1a2a4a;border:1px solid #b8a060}
-.tabs-row{flex-shrink:0;display:flex;justify-content:flex-start;gap:6px;padding:2px 16px 4px 16px;position:relative;z-index:2100}
-.tabs-row.empty{display:none}
-.tab{font-family:'EB Garamond',Georgia,serif;font-size:.8rem;font-weight:600;padding:3px 14px;background:#1a2a4a;color:#e0d4b8;border:1px solid #b8860b;border-radius:4px;cursor:pointer}
-.tab.active{background:#b8860b;color:#1a2a4a}
-.tab:hover{background:#2a3a5a}
-.tab.active:hover{background:#c8960b;color:#1a2a4a}
-.main{flex:1;display:flex;gap:10px;padding:0 16px 6px 16px;min-height:0}
-.left-part{flex:0 0 63%;min-height:0;min-width:0;display:flex}
-.game-field{flex:1;border:3px solid #b8860b;border-radius:8px;padding:var(--gap,5px);padding-bottom:calc(var(--gap,5px) + 6px);display:grid;grid-template-columns:repeat(var(--cols,5),minmax(0,1fr));gap:var(--gap,5px);min-height:0;min-width:0;position:relative;background:rgba(0,0,0,.05);overflow:hidden;grid-auto-rows:minmax(0,1fr)}
-.game-field .start-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Playfair Display',Georgia,serif;font-size:1rem;padding:8px 24px;background:#2a4a6a;color:#e0d4b8;border:2px solid #b8860b;border-radius:6px;cursor:pointer;z-index:10}
-.game-field .start-btn:hover{background:#3a5a7a}
-.tile{--edge1:#7a90ac;--edge2:#6a80a0;width:100%;height:100%;min-width:0;min-height:0;border-radius:5px 8px 8px 5px;cursor:pointer;text-align:center;font-family:'EB Garamond',Georgia,serif;font-size:1.05rem;font-weight:700;line-height:1.1;user-select:none;display:flex;align-items:center;justify-content:center;padding:2px 4px 4px 4px;overflow:hidden;position:relative;transition:box-shadow .15s,transform .15s;box-shadow:inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(0,0,0,.12),0 2px 0 var(--edge1),0 4px 0 var(--edge2),0 6px 6px rgba(0,0,0,.3);border:1px solid rgba(0,0,0,.15);border-bottom:none}
-.tile-content{display:block;width:100%;text-align:center;line-height:1.1;overflow-wrap:normal;word-break:keep-all;hyphens:none;-webkit-hyphens:none}
-.tile-content .second{color:#2a4a7a}
-.tile-content .third{color:#3a6a9a}
-.tile-content i{font-style:italic;font-weight:400;opacity:.85}
-.tile.phrase{--edge1:#7a90ac;--edge2:#5a708c;background:linear-gradient(180deg,#cfddef,#B0C4DE 45%,#8aa0bc);color:#1a2a4a}
-.tile.meaning{--edge1:#b8a070;--edge2:#9a8458;background:linear-gradient(180deg,#f8e8c8,#F5DEB3 45%,#d8c090);color:#1a2a4a}
-.tile.selected{border:2px solid #b8860b;box-shadow:0 0 0 2px #b8860b,inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(0,0,0,.12),0 2px 0 var(--edge1),0 4px 0 var(--edge2),0 6px 6px rgba(0,0,0,.3);transform:translateY(-2px)}
-.tile.correct{background:linear-gradient(180deg,#c8e6c9,#a8d5a8) !important;border:2px solid #4caf50 !important;color:#1a2a4a !important;--edge1:#6a9a6a;--edge2:#4a7a4a}
-.tile.wrong{background:linear-gradient(180deg,#ffcdd2,#ef9a9a) !important;border:2px solid #c62828 !important;color:#1a2a4a !important;--edge1:#a04040;--edge2:#802020}
-.tile.hidden{visibility:hidden;pointer-events:none}
-@media (min-width:1100px){.tile{font-size:1.5rem}}
-@media (min-width:750px) and (max-width:1099px){.tile{font-size:1.2rem}}
-@media (max-width:749px){.tile{font-size:1.05rem}}
-.right-column{flex:0 0 37%;display:flex;flex-direction:column;gap:8px;min-height:0;min-width:0}
-.chest{flex:0 0 55%;display:flex;justify-content:center;align-items:stretch;padding:30px 4px 10px 4px;min-height:0}
-.chest-inner{position:relative;width:92%;height:100%;perspective:600px;perspective-origin:50% 100%;overflow:visible}
-.chest-body{position:absolute;bottom:0;left:0;right:0;height:75%;background:linear-gradient(180deg,#8b5a2b,#5a3414 55%,#2e1808);border:2px solid #1a0f05;border-radius:3px 3px 7px 7px;box-shadow:inset 0 3px 0 rgba(255,200,150,.18),inset 0 -8px 14px rgba(0,0,0,.6),0 6px 14px rgba(0,0,0,.55);z-index:1;overflow:hidden}
-.body-wood{position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent 0,transparent 6px,rgba(0,0,0,.15) 6px,rgba(0,0,0,.15) 7px);pointer-events:none}
-.body-strap-left,.body-strap-right{position:absolute;top:0;bottom:0;width:16px;background:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='28' viewBox='0 0 16 28'%3E%3Cpath d='M8 0 L8 28 M3.5 7 Q8 3.5 12.5 7 M3.5 21 Q8 24.5 12.5 21' stroke='%232a1808' fill='none' stroke-width='1.2'/%3E%3Ccircle cx='8' cy='14' r='1.4' fill='%232a1808'/%3E%3C/svg%3E"),linear-gradient(90deg,#6a4a1a,#d4a843 50%,#6a4a1a);background-repeat:repeat-y,no-repeat;background-size:100% auto,100% 100%;box-shadow:inset 0 0 0 1px rgba(40,25,5,.7),0 0 4px rgba(0,0,0,.5);border-radius:2px;z-index:2}
-.body-strap-left{left:18%}.body-strap-right{right:18%}
-.body-strap-bottom{position:absolute;left:0;right:0;bottom:12px;height:11px;background:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='11' viewBox='0 0 26 11'%3E%3Cpath d='M0 5.5 L26 5.5 M6 2.5 Q13 0.5 20 2.5 M6 8.5 Q13 10.5 20 8.5' stroke='%232a1808' fill='none' stroke-width='1.1'/%3E%3Ccircle cx='13' cy='5.5' r='1.3' fill='%232a1808'/%3E%3C/svg%3E"),linear-gradient(180deg,#6a4a1a,#d4a843 50%,#6a4a1a);background-repeat:repeat-x,no-repeat;background-size:auto 100%,100% 100%;box-shadow:inset 0 0 0 1px rgba(40,25,5,.7),0 0 4px rgba(0,0,0,.5);border-radius:2px;z-index:2}
-.chest-lid{position:absolute;bottom:75%;left:0;right:0;height:25%;background:linear-gradient(180deg,#a06a35,#6a3e18 60%,#3a2008);border:2px solid #1a0f05;border-bottom:none;border-radius:48% 48% 0 0/88% 88% 0 0;transform-origin:50% calc(100% + 4px);transform:rotateX(0deg);transition:transform 3.2s cubic-bezier(.42,.05,.58,.95);box-shadow:inset 0 6px 0 rgba(255,200,150,.22),inset 0 -2px 8px rgba(0,0,0,.45);z-index:5;overflow:hidden}
-.chest-lid.open{transform:rotateX(-65deg)}
-.chest-lid.closing{transition:transform 1.2s cubic-bezier(.42,.05,.58,.95)}
-.lid-wood{position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent 0,transparent 5px,rgba(0,0,0,.12) 5px,rgba(0,0,0,.12) 6px);border-radius:48% 48% 0 0/88% 88% 0 0}
-.lid-strap-left,.lid-strap-right{position:absolute;top:0;bottom:0;width:16px;background:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='28' viewBox='0 0 16 28'%3E%3Cpath d='M8 0 L8 28 M3.5 7 Q8 3.5 12.5 7 M3.5 21 Q8 24.5 12.5 21' stroke='%232a1808' fill='none' stroke-width='1.2'/%3E%3Ccircle cx='8' cy='14' r='1.4' fill='%232a1808'/%3E%3C/svg%3E"),linear-gradient(90deg,#6a4a1a,#d4a843 50%,#6a4a1a);background-repeat:repeat-y,no-repeat;background-size:100% auto,100% 100%;box-shadow:inset 0 0 0 1px rgba(40,25,5,.7),0 0 4px rgba(0,0,0,.5);border-radius:2px;transition:opacity 1.6s ease}
-.lid-strap-left{left:18%}.lid-strap-right{right:18%}
-.chest-lid.open .lid-strap-left,.chest-lid.open .lid-strap-right{opacity:0}
-.chest-lock{position:absolute;top:10%;left:50%;transform:translateX(-50%);width:34px;height:30px;background:linear-gradient(180deg,#e8bc53,#b8860b 50%,#7a5a1a);border:2px solid #2a1808;border-radius:5px;box-shadow:inset 0 2px 0 rgba(255,255,255,.4),inset 0 -2px 0 rgba(0,0,0,.35),0 3px 6px rgba(0,0,0,.5);z-index:20}
-.chest-lock::before{content:'';position:absolute;top:-5px;left:50%;transform:translateX(-50%);width:8px;height:6px;background:linear-gradient(180deg,#e8bc53,#b8860b);border:2px solid #2a1808;border-bottom:none;border-radius:4px 4px 0 0}
-.chest-lock::after{content:'';position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:6px;height:10px;background:radial-gradient(circle at 50% 25%,#000 0 2px,#0a0400 3px);border-radius:50% 50% 2px 2px;box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 0 2px rgba(0,0,0,.6)}
-.chest-key{position:absolute;top:-16px;left:50%;transform:translateX(-50%) rotate(0deg);transform-origin:50% 16px;transition:transform 1s cubic-bezier(.45,.05,.55,.95);z-index:21}
-.chest-key.turned{transform:translateX(-50%) rotate(90deg)}
-.key-head{width:22px;height:22px;background:radial-gradient(circle at 40% 35%,#f8d878,#d4a843 45%,#7a5a1a);border:2px solid #2a1808;border-radius:50%;box-shadow:inset 0 2px 0 rgba(255,255,255,.45),inset 0 -2px 4px rgba(0,0,0,.3),0 2px 4px rgba(0,0,0,.55);position:relative}
-.key-head::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:radial-gradient(circle at 40% 35%,#7a5a1a,#2a1808);border-radius:50%;box-shadow:inset 0 1px 0 rgba(0,0,0,.7)}
-.key-head::after{content:'';position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:3px;height:5px;background:#d4a843;border-radius:2px;box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
-.book-shelf{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;min-height:0;min-width:0;padding:0 4px}
-.book{position:relative;width:100%;flex:1;display:flex;justify-content:center;align-items:flex-end;min-height:0;filter:drop-shadow(0 4px 8px rgba(0,0,0,.4))}
-.book-open{position:relative;width:100%;height:82%;display:flex;flex-direction:column}
-.book-cover{position:absolute;top:-4px;left:-4px;right:-4px;bottom:-4px;background:#1a2a4a;border-radius:4px;z-index:1}
-.book-pages-edge-top,.book-pages-edge-bottom{position:absolute;left:3px;right:3px;height:4px;background:repeating-linear-gradient(to bottom,#e0d4b8,#e0d4b8 1px,#d4c8a8 1px,#d4c8a8 2px);z-index:2}
-.book-pages-edge-top{top:0;border-radius:2px 2px 0 0}
-.book-pages-edge-bottom{bottom:0;border-radius:0 0 2px 2px}
-.book-spread{position:relative;z-index:3;display:flex;height:100%;margin:4px 3px;border-radius:2px;perspective:1600px}
-.page{flex:1;min-width:0;background:#e0d4b8;background-image:radial-gradient(circle at 20% 30%,rgba(184,92,56,.1) .5px,transparent 1px),radial-gradient(circle at 70% 60%,rgba(166,138,58,.1) .5px,transparent 1px);padding:20px 10px;display:grid;grid-template-rows:repeat(4,minmax(0,1fr));gap:10px;position:relative}
-.book-fold{width:6px;flex-shrink:0;background:linear-gradient(to right,#d4c8a8,#c8bc9c 30%,#b8ac8c 50%,#c8bc9c 70%,#d4c8a8);position:relative}
-.book-fold::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:2px;height:100%;background:rgba(0,0,0,.15)}
-.book-pair{display:flex;flex-direction:row;gap:4px;align-items:center;min-width:0;min-height:0;padding:2px 0}
-.book-pair .pair-phrase{flex:0 0 45%;min-width:0;padding:1px;color:#152040;text-align:left;font-family:'EB Garamond',Georgia,serif;font-weight:700;font-size:.61rem;position:relative}
-.pair-content{display:block;width:100%;text-align:left;line-height:1.15;overflow-wrap:normal;word-break:keep-all;hyphens:none;-webkit-hyphens:none}
-.pair-content i{font-style:italic;font-weight:400;opacity:.85}
-.book-pair .pair-phrase .lamp-inline{font-size:.7rem;margin-left:2px;cursor:pointer;flex-shrink:0}
-.book-pair .pair-dash{flex:0 0 auto;display:flex;align-items:center;color:#152040;font-weight:700;padding:0 1px;font-size:.61rem}
-.book-pair .pair-meaning{flex:1;min-width:0;padding:1px;color:#152040;text-align:left;font-size:.61rem;font-weight:400}
-.book-pair .pair-meaning .second{color:#2a4a7a}
-.book-pair .pair-meaning .third{color:#3a6a9a}
-.shelf{position:relative;width:100%;height:14px;margin-top:4px;background:linear-gradient(180deg,#a0552a,#8b3a1a 15%,#6e2410 50%,#4a1408 85%,#2a0800);border-radius:3px 3px 4px 4px;box-shadow:0 2px 0 rgba(255,180,120,.25) inset,0 -2px 4px rgba(0,0,0,.4) inset,0 5px 10px rgba(0,0,0,.45),0 1px 0 rgba(160,85,42,.4)}
-.shelf::before{content:'';position:absolute;top:0;left:6px;right:6px;height:2px;background:linear-gradient(90deg,transparent,rgba(255,200,150,.5),transparent);border-radius:1px}
-.shelf::after{content:'';position:absolute;bottom:-3px;left:3px;right:3px;height:3px;background:linear-gradient(180deg,#3a0e04,#1a0400);border-radius:0 0 3px 3px;box-shadow:0 2px 5px rgba(0,0,0,.5)}
-@keyframes flipPage{0%{transform:rotateY(0)}100%{transform:rotateY(-180deg)}}
-.flip-clone{position:absolute;top:0;right:0;width:50%;height:100%;transform-origin:left center;transform-style:preserve-3d;animation:flipPage 1.3s cubic-bezier(.45,.05,.55,.95) forwards;z-index:10;background:#e0d4b8;background-image:radial-gradient(circle at 20% 30%,rgba(184,92,56,.1) .5px,transparent 1px),radial-gradient(circle at 70% 60%,rgba(166,138,58,.1) .5px,transparent 1px);border-radius:2px;box-shadow:0 0 12px rgba(0,0,0,.3)}
-.flip-clone-front{position:absolute;top:0;left:0;width:100%;height:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;padding:20px 10px;display:grid;grid-template-rows:repeat(4,minmax(0,1fr));gap:10px}
-.footer{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:4px 16px;position:relative;z-index:2100}
-.footer-buttons{display:flex;gap:6px}
-.btn{font-family:'EB Garamond',Georgia,serif;font-weight:600;background:#1a2a4a;color:#e0d4b8;border:1px solid #b8860b;border-radius:5px;padding:4px 10px;font-size:.7rem;cursor:pointer}
-.btn:hover{background:#2a3a5a}
-.btn.muted{opacity:.6}
-.watermark{color:rgba(224,212,184,.9);font-size:.65rem;text-shadow:0 1px 2px rgba(0,0,0,.4)}
-.pause-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(26,42,74,.7);display:none;align-items:center;justify-content:center;flex-direction:column;z-index:1000}
-.pause-overlay.active{display:flex}
-.pause-overlay .coffee{font-size:5rem;margin-bottom:20px}
-.pause-overlay .btn{font-size:1rem;padding:10px 30px}
-.tooltip{position:absolute;background:#f5f0e1;border:2.5px solid #1a2a4a;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#1a2a4a;z-index:3000;box-shadow:0 3px 10px rgba(0,0,0,.35);max-width:240px;line-height:1.4}
-.tooltip .example{font-style:italic;color:#1a2a4a;font-weight:600}
-.tooltip .warning{display:block;margin-top:3px}
-.final-overlay{position:fixed;top:0;left:0;right:0;bottom:0;display:none;flex-direction:column;z-index:1500;pointer-events:none}
-.final-overlay.active{display:flex}
-.final-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;pointer-events:auto}
-.final-book{width:400px;height:560px;background:linear-gradient(135deg,#1e3050,#0d1b3e);border-radius:10px;border:5px solid #b8860b;border-left:none;display:flex;align-items:center;justify-content:center;box-shadow:0 24px 60px rgba(0,0,0,.65),inset 0 0 80px rgba(184,134,11,.2);position:relative;cursor:pointer;animation:bookAppear .8s ease-out;margin-left:52px}
-.final-book::before{content:'';position:absolute;left:-52px;top:-5px;bottom:-5px;width:56px;background:linear-gradient(90deg,#060c1c,#1a2a4a 45%,#2e4a7a 55%,#1a2a4a 100%);border:5px solid #b8860b;border-right:none;border-radius:10px 0 0 10px;box-shadow:inset -10px 0 16px rgba(0,0,0,.7),inset 0 0 12px rgba(184,134,11,.3)}
-.final-book::after{content:'';position:absolute;left:-38px;top:32px;bottom:32px;width:5px;background:repeating-linear-gradient(to bottom,rgba(224,212,184,.6) 0 1px,transparent 1px 6px);border-radius:3px}
-@keyframes bookAppear{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
-.final-book-title{font-family:'Playfair Display',Georgia,serif;font-weight:900;font-size:2.1rem;color:#b8860b;text-align:center;padding:36px;letter-spacing:1.5px;text-shadow:0 2px 4px rgba(0,0,0,.6);line-height:1.2}
-.final-btn{font-family:'Playfair Display',Georgia,serif;font-size:1.15rem;padding:14px 42px;background:#4caf50;color:#fff;border:2px solid #2e7d32;border-radius:8px;cursor:pointer;box-shadow:0 4px 0 #2e7d32,0 8px 16px rgba(0,0,0,.35)}
-.final-btn:hover{background:#66bb6a}
-.final-btn:active{transform:translateY(2px)}
-.dict-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(26,42,74,.9);display:none;align-items:center;justify-content:center;z-index:2000}
-.dict-overlay.active{display:flex}
-.dict-container{width:94%;max-width:960px;height:88%;background:#e0d4b8;border-radius:8px;border:4px solid #1a2a4a;display:flex;flex-direction:column;overflow:hidden;position:relative}
-.dict-header{display:flex;justify-content:space-between;align-items:center;padding:6px 14px;background:#1a2a4a;color:#e0d4b8;font-family:'Playfair Display',Georgia,serif;font-size:.95rem}
-.dict-close{font-size:1.2rem;cursor:pointer;color:#e0d4b8;background:none;border:none}
-.dict-pages{flex:1;display:flex;overflow:visible;position:relative}
-.dict-page{flex:1;position:relative;padding:14px 24px 44px 18px;overflow-y:auto;overflow-x:visible;display:flex;flex-direction:column;background:#e0d4b8;background-image:radial-gradient(circle at 20% 30%,rgba(184,92,56,.1) .5px,transparent 1px),radial-gradient(circle at 70% 60%,rgba(166,138,58,.1) .5px,transparent 1px)}
-.dict-page-content{flex:1;display:flex;flex-direction:column}
-.dict-fold{width:6px;flex-shrink:0;background:linear-gradient(to right,#d4c8a8,#c8bc9c 30%,#b8ac8c 50%,#c8bc9c 70%,#d4c8a8);position:relative}
-.dict-fold::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:2px;height:100%;background:rgba(0,0,0,.15)}
-.dict-section-title{font-family:'Playfair Display',Georgia,serif;font-weight:900;font-size:2rem;color:#c0392b;margin:6px 0 8px;text-align:center;text-shadow:0 1px 2px rgba(0,0,0,.15);letter-spacing:1px}
-.dict-page .arrow{position:absolute;bottom:10px;font-size:2rem;font-weight:800;color:#e74c3c;cursor:pointer;user-select:none;line-height:1;text-shadow:0 1px 2px rgba(0,0,0,.25)}
-.dict-page .arrow:hover{color:#ff6b5b}
-.dict-page .arrow.disabled{color:#d0a0a0;cursor:default;text-shadow:none}
-.dict-page .arrow.back{left:16px}
-.dict-page .arrow.forward{right:16px}
-.dict-entry{display:flex;align-items:center;gap:6px;padding:4px 0;min-height:2rem;flex:0 0 auto}
-.dict-entry .lock{font-size:.85rem;flex-shrink:0;width:20px;text-align:center}
-.dict-entry .entry-phrase{font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:1.05rem;color:#5a2a2a;flex:0 0 40%;line-height:1.15}
-.dict-entry .entry-phrase i{font-style:italic;font-weight:400;opacity:.85}
-.dict-entry .entry-phrase .lamp-inline{font-size:.95rem;margin-left:3px;cursor:pointer}
-.dict-entry .entry-dash{color:#1a2a4a;padding:0 4px;flex-shrink:0}
-.dict-entry .entry-meaning{font-family:'EB Garamond',Georgia,serif;font-size:1.08rem;font-weight:600;color:#152040;flex:1;line-height:1.15;padding-right:14px}
-.dict-entry .entry-meaning .second{color:#2a4a7a}
-.dict-entry .entry-meaning .third{color:#3a6a9a}
-.dict-entry.empty .entry-phrase,.dict-entry.empty .entry-dash,.dict-entry.empty .entry-meaning{visibility:hidden}
-.dict-page-content.distribute{justify-content:space-between}
-.dict-page-content.distribute .dict-entry{flex:0 0 auto}
-
-body.layout-tablet.layout-portrait .main{flex-direction:column;padding:0 12px 5px 12px;gap:6px}
-body.layout-tablet.layout-portrait .top-part{flex:0 0 35%;display:flex;flex-direction:row;gap:8px;min-height:0;min-width:0}
-body.layout-tablet.layout-portrait .top-part .chest{flex:1;min-width:0;height:100%;margin-top:0}
-body.layout-tablet.layout-portrait .top-part .book-shelf{flex:1;min-width:0;padding:0 4px}
-body.layout-tablet.layout-portrait .top-part .book-open{height:92%}
-body.layout-tablet.layout-portrait .main .left-part{flex:1;width:100%}
-body.layout-tablet.layout-portrait .final-book{width:340px;height:480px;margin-left:44px}
-body.layout-tablet.layout-portrait .final-book::before{left:-44px;width:48px}
-body.layout-tablet.layout-portrait .final-book::after{left:-32px;top:24px;bottom:24px}
-body.layout-tablet.layout-portrait .final-book-title{font-size:1.7rem;padding:28px}
-body.layout-tablet.layout-portrait .dict-container{width:96%;height:92%}
-body.layout-tablet.layout-portrait .dict-entry .entry-phrase{font-size:1rem}
-body.layout-tablet.layout-portrait .dict-entry .entry-meaning{font-size:1rem}
-
-body.layout-tablet.layout-landscape .chest{flex:0 0 55%;margin-top:calc(-1.2cm)}
-body.layout-tablet.layout-landscape .chest-inner{width:78%}
-body.layout-tablet.layout-landscape .book-open{height:calc(82% + 2.5cm)}
-body.layout-tablet.layout-landscape .page{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
-body.layout-tablet.layout-landscape .book-pair{padding:3px 0}
-body.layout-tablet.layout-landscape .flip-clone-front{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
-
-body.layout-phone .page{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:8px;align-content:space-between;padding:18px 10px}
-body.layout-phone .flip-clone-front{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:8px;align-content:space-between;padding:18px 10px}
-body.layout-phone .final-book{width:280px;height:400px;margin-left:36px}
-body.layout-phone .final-book::before{left:-36px;width:40px}
-body.layout-phone .final-book::after{left:-26px;top:20px;bottom:20px}
-body.layout-phone .final-book-title{font-size:1.5rem;padding:24px}
-body.layout-phone .final-btn{font-size:1rem;padding:12px 34px}
-body.layout-phone .dict-container{width:96%;height:92%}
-body.layout-phone .dict-entry .entry-phrase{font-size:.98rem}
-body.layout-phone .dict-entry .entry-meaning{font-size:.98rem}
+  html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#333;font-family:monospace}
+  #box{
+    position:fixed;top:0;left:0;
+    width:100%;height:100%;
+    transform-origin:top left;
+    background:#111;
+    color:#fff;
+    display:flex;flex-direction:column;
+    font-size:14vw;
+  }
+  .top{background:#d33;flex:1;display:flex;align-items:center;justify-content:center;color:#fff}
+  .mid{background:#3d3;flex:1;display:flex;align-items:center;justify-content:center;color:#111}
+  .bot{background:#33d;flex:1;display:flex;align-items:center;justify-content:center;color:#fff}
+  #info{
+    position:fixed;top:4px;left:6px;
+    background:#000;color:#ff0;
+    font-size:12px;padding:4px 8px;border-radius:4px;
+    z-index:9999;font-family:monospace;
+  }
+  #switchBtn{
+    position:fixed;bottom:6px;left:6px;
+    background:#ff0;color:#000;border:none;
+    padding:8px 14px;font-size:16px;border-radius:4px;
+    z-index:9999;cursor:pointer;font-family:monospace;
+  }
 </style>
 </head>
 <body>
 
-<div id="rotateWrap">
-  <div class="header">
-    <h1>Фразеологизмы. Знаток</h1>
-    <p class="instruction">
-      Соедините <span class="label-phrase">фразеологизм</span> и его <span class="label-meaning">значение</span>
-    </p>
-  </div>
+<div id="info">загрузка…</div>
+<button id="switchBtn">Следующий вариант</button>
 
-  <div class="tabs-row empty" id="tabsRow">
-    <button class="tab active" data-variant="0">Вариант 1</button>
-    <button class="tab" data-variant="1">Вариант 2</button>
-    <button class="tab" data-variant="2">Вариант 3</button>
-  </div>
-
-  <div class="main" id="mainArea">
-    <div class="left-part" id="leftPart">
-      <div class="game-field" id="gameField">
-        <button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>
-      </div>
-    </div>
-    <div class="right-column" id="rightColumn">
-      <div class="chest" id="chest">
-        <div class="chest-inner">
-          <div class="chest-lid" id="chestLid">
-            <div class="lid-wood"></div>
-            <div class="lid-strap-left"></div>
-            <div class="lid-strap-right"></div>
-          </div>
-          <div class="chest-body">
-            <div class="body-wood"></div>
-            <div class="body-strap-left"></div>
-            <div class="body-strap-right"></div>
-            <div class="body-strap-bottom"></div>
-            <div class="chest-lock">
-              <div class="chest-key" id="chestKey">
-                <div class="key-head"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="book-shelf" id="bookShelf">
-        <div class="book">
-          <div class="book-open">
-            <div class="book-cover"></div>
-            <div class="book-pages-edge-top"></div>
-            <div class="book-pages-edge-bottom"></div>
-            <div class="book-spread" id="bookSpread">
-              <div class="page" id="pageLeft"></div>
-              <div class="book-fold"></div>
-              <div class="page" id="pageRight"></div>
-            </div>
-          </div>
-        </div>
-        <div class="shelf"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer">
-    <div class="footer-buttons">
-      <button class="btn" id="soundBtn" onclick="toggleSound()">Звук 🔊</button>
-      <button class="btn" onclick="togglePause()">Пауза</button>
-      <button class="btn" onclick="restartGame()">Играть снова</button>
-    </div>
-    <div class="watermark">© Анна Сазонова, 2026</div>
-  </div>
-</div>
-
-<div class="final-overlay" id="finalOverlay">
-  <div class="final-center">
-    <div class="final-book" onclick="openDict()">
-      <div class="final-book-title">Словарь<br>фразеологизмов</div>
-    </div>
-    <button class="final-btn" onclick="openDict()">Открыть словарь</button>
-  </div>
-</div>
-
-<div class="pause-overlay" id="pauseOverlay">
-  <div class="coffee">☕</div>
-  <button class="btn" onclick="togglePause()">Продолжить</button>
-</div>
-
-<div class="dict-overlay" id="dictOverlay">
-  <div class="dict-container">
-    <div class="dict-header">
-      <span>Словарь фразеологизмов</span>
-      <button class="dict-close" onclick="closeDict()">✕</button>
-    </div>
-    <div class="dict-pages">
-      <div class="dict-page" id="dictPageLeft">
-        <div class="dict-page-content" id="dictPageLeftContent"></div>
-        <div class="arrow back" id="dictArrowBack" onclick="dictPrevPage()">←</div>
-      </div>
-      <div class="dict-fold"></div>
-      <div class="dict-page" id="dictPageRight">
-        <div class="dict-page-content" id="dictPageRightContent"></div>
-        <div class="arrow forward" id="dictArrowForward" onclick="dictNextPage()">→</div>
-      </div>
-    </div>
-  </div>
+<div id="box">
+  <div class="top">ВЕРХ</div>
+  <div class="mid">ЦЕНТР</div>
+  <div class="bot">НИЗ</div>
 </div>
 
 <script>
-const ALL_PAIRS = [
-  { p: "альфа и омега", m: "суть, основа; начало и конец" },
-  { p: "без оглядки", m: "быстро, не оглядываясь" },
-  { p: "без устали", m: "не переставая" },
-  { p: "без толку", m: "бесполезно" },
-  { p: "без ума", m: "в восхищении от кого-то/чего-то" },
-  { p: "без царя в голове", m: "глупый, легкомысленный" },
-  { p: "без числа", m: "очень много" },
-  { p: "белая ворона", m: "человек, отличающийся от других" },
-  { p: "белый свет / на белом свете", m: "мир вокруг нас" },
-  { p: "бить ключом", m: "бурно протекать; активно проявляться" },
-  { p: "бить через край", m: "активно проявляться; бурно протекать" },
-  { p: "бок о бок", m: "рядом, близко" },
-  { p: "более или менее", m: "средне" },
-  { p: "более того / больше того", m: "сверх чего-либо" },
-  { p: "болеть душой", m: "переживать" },
-  { p: "большей частью / по большей части", m: "главным образом" },
-  { p: "брать верх", m: "преобладать, побеждать" },
-  { p: "брать в свои руки", m: "возглавить" },
-  { p: "брать за горло", m: "заставлять, принуждать" },
-  { p: "взять себя в руки", m: "успокоиться, собраться" },
-  { p: "бросаться в глаза", m: "быть заметным, выделяться" },
-  { p: "будь здоров", m: "хорошо" },
-  { p: "быть / держаться в тени", m: "оставаться незаметным" },
-  { p: "всё валится из рук", m: "ничего не получается" },
-  { p: "вверх дном", m: "в беспорядке" },
-  { p: "вверх ногами", m: "наоборот, в перевёрнутом виде" },
-  { p: "в глаза не видел", m: "никогда не видел" },
-  { p: "в два счёта", m: "очень быстро" },
-  { p: "в двух словах", m: "кратко" },
-  { p: "в двух шагах", m: "очень близко" },
-  { p: "в добрый час", m: "пожелание удачи" },
-  { p: "в добрый путь", m: "пожелание уезжающему" },
-  { p: "вдоль и поперёк", m: "во всех подробностях" },
-  { p: "вести себя", m: "поступать определённым образом" },
-  { p: "повесить голову", m: "расстроиться, приуныть" },
-  { p: "взять на заметку", m: "запомнить" },
-  { p: "в конечном счёте", m: "в итоге" },
-  { p: "в конце концов", m: "наконец" },
-  { p: "в крайнем случае", m: "при острой необходимости" },
-  { p: "в любом случае", m: "при любых обстоятельствах" },
-  { p: "в мгновение ока", m: "очень быстро" },
-  { p: "вместе с тем", m: "в то же время" },
-  { p: "во весь дух", m: "очень быстро" },
-  { p: "во весь рост", m: "выпрямившись; с очевидностью" },
-  { p: "во всяком случае", m: "при любых обстоятельствах; однако" },
-  { p: "в один голос", m: "вместе" },
-  { p: "в один миг", m: "очень быстро" },
-  { p: "водить за нос", m: "обманывать" },
-  { p: "во имя", m: "ради кого-то/чего-то" },
-  { p: "войти в положение", m: "понять кого-то" },
-  { p: "воспрянуть духом", m: "преодолеть отчаяние" },
-  { p: "во что бы то ни стало", m: "в любом случае" },
-  { p: "впиться глазами", m: "пристально смотреть" },
-  { p: "в порядке вещей", m: "обыкновенно" },
-  { p: "в последнее время", m: "сейчас, с недавних пор" },
-  { p: "в последнюю очередь", m: "после всего" },
-  { p: "в противном случае", m: "иначе" },
-  { p: "в самый раз", m: "впору" },
-  { p: "в своё время", m: "в прошлом; своевременно" },
-  { p: "в свою очередь", m: "также, тоже" },
-  { p: "в сердцах", m: "гневно, раздражённо" },
-  { p: "все до одного", m: "абсолютно все" },
-  { p: "всё в порядке", m: "всё хорошо" },
-  { p: "всё на свете", m: "абсолютно всё" },
-  { p: "всё равно", m: "без разницы" },
-  { p: "выжимать соки", m: "доводить до изнеможения" },
-  { p: "выше головы", m: "нельзя преодолеть" },
-  { p: "выше сил", m: "невозможно справиться" },
-  { p: "главным образом", m: "преимущественно; самое важное" },
-  { p: "глаза в глаза", m: "рядом, близко" },
-  { p: "глаза горят", m: "желание что-то получить; воодушевление" },
-  { p: "глаза разбегаются", m: "слишком много всего" },
-  { p: "глазом не моргнул", m: "не отреагировал" },
-  { p: "гнуть спину", m: "тяжело работать; унижаться" },
-  { p: "горя не знать", m: "не испытывать беспокойства" },
-  { p: "грешным делом", m: "признание оплошности" },
-  { p: "далеко пойдёт", m: "добьётся успехов" },
-  { p: "дать волю", m: "не сдерживать; много позволять" },
-  { p: "преподать урок", m: "проучить" },
-  { p: "делать нечего", m: "необходимость смириться" },
-  { p: "дело в шляпе", m: "успешное завершение" },
-  { p: "дело житейское", m: "что-то обыденное" },
-  { p: "день за днём", m: "каждый день" },
-  { p: "держать себя в руках", m: "сдерживаться" },
-  { p: "держать ухо востро", m: "быть бдительным" },
-  { p: "днём с огнём", m: "невозможно найти" },
-  { p: "добро пожаловать", m: "приветствие" },
-  { p: "до глубины души", m: "сильно впечатлить" },
-  { p: "до нитки вымокнуть", m: "полностью промокнуть" },
-  { p: "до сих пор", m: "до сегодняшнего дня" },
-  { p: "достать из-под земли", m: "получить любой ценой" },
-  { p: "друг друга", m: "взаимно, один другого" },
-  { p: "душа болит", m: "переживать из-за чего-то/кого-то" },
-  { p: "душа в душу", m: "дружно" },
-  { p: "душа не лежит", m: "что-то не нравится" },
-  { p: "души не чаять", m: "обожать, очень любить" },
-  { p: "душой и телом", m: "целиком и полностью" },
-  { p: "едва таскать ноги", m: "обессилеть" },
-  { p: "еле дышать", m: "быть в крайне тяжёлом состоянии" },
-  { p: "ещё бы", m: "конечно, разумеется" },
-  { p: "забивать голову", m: "думать о ненужном" },
-  { p: "заговаривать зубы", m: "обманывать" },
-  { p: "задеть за живое", m: "затронуть болезненную тему" },
-  { p: "закидывать камнями", m: "обвинять кого-то" },
-  { p: "заметать следы", m: "уничтожать улики" },
-  { p: "за плечами", m: "то, что было в прошлом" },
-  { p: "засучив рукава", m: "усердно" },
-  { p: "затаив дыхание", m: "с интересом; очень тихо" },
-  { p: "играть важную роль", m: "иметь большое значение" },
-  { p: "из конца в конец", m: "от края до края" },
-  { p: "изливать душу", m: "доверительно рассказывать" },
-  { p: "изо всех сил", m: "с напряжением" },
-  { p: "из рук в руки", m: "от одного к другому" },
-  { p: "иметь в виду", m: "учитывать что-либо" },
-  { p: "иметь дело", m: "о взаимодействии с кем-то/чем-то" },
-  { p: "иметь значение", m: "о чём-то важном" },
-  { p: "искра божья", m: "талант; благородные задатки" },
-  { p: "испокон веков", m: "издавна" },
-  { p: "и так и сяк", m: "по-разному, по-всякому" },
-  { p: "как бы то ни было", m: "несмотря ни на что" },
-  { p: "как ветром сдуло", m: "о внезапном исчезновении" },
-  { p: "как из ведра", m: "о проливном дожде" },
-  { p: "как миленький", m: "о беспрекословном подчинении" },
-  { p: "как назло", m: "как будто нарочно" },
-  { p: "как правило", m: "обычно" },
-  { p: "как раз", m: "точно; именно; впору" },
-  { p: "как следует", m: "как нужно; в полной мере" },
-  { p: "камень на сердце", m: "тревога, тяжесть" },
-  { p: "каши не сваришь", m: "о невозможности договориться" },
-  { p: "конец пришёл", m: "о трудном положении; о смерти" },
-  { p: "кот наплакал", m: "очень мало" },
-  { p: "кровь из носу", m: "обязательно" },
-  { p: "кроме того", m: "вдобавок" },
-  { p: "кто знает", m: "неизвестно" },
-  { p: "кто куда", m: "в разные стороны" },
-  { p: "куда деваться", m: "нет иного выхода" },
-  { p: "куда ни шло", m: "как-нибудь, худо-бедно" },
-  { p: "лезть в голову", m: "настойчиво возникать в мыслях" },
-  { p: "лить слёзы", m: "плакать" },
-  { p: "лицом к лицу", m: "близко" },
-  { p: "лишь только", m: "после чего-то, как только" },
-  { p: "локти кусать", m: "жалеть о чём-то" },
-  { p: "ломать голову", m: "мучительно думать" },
-  { p: "ломать копья", m: "спорить; бороться за что-либо" },
-  { p: "любой ценой", m: "не считаясь с потерями" },
-  { p: "мало ли что", m: "неважно; на всякий случай" },
-  { p: "махнуть рукой", m: "перестать интересоваться кем-то/чем-то" },
-  { p: "между делом", m: "попутно" },
-  { p: "между прочим", m: "кстати; не уделяя особого внимания" },
-  { p: "между тем", m: "тем временем; однако" },
-  { p: "мёртвая хватка", m: "крайняя степень упорства" },
-  { p: "может быть", m: "возможно" },
-  { p: "на всякий случай", m: "вдруг понадобится" },
-  { p: "на край света", m: "куда угодно; очень далеко" },
-  { p: "на первых порах", m: "в самом начале" },
-  { p: "поле брани", m: "сфера столкновения мнений, интересов" },
-  { p: "направить стопы", m: "пойти куда-либо" },
-  { p: "на произвол судьбы", m: "оставить без поддержки" },
-  { p: "на равных", m: "одинаково" },
-  { p: "на самом деле", m: "действительно" },
-  { p: "на своей шкуре", m: "испытать самому" },
-  { p: "на седьмом небе", m: "состояние счастья" },
-  { p: "на совесть", m: "добротно" },
-  { p: "на точке замерзания", m: "без развития" },
-  { p: "на ходу", m: "во время движения; без усилий" },
-  { p: "на худой конец", m: "в худшем случае" },
-  { p: "не верить глазам/ушам", m: "удивление, недоверие" },
-  { p: "не в силах", m: "о бессилии, об отсутствии возможностей" },
-  { p: "не давать покоя", m: "постоянно тревожить" },
-  { p: "не ко двору", m: "не соответствовать чьим-либо требованиям" },
-  { p: "не иметь понятия", m: "не знать, не разбираться" },
-  { p: "не по нутру", m: "кто-то/что-то не нравится" },
-  { p: "не подать виду", m: "не показывать своих чувств" },
-  { p: "не по себе", m: "внутренний дискомфорт" },
-  { p: "не сводить глаз", m: "внимательно смотреть" },
-  { p: "несмотря ни на что", m: "вопреки" },
-  { p: "нести крест", m: "переносить испытания" },
-  { p: "нести на своих плечах", m: "без помощи, без содействия" },
-  { p: "нет дела", m: "всё равно" },
-  { p: "ни в жизнь", m: "никогда" },
-  { p: "ни в коем случае", m: "ни при каких условиях" },
-  { p: "никуда не годится", m: "очень плохо" },
-  { p: "ни с того ни с сего", m: "неожиданно" },
-  { p: "один-одинёшенек", m: "в полном одиночестве" },
-  { p: "одним словом", m: "коротко говоря" },
-  { p: "одно время", m: "когда-то в прошлом" },
-  { p: "опустить руки", m: "сдаться, отчаяться" },
-  { p: "остаться в памяти", m: "запомниться" },
-  { p: "отвести глаза (кому-то)", m: "умышленно отвлечь внимание" },
-  { p: "отдавать должное", m: "признавать достоинства" },
-  { p: "открыть глаза", m: "избавить от заблуждения" },
-  { p: "от нечего делать", m: "от скуки, от безделья" },
-  { p: "падать духом", m: "отчаиваться" },
-  { p: "пальцем не тронуть", m: "не применять физического воздействия" },
-  { p: "пасть духом", m: "отчаяться" },
-  { p: "первым делом", m: "в первую очередь" },
-  { p: "перебежать дорогу", m: "помешать" },
-  { p: "перевести дух", m: "отдохнуть" },
-  { p: "по белу свету", m: "повсюду" },
-  { p: "поднять на ноги", m: "разбудить; взбудоражить" },
-  { p: "подступить к горлу", m: "неожиданно взволновать" },
-  { p: "(говорить, лезть) под руку", m: "мешать" },
-  { p: "по душе", m: "о том, что нравится" },
-  { p: "подумать только", m: "выражение удивления, недоумения" },
-  { p: "пойти в ход", m: "использоваться" },
-  { p: "по крайней мере", m: "самое меньшее; во всяком случае" },
-  { p: "по правде", m: "честно, без обмана" },
-  { p: "по правде говоря", m: "откровенно" },
-  { p: "по совести", m: "справедливо" },
-  { p: "по совести сказать / по совести говоря", m: "откровенно, искренне" },
-  { p: "поставить крест (на ком-то/чём-то)", m: "разувериться; потерять надежду" },
-  { p: "представь себе", m: "вообрази" },
-  { p: "прежде всего", m: "в первую очередь" },
-  { p: "прийти в голову", m: "возникнуть в сознании" },
-  { p: "прийти в себя", m: "очнуться" },
-  { p: "принять меры", m: "осуществить необходимые действия" },
-  { p: "приятного аппетита", m: "пожелание перед едой" },
-  { p: "проникнуть в душу", m: "понять человека; сильно взволновать" },
-  { p: "пропасть без вести", m: "находиться неизвестно где" },
-  { p: "пуля не берёт", m: "о том, кто остаётся невредимым" },
-  { p: "путаться под ногами", m: "мешать" },
-  { p: "разводить руками", m: "недоумевать; не знать, как поступить" },
-  { p: "раз и навсегда", m: "окончательно, на всё время; решительное предупреждение" },
-  { p: "рано или поздно", m: "о том, что неизбежно произойдёт" },
-  { p: "речь идёт о...", m: "вопрос касается кого-либо/чего-либо" },
-  { p: "рука об руку", m: "вместе" },
-  { p: "рукой подать", m: "близко" },
-  { p: "сам не свой", m: "поведение/настроение отличается от обычного" },
-  { p: "самое большее", m: "не больше, чем; в лучшем случае" },
-  { p: "сам по себе", m: "самостоятельно, обособленно; отдельно взятый" },
-  { p: "сбыть с рук", m: "избавиться" },
-  { p: "сверху донизу", m: "целиком и полностью" },
-  { p: "свести на нет", m: "лишить смысла; уничтожить" },
-  { p: "свет клином сошёлся", m: "о единственно желаемом" },
-  { p: "своими словами", m: "передавая содержание, а не форму" },
-  { p: "с глазу на глаз", m: "без свидетелей" },
-  { p: "с грехом пополам", m: "еле-еле" },
-  { p: "с дороги", m: "сразу после поездки" },
-  { p: "сидеть на шее", m: "быть на иждивении у кого-то" },
-  { p: "сидеть сложа руки", m: "ничего не делать" },
-  { p: "скажи на милость", m: "выражение удивления, возмущения" },
-  { p: "скорее всего", m: "наиболее вероятно" },
-  { p: "скрепя сердце", m: "неохотно" },
-  { p: "слово за слово", m: "постепенно в ходе разговора; пререкаясь" },
-  { p: "сложить оружие", m: "сдаться; отказаться от продолжения борьбы" },
-  { p: "смотреть в оба", m: "внимательно следить; быть начеку" },
-  { p: "сойти с рук", m: "о том, что осталось безнаказанным" },
-  { p: "сойти с ума / сходить с ума", m: "поступать безрассудно; сильно увлечься кем-то/чем-то" },
-  { p: "сослужить службу", m: "принести пользу" },
-  { p: "со спокойной душой", m: "без переживаний" },
-  { p: "спать мёртвым сном", m: "очень крепко" },
-  { p: "с первого взгляда / на первый взгляд", m: "сразу, по первому впечатлению" },
-  { p: "сплошь и рядом", m: "везде" },
-  { p: "спокойной ночи", m: "пожелание перед сном" },
-  { p: "с пылу с жару", m: "о только что приготовленном; о недавно появившемся" },
-  { p: "с рук на руки", m: "передать лично" },
-  { p: "стало быть", m: "следовательно" },
-  { p: "с тех пор", m: "с определённого момента в прошлом" },
-  { p: "стоять насмерть", m: "не уступать, не сдаваться" },
-  { p: "с чистого листа", m: "о возможности начать заново" },
-  { p: "так и быть", m: "уступка, вынужденное согласие" },
-  { p: "так или иначе", m: "тем или иным способом; в любом случае" },
-  { p: "таким образом", m: "следовательно" },
-  { p: "так сказать", m: "если можно так выразиться" },
-  { p: "телячьи нежности", m: "неуместное проявление ласки" },
-  { p: "тем не менее", m: "и всё-таки" },
-  { p: "то и дело", m: "часто, регулярно" },
-  { p: "только что", m: "прямо сейчас" },
-  { p: "точка зрения", m: "чьё-либо мнение" },
-  { p: "тут как тут", m: "в тот самый момент" },
-  { p: "уписывать за обе щеки", m: "есть с большим аппетитом" },
-  { p: "хлеб насущный", m: "средства к существованию; жизненно необходимое" },
-  { p: "час пик", m: "время наибольшей загруженности" },
-  { p: "честно говоря", m: "откровенно" },
-  { p: "честное слово", m: "уверение в правдивости" },
-  { p: "честь по чести", m: "по всем правилам" },
-  { p: "читать мораль", m: "поучать" },
-  { p: "что есть силы / что есть мочи", m: "с предельным напряжением" },
-  { p: "что и говорить", m: "вне всякого сомнения" },
-  { p: "что касается", m: "если говорить о чём-то/ком-то, то…" },
-  { p: "что поделаешь", m: "о необходимости примириться с чем-либо" },
-  { p: "что толку", m: "бесполезно" },
-  { p: "чувствовать себя...", m: "испытывать какое-либо состояние" },
-  { p: "язык не поворачивается", m: "не решаться что-либо сказать" }
+const box=document.getElementById('box');
+const info=document.getElementById('info');
+const btn=document.getElementById('switchBtn');
+
+// Ориентация при загрузке — фиксируем
+let LOCKED_LANDSCAPE = window.innerWidth >= window.innerHeight;
+
+// Текущий вариант трансформации (0..3) — переключается кнопкой
+let variantIndex = 0;
+
+// Список вариантов. В каждом случае (W,H) — размеры контейнера после поворота.
+// Формулы подобраны так, чтобы компенсировать поворот браузера.
+const VARIANTS = [
+  // 1) translate(hi, 0) rotate(90deg)
+  (wi,hi)=>`translate(${hi}px, 0) rotate(90deg)`,
+  // 2) translate(0, wi) rotate(-90deg)
+  (wi,hi)=>`translate(0, ${wi}px) rotate(-90deg)`,
+  // 3) translate(hi, 0) rotate(-90deg)
+  (wi,hi)=>`translate(${hi}px, 0) rotate(-90deg)`,
+  // 4) translate(0, wi) rotate(90deg)
+  (wi,hi)=>`translate(0, ${wi}px) rotate(90deg)`,
 ];
 
-let LOCKED_LANDSCAPE = null;
-function lockOrientation(){LOCKED_LANDSCAPE=(window.innerWidth>=window.innerHeight);}
-function getLockedIsLandscape(){if(LOCKED_LANDSCAPE===null)lockOrientation();return LOCKED_LANDSCAPE;}
-function getDeviceType(){const m=Math.min(window.innerWidth,window.innerHeight);if(m<600)return 'phone';if(m<900)return 'tablet';return 'desktop';}
+function apply(){
+  const wi = window.innerWidth;
+  const hi = window.innerHeight;
+  const currentIsLandscape = wi >= hi;
 
-function applyBodyClasses(){
-  document.body.classList.remove('layout-portrait','layout-landscape','layout-phone','layout-tablet','layout-desktop');
-  const d=getDeviceType();
-  document.body.classList.add('layout-'+d);
-  document.body.classList.add(getLockedIsLandscape()?'layout-landscape':'layout-portrait');
-}
+  // Размеры контейнера всегда 100% — мы не трогаем
+  box.style.width = '100%';
+  box.style.height = '100%';
+  box.style.transformOrigin = 'top left';
 
-// Компенсация поворота браузера через трансформацию контейнера.
-function applyFixedRotation(){
-  const w=document.getElementById('rotateWrap');
-  if(!w)return;
-  const currentIsLandscape=(window.innerWidth>=window.innerHeight);
-  const lockedIsLandscape=getLockedIsLandscape();
-  const wi=window.innerWidth, hi=window.innerHeight;
-  w.style.width='100%';
-  w.style.height='100%';
-  w.style.transformOrigin='top left';
-  if(currentIsLandscape===lockedIsLandscape){
-    w.style.transform='';
-  }else if(lockedIsLandscape){
-    // Зафиксирована альбомная, а сейчас портретная — крутим по часовой
-    w.style.transform=`translate(${hi}px, 0) rotate(90deg)`;
-  }else{
-    // Зафиксирована портретная, а сейчас альбомная — крутим против часовой
-    w.style.transform=`translate(0, ${wi}px) rotate(-90deg)`;
+  if (currentIsLandscape === LOCKED_LANDSCAPE) {
+    // ориентация совпадает с зафиксированной — ничего не крутим
+    box.style.transform = '';
+    info.textContent =
+      'вар. ' + (variantIndex+1) + ' / 4   ориент.: ' +
+      (LOCKED_LANDSCAPE?'альбом':'портрет') + ' = текущей, БЕЗ поворота';
+  } else {
+    // ориентация не совпадает — применяем выбранный вариант
+    box.style.transform = VARIANTS[variantIndex](wi,hi);
+    info.textContent =
+      'вар. ' + (variantIndex+1) + ' / 4   зафикс.: ' +
+      (LOCKED_LANDSCAPE?'альбом':'портрет') + '  сейчас: ' +
+      (currentIsLandscape?'альбом':'портрет') + '  →  ' +
+      VARIANTS[variantIndex](wi,hi);
   }
 }
 
-function getParams(){
-  const d=getDeviceType();
-  const land=getLockedIsLandscape();
-  if(d==='phone'){return{pairsPerRound:6,tabs:3,cols:3,rows:4,gap:5,bookPairsPerPage:3,totalTiles:190};}
-  if(d==='tablet'){return{pairsPerRound:15,tabs:3,cols:land?6:5,rows:land?5:6,gap:5,bookPairsPerPage:land?3:4,totalTiles:190};}
-  return{pairsPerRound:20,tabs:1,cols:5,rows:8,gap:6,bookPairsPerPage:4,totalTiles:568};
-}
-function normalizeMeaning(m){return m.toLowerCase().replace(/[;,.!?()]/g,' ').split(/\s+/).filter(w=>w.length>2).sort().join(' ');}
-function meaningsAreSimilar(a,b){const n1=normalizeMeaning(a),n2=normalizeMeaning(b);if(n1===n2)return true;const w1=new Set(n1.split(' ')),w2=new Set(n2.split(' '));const i=[...w1].filter(w=>w2.has(w));const ms=Math.min(w1.size,w2.size);return ms>0&&i.length/ms>=.6;}
-function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
-function buildVariants(){const p=getParams();const s=shuffle(ALL_PAIRS);const t=s.length;const tabs=p.tabs;const pr=p.pairsPerRound;const vs=Math.floor(t/tabs);const va=[];let st=0;for(let i=0;i<tabs;i++){const sz=(i===tabs-1)?(t-st):vs;va.push(s.slice(st,st+sz));st+=sz;}return va.map(v=>{const r=[];const rem=[...v];while(rem.length>0){const round=[];const used=new Set();for(let i=0;i<rem.length;i++){if(round.length>=pr)break;const c=rem[i];if(used.has(i))continue;let hc=false;for(const e of round){if(meaningsAreSimilar(c.m,e.m)){hc=true;break;}}if(!hc){round.push(c);used.add(i);}}if(round.length<pr){for(let i=0;i<rem.length;i++){if(round.length>=pr)break;if(used.has(i))continue;round.push(rem[i]);used.add(i);}}const nr=[];rem.forEach((it,i)=>{if(!used.has(i))nr.push(it);});r.push(round);rem.length=0;rem.push(...nr);}return r;});}
+btn.onclick = () => {
+  variantIndex = (variantIndex + 1) % VARIANTS.length;
+  apply();
+};
 
-let variants=[],currentVariant=0,pairsOnField=[],remainingPairs=[],pairsInBook=[];
-let selectedPhrase=null,selectedMeaning=null;
-let soundOn=true,paused=false,gameStarted=false,isAnimating=false;
-let deviceParams=getParams();
-let collectedPhrases=new Set();
-let isFlipping=false;
+window.addEventListener('resize', apply);
+window.addEventListener('orientationchange', () => setTimeout(apply, 100));
 
-let variantState=[
-  {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],remainingPairs:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:''},
-  {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],remainingPairs:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:''},
-  {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],remainingPairs:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:''}
-];
-let currentRoundRef=0;
-let stackRemainingRef=0;
-let bookLeftPairsRef=0;
-let bookRightPairsRef=0;
-Object.defineProperty(window,'currentRound',{get(){return currentRoundRef;},set(v){currentRoundRef=v;}});
-Object.defineProperty(window,'stackRemaining',{get(){return stackRemainingRef;},set(v){stackRemainingRef=v;}});
-Object.defineProperty(window,'bookLeftPairs',{get(){return bookLeftPairsRef;},set(v){bookLeftPairsRef=v;}});
-Object.defineProperty(window,'bookRightPairs',{get(){return bookRightPairsRef;},set(v){bookRightPairsRef=v;}});
-
-let audioCtx=null;
-function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
-function playWoodClick(){if(!soundOn)return;try{const c=getAudioCtx(),n=c.currentTime;const nl=Math.floor(c.sampleRate*.012);const nb=c.createBuffer(1,nl,c.sampleRate);const nd=nb.getChannelData(0);for(let i=0;i<nl;i++){const t=i/nl;nd[i]=(Math.random()*2-1)*Math.pow(1-t,4);}const ns=c.createBufferSource();ns.buffer=nb;const bp=c.createBiquadFilter();bp.type='bandpass';bp.frequency.value=1500;bp.Q.value=1;const ng=c.createGain();ng.gain.value=.28;ns.connect(bp);bp.connect(ng);ng.connect(c.destination);ns.start(n);const o=c.createOscillator(),og=c.createGain();o.type='sine';o.frequency.setValueAtTime(340,n);o.frequency.exponentialRampToValueAtTime(180,n+.04);og.gain.setValueAtTime(.001,n);og.gain.exponentialRampToValueAtTime(.14,n+.003);og.gain.exponentialRampToValueAtTime(.001,n+.045);o.connect(og);og.connect(c.destination);o.start(n);o.stop(n+.05);}catch(e){}}
-function playDiceDrop(count){if(!soundOn)return;try{const c=getAudioCtx(),n=c.currentTime;for(let k=0;k<count;k++){const t=n+k*.14+Math.random()*.015;const f=900+Math.random()*600;const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(f*.55,t+.025);g.gain.setValueAtTime(.001,t);g.gain.exponentialRampToValueAtTime(.07,t+.002);g.gain.exponentialRampToValueAtTime(.001,t+.035);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+.04);}}catch(e){}}
-function playFanfare(){if(!soundOn)return;try{const c=getAudioCtx();[523.25,659.25,783.99,1046.5].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(.1,c.currentTime+i*.15);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+i*.15+.4);o.connect(g);g.connect(c.destination);o.start(c.currentTime+i*.15);o.stop(c.currentTime+i*.15+.4);});}catch(e){}}
-function playKeyTurn(){if(!soundOn)return;try{const c=getAudioCtx();[880,1108,1318].forEach((f,i)=>{const t=c.currentTime+i*.1;const o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(.001,t);g.gain.exponentialRampToValueAtTime(.14,t+.008);g.gain.exponentialRampToValueAtTime(.001,t+.18);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+.2);});}catch(e){}}
-function playChestOpen(){if(!soundOn)return;try{const c=getAudioCtx(),n=c.currentTime,d=3.2;const o=c.createOscillator();o.type='sawtooth';o.frequency.setValueAtTime(180,n);o.frequency.linearRampToValueAtTime(200,n+d*.5);o.frequency.linearRampToValueAtTime(170,n+d);const v=c.createOscillator();v.frequency.value=8;const vg=c.createGain();vg.gain.value=25;v.connect(vg);vg.connect(o.frequency);const g=c.createGain();g.gain.setValueAtTime(.001,n);g.gain.linearRampToValueAtTime(.08,n+.15);g.gain.setValueAtTime(.08,n+d*.7);g.gain.linearRampToValueAtTime(.001,n+d);const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=800;f.Q.value=1.5;o.connect(f);f.connect(g);g.connect(c.destination);o.start(n);o.stop(n+d);v.start(n);v.stop(n+d);}catch(e){}}
-function playChestClose(){if(!soundOn)return;try{const c=getAudioCtx(),n=c.currentTime,d=1.2;const o=c.createOscillator();o.type='sawtooth';o.frequency.setValueAtTime(150,n);o.frequency.linearRampToValueAtTime(170,n+d*.5);o.frequency.linearRampToValueAtTime(140,n+d);const v=c.createOscillator();v.frequency.value=9;const vg=c.createGain();vg.gain.value=22;v.connect(vg);vg.connect(o.frequency);const g=c.createGain();g.gain.setValueAtTime(.001,n);g.gain.linearRampToValueAtTime(.08,n+.15);g.gain.setValueAtTime(.08,n+d*.7);g.gain.linearRampToValueAtTime(.001,n+d);const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=700;f.Q.value=1.5;o.connect(f);f.connect(g);g.connect(c.destination);o.start(n);o.stop(n+d);v.start(n);v.stop(n+d);const tt=n+d+.05;const to=c.createOscillator(),tg=c.createGain();to.type='sine';to.frequency.setValueAtTime(90,tt);to.frequency.exponentialRampToValueAtTime(45,tt+.15);tg.gain.setValueAtTime(.001,tt);tg.gain.exponentialRampToValueAtTime(.35,tt+.005);tg.gain.exponentialRampToValueAtTime(.001,tt+.18);to.connect(tg);tg.connect(c.destination);to.start(tt);to.stop(tt+.2);}catch(e){}}
-
-const SHORT_WORDS=['в','на','с','к','по','за','из','от','до','у','о','об','во','со','ко','под','над','при','про','без','для','через','между','перед','и','а','но','да','или','либо','что','как','то','же','бы','ли'];
-
-function addNbsp(t){
-  t=t.replace(/\(([^)]*)\)/g,'<i>($1)</i>');
-  t=t.replace(/во что бы то ни стало/gi,'во&nbsp;что&nbsp;бы&nbsp;то<br>ни&nbsp;стало');
-  t=t.replace(/несмотря ни на что/gi,'несмотря<br>ни&nbsp;на&nbsp;что');
-  t=t.replace(/ни с того ни с сего/gi,'ни&nbsp;с&nbsp;того<br>ни&nbsp;с&nbsp;сего');
-  SHORT_WORDS.forEach(w=>{const re=new RegExp('(^|\\s)('+w+')\\s+','gi');t=t.replace(re,'$1$2&nbsp;');});
-  t=t.replace(/(^|\s)(ни|не)\s+/gi,'$1$2&nbsp;');
-  t=t.replace(/(\S)-(\S)/g,'$1\u2011$2');
-  t=t.replace(/один\u2011одинёшенек/g,'один-одинёшенек');
-  return t;
-}
-function splitMeaning(m){return m.split(';').map(s=>s.trim());}
-function renderMeaningHTMLStacked(m){const p=splitMeaning(m);const cl=['','second','third'];return p.map((part,i)=>{const cls=cl[i]||'third';const sep=i<p.length-1?';':'';return cls?`<span class="${cls}">${addNbsp(part)}${sep}</span>`:`<span>${addNbsp(part)}${sep}</span>`;}).join('<br>');}
-
-function fitTiles(){document.querySelectorAll('.tile').forEach(tile=>{tile.style.fontSize='';const cs=parseFloat(getComputedStyle(tile).fontSize);const mn=8;let s=cs,it=0;while((tile.scrollHeight>tile.clientHeight+1||tile.scrollWidth>tile.clientWidth+1)&&s>mn&&it<40){s-=.5;tile.style.fontSize=s+'px';it++;}});}
-function fitBook(){document.querySelectorAll('.pair-phrase, .pair-meaning').forEach(item=>{item.style.fontSize='';const cs=parseFloat(getComputedStyle(item).fontSize);const mn=6;let s=cs,it=0;while((item.scrollHeight>item.clientHeight+1||item.scrollWidth>item.clientWidth+1)&&s>mn&&it<40){s-=.3;item.style.fontSize=s+'px';it++;}});}
-
-const LAMP_PHRASE='будь здоров';
-const TOOLTIP_TEXT='Например, <span class="example">Дела идут будь здоров!</span><span class="warning">Не путать с пожеланием здоровья</span>';
-let tooltipEl=null;
-function showTooltip(a){if(tooltipEl){tooltipEl.remove();tooltipEl=null;}const r=a.getBoundingClientRect();tooltipEl=document.createElement('div');tooltipEl.className='tooltip';tooltipEl.innerHTML=TOOLTIP_TEXT;tooltipEl.style.left=Math.min(r.left,window.innerWidth-260)+'px';tooltipEl.style.top=(r.bottom+6)+'px';document.body.appendChild(tooltipEl);setTimeout(()=>{document.addEventListener('click',hideTooltipOnce,{once:true});},100);}
-function hideTooltipOnce(){if(tooltipEl){tooltipEl.remove();tooltipEl=null;}}
-
-function applyPortraitTabletLayout(){
-  const main=document.getElementById('mainArea'),lp=document.getElementById('leftPart'),rc=document.getElementById('rightColumn'),ch=document.getElementById('chest'),bs=document.getElementById('bookShelf');
-  const tp=getDeviceType()==='tablet'&&!getLockedIsLandscape();
-  if(tp){
-    let t=document.getElementById('topPart');
-    if(!t){t=document.createElement('div');t.id='topPart';t.className='top-part';main.insertBefore(t,lp);}
-    t.appendChild(ch);t.appendChild(bs);rc.style.display='none';
-  }else{
-    const t=document.getElementById('topPart');
-    if(t){rc.style.display='flex';rc.appendChild(ch);rc.appendChild(bs);t.remove();}
-  }
-}
-
-function syncGlobalToVariant(){
-  const s=variantState[currentVariant];
-  s.round=currentRoundRef;
-  s.stackRemaining=stackRemainingRef;
-  s.gameStarted=gameStarted;
-  s.pairsInBook=[...pairsInBook];
-  s.remainingPairs=[...remainingPairs];
-  s.bookLeftPairs=bookLeftPairsRef;
-  s.bookRightPairs=bookRightPairsRef;
-  s.pageLeftHTML=document.getElementById('pageLeft').innerHTML;
-  s.pageRightHTML=document.getElementById('pageRight').innerHTML;
-}
-function loadVariantToGlobal(i){
-  const s=variantState[i];
-  currentRoundRef=s.round;
-  stackRemainingRef=s.stackRemaining;
-  gameStarted=s.gameStarted;
-  pairsInBook=[...s.pairsInBook];
-  remainingPairs=[...s.remainingPairs];
-  bookLeftPairsRef=s.bookLeftPairs;
-  bookRightPairsRef=s.bookRightPairs;
-  document.getElementById('pageLeft').innerHTML=s.pageLeftHTML;
-  document.getElementById('pageRight').innerHTML=s.pageRightHTML;
-}
-
-function initGame(){
-  lockOrientation();
-  applyBodyClasses();
-  applyFixedRotation();
-  deviceParams=getParams();
-  variants=buildVariants();
-  currentVariant=0;
-  currentRoundRef=0;
-  stackRemainingRef=deviceParams.totalTiles;
-  pairsInBook=[];
-  remainingPairs=[];
-  bookLeftPairsRef=0;bookRightPairsRef=0;
-  pairsOnField=[];
-  collectedPhrases=new Set();
-  gameStarted=false;
-  paused=false;
-  selectedPhrase=null;selectedMeaning=null;
-  isAnimating=false;isFlipping=false;
-  variantState.forEach(s=>{
-    s.round=0;s.stackRemaining=deviceParams.totalTiles;s.gameStarted=false;
-    s.pairsInBook=[];s.remainingPairs=[];s.bookLeftPairs=0;s.bookRightPairs=0;
-    s.pageLeftHTML='';s.pageRightHTML='';
-  });
-  document.getElementById('chestLid').classList.remove('open','closing');
-  document.getElementById('chestKey').classList.remove('turned');
-  const tr=document.getElementById('tabsRow');
-  if(deviceParams.tabs>1)tr.classList.remove('empty');else tr.classList.add('empty');
-  document.querySelectorAll('.tab').forEach((tab,i)=>{tab.style.display=i<deviceParams.tabs?'inline-block':'none';tab.classList.toggle('active',i===0);tab.onclick=()=>switchVariant(i);});
-  const f=document.getElementById('gameField');
-  f.style.setProperty('--cols',deviceParams.cols);
-  f.style.setProperty('--gap',deviceParams.gap+'px');
-  f.innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
-  document.getElementById('pageLeft').innerHTML='';
-  document.getElementById('pageRight').innerHTML='';
-  applyPortraitTabletLayout();
-  document.getElementById('pauseOverlay').classList.remove('active');
-  document.getElementById('dictOverlay').classList.remove('active');
-  document.getElementById('finalOverlay').classList.remove('active');
-  document.getElementById('mainArea').style.visibility='';
-}
-
-function switchVariant(i){
-  syncGlobalToVariant();
-  currentVariant=i;
-  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',j===i));
-  loadVariantToGlobal(i);
-  document.getElementById('finalOverlay').classList.remove('active');
-  document.getElementById('dictOverlay').classList.remove('active');
-  document.getElementById('mainArea').style.visibility='';
-  const f=document.getElementById('gameField');
-  f.innerHTML='';
-  if(!gameStarted){
-    f.innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
-    document.getElementById('chestLid').classList.remove('open','closing');
-    document.getElementById('chestKey').classList.remove('turned');
-  }else{
-    renderField(true);
-    document.getElementById('chestLid').classList.add('open');
-    document.getElementById('chestKey').classList.add('turned');
-  }
-}
-
-function startGame(){gameStarted=true;syncGlobalToVariant();const b=document.getElementById('startBtn');if(b)b.remove();playKeyTurn();document.getElementById('chestKey').classList.add('turned');setTimeout(()=>{playChestOpen();document.getElementById('chestLid').classList.add('open');},700);setTimeout(()=>nextRound(),3200);}
-
-function nextRound(){const r=variants[currentVariant];if(currentRound>=r.length){showFinal();return;}pairsOnField=[...r[currentRound]];remainingPairs=[...pairsOnField];const t=pairsOnField.length*2;stackRemaining=Math.max(0,stackRemaining-t);renderField();currentRound++;syncGlobalToVariant();}
-
-function renderField(skipAnimation){
-  const f=document.getElementById('gameField');
-  f.innerHTML='';
-  const tiles=[];
-  remainingPairs.forEach(p=>{tiles.push({type:'phrase',text:p.p,pair:p});tiles.push({type:'meaning',text:p.m,pair:p});});
-  let arr=shuffle(tiles);
-  const cols=deviceParams.cols;
-  function areNeighbors(i,j){
-    const ri=Math.floor(i/cols),ci=i%cols;
-    const rj=Math.floor(j/cols),cj=j%cols;
-    const dr=Math.abs(ri-rj),dc=Math.abs(ci-cj);
-    return (dr===1&&dc===0)||(dr===0&&dc===1);
-  }
-  function samePair(a,b){return a.pair===b.pair&&a.type!==b.type;}
-  let guard=0;
-  while(guard<3000){
-    let bad=-1;
-    for(let i=0;i<arr.length&&bad<0;i++){
-      for(let j=i+1;j<arr.length;j++){
-        if(areNeighbors(i,j)&&samePair(arr[i],arr[j])){bad=i;break;}
-      }
-    }
-    if(bad<0)break;
-    let other=Math.floor(Math.random()*arr.length);
-    [arr[bad],arr[other]]=[arr[other],arr[bad]];
-    guard++;
-  }
-  arr.forEach(d=>{
-    const tile=document.createElement('div');
-    tile.className='tile '+d.type;
-    const inner=document.createElement('div');
-    inner.className='tile-content';
-    if(d.type==='phrase')inner.innerHTML=addNbsp(d.text);
-    else inner.innerHTML=renderMeaningHTMLStacked(d.text);
-    tile.appendChild(inner);
-    tile.dataset.type=d.type;
-    tile.dataset.phrase=d.pair.p;
-    tile.dataset.meaning=d.pair.m;
-    tile.onclick=()=>selectTile(tile);
-    f.appendChild(tile);
-  });
-  const totalTiles=arr.length;
-  const actualRows=Math.ceil(totalTiles/cols);
-  const maxRows=Math.ceil((deviceParams.pairsPerRound*2)/cols);
-  const gap=deviceParams.gap;
-  const fieldH=f.clientHeight-2*gap-(gap+6);
-  const rowHActual=(fieldH-gap*(actualRows-1))/actualRows;
-  const rowHFull=(fieldH-gap*(maxRows-1))/maxRows;
-  const rowH=Math.max(30, Math.min(rowHActual, rowHFull));
-  f.style.gridTemplateColumns=`repeat(${cols}, minmax(0,1fr))`;
-  f.style.gridTemplateRows=`repeat(${actualRows}, ${rowH}px)`;
-  f.style.alignContent='start';
-  fitTiles();
-
-  if(skipAnimation)return;
-
-  const chestEl=document.getElementById('chest');
-  const bodyEl=chestEl.querySelector('.chest-body');
-  const br=bodyEl.getBoundingClientRect();
-  const openX=br.left+br.width/2;
-  const openY=br.top+6;
-  const spreadW=br.width*0.22;
-
-  const all=f.querySelectorAll('.tile');
-  all.forEach(tile=>{
-    const r=tile.getBoundingClientRect();
-    const jitter=(Math.random()-0.5)*spreadW;
-    const dx=(openX+jitter)-(r.left+r.width/2);
-    const dy=openY-(r.top+r.height/2);
-    tile.style.transform=`translate(${dx}px, ${dy}px) scale(0.12)`;
-    tile.style.opacity='0';
-    tile.style.transition='none';
-    tile.style.zIndex='500';
-    tile.style.position='relative';
-  });
-  playDiceDrop(all.length);
-
-  const total=all.length;
-  const stagger=Math.max(90, Math.min(220, 2400/Math.max(1,total)));
-  const dur=1.35;
-  setTimeout(()=>{
-    all.forEach((tile,i)=>{
-      setTimeout(()=>{
-        tile.style.transition=`transform ${dur}s cubic-bezier(0.18,0.72,0.35,1), opacity 0.3s ease-out`;
-        tile.style.transform='translate(0,0) scale(1)';
-        tile.style.opacity='1';
-      }, i*stagger);
-    });
-    const totalTime=total*stagger+dur*1000+250;
-    setTimeout(()=>{
-      all.forEach(tile=>{tile.style.transition='';tile.style.transform='';tile.style.opacity='';tile.style.zIndex='';tile.style.position='';});
-      fitTiles();
-    }, totalTime);
-  }, 150);
-}
-
-function selectTile(tile){if(paused||!gameStarted||isAnimating||isFlipping)return;if(tile.classList.contains('hidden'))return;playWoodClick();document.querySelectorAll('.tile').forEach(t=>t.classList.remove('selected'));tile.classList.add('selected');if(tile.dataset.type==='phrase')selectedPhrase=tile;else selectedMeaning=tile;if(selectedPhrase&&selectedMeaning)checkPair();}
-
-function checkPair(){if(isAnimating)return;isAnimating=true;const p=selectedPhrase,m=selectedMeaning;if(p.dataset.phrase===m.dataset.phrase){p.classList.add('correct');m.classList.add('correct');p.classList.remove('selected');m.classList.remove('selected');selectedPhrase=null;selectedMeaning=null;animateToBook(p,m);}else{p.classList.add('wrong');m.classList.add('wrong');setTimeout(()=>{p.classList.remove('wrong','selected');m.classList.remove('wrong','selected');selectedPhrase=null;selectedMeaning=null;isAnimating=false;},500);}}
-
-function animateToBook(p,m){const br=document.querySelector('.book').getBoundingClientRect();const pr=p.getBoundingClientRect();const mr=m.getBoundingClientRect();const pc=p.cloneNode(true);const mc=m.cloneNode(true);[pc,mc].forEach((cl,i)=>{const r=i===0?pr:mr;cl.style.position='fixed';cl.style.left=r.left+'px';cl.style.top=r.top+'px';cl.style.width=r.width+'px';cl.style.height=r.height+'px';cl.style.zIndex='9999';cl.style.transition='all .5s ease-in';cl.style.pointerEvents='none';document.body.appendChild(cl);});p.style.visibility='hidden';m.style.visibility='hidden';const matchedPhrase=p.dataset.phrase;requestAnimationFrame(()=>{const tx=br.left+br.width/2,ty=br.top+br.height/2;pc.style.left=(tx-40)+'px';pc.style.top=(ty-15)+'px';pc.style.width='60px';pc.style.height='30px';pc.style.opacity='0';mc.style.left=(tx+5)+'px';mc.style.top=(ty-15)+'px';mc.style.width='60px';mc.style.height='30px';mc.style.opacity='0';});setTimeout(()=>{pc.remove();mc.remove();p.classList.add('hidden');m.classList.add('hidden');addPairToBook(p.dataset.phrase,p.dataset.meaning);collectedPhrases.add(p.dataset.phrase);remainingPairs=remainingPairs.filter(x=>x.p!==matchedPhrase);isAnimating=false;syncGlobalToVariant();const rem=document.querySelectorAll('.tile:not(.hidden)').length;if(rem===0){setTimeout(()=>nextRound(),800);}},500);}
-
-function addPairToBook(phrase,meaning){const pl=document.getElementById('pageLeft'),pr=document.getElementById('pageRight');const pp=deviceParams.bookPairsPerPage;const pd=document.createElement('div');pd.className='book-pair';const ph=document.createElement('div');ph.className='pair-phrase';const phI=document.createElement('div');phI.className='pair-content';phI.innerHTML=addNbsp(phrase);ph.appendChild(phI);if(phrase===LAMP_PHRASE){const l=document.createElement('span');l.className='lamp-inline';l.textContent='💡';l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};ph.appendChild(l);}const dh=document.createElement('div');dh.className='pair-dash';dh.textContent='—';const mh=document.createElement('div');mh.className='pair-meaning';const mhI=document.createElement('div');mhI.className='pair-content';mhI.innerHTML=renderMeaningHTMLStacked(meaning);mh.appendChild(mhI);pd.appendChild(ph);pd.appendChild(dh);pd.appendChild(mh);if(bookLeftPairs<pp){pl.appendChild(pd);bookLeftPairs++;}else if(bookRightPairs<pp){pr.appendChild(pd);bookRightPairs++;}pairsInBook.push({phrase,meaning});setTimeout(fitBook,30);syncGlobalToVariant();if(bookLeftPairs>=pp&&bookRightPairs>=pp){isFlipping=true;setTimeout(()=>{flipBookPage(()=>{pl.innerHTML='';pr.innerHTML='';bookLeftPairs=0;bookRightPairs=0;isFlipping=false;syncGlobalToVariant();});},700);}}
-
-function flipBookPage(cb){const sp=document.getElementById('bookSpread'),rp=document.getElementById('pageRight');const rr=rp.getBoundingClientRect(),sr=sp.getBoundingClientRect();const cl=document.createElement('div');cl.className='flip-clone';cl.style.position='absolute';cl.style.left=(rr.left-sr.left)+'px';cl.style.top='0';cl.style.width=rr.width+'px';cl.style.height='100%';const fr=document.createElement('div');fr.className='flip-clone-front';fr.innerHTML=rp.innerHTML;cl.appendChild(fr);rp.innerHTML='';sp.appendChild(cl);setTimeout(()=>{cl.remove();if(cb)cb();},1300);}
-
-function showFinal(){
-  playChestClose();
-  const lid=document.getElementById('chestLid');
-  const key=document.getElementById('chestKey');
-  lid.classList.remove('open');
-  lid.classList.add('closing');
-  key.classList.remove('turned');
-  document.getElementById('mainArea').style.visibility='hidden';
-  document.getElementById('finalOverlay').classList.add('active');
-  playFanfare();
-  setTimeout(()=>{lid.classList.remove('closing');},1400);
-  variantState[currentVariant].gameStarted=false;
-  variantState[currentVariant].round=0;
-  variantState[currentVariant].pairsInBook=[];
-  variantState[currentVariant].remainingPairs=[];
-  variantState[currentVariant].bookLeftPairs=0;
-  variantState[currentVariant].bookRightPairs=0;
-  variantState[currentVariant].pageLeftHTML='';
-  variantState[currentVariant].pageRightHTML='';
-}
-
-let dictPages=[],dictCurrentPage=0;
-function sortKey(phrase){return phrase.replace(/^\s*\([^)]*\)\s*/,'').trim();}
-function buildDictPages(){
-  const sorted=[...ALL_PAIRS].sort((a,b)=>sortKey(a.p).localeCompare(sortKey(b.p),'ru'));
-  const entries=[];
-  let lastLetter='';
-  sorted.forEach(p=>{
-    const k=sortKey(p.p);
-    const l=k[0].toUpperCase();
-    if(l!==lastLetter){entries.push({type:'letter',letter:l});lastLetter=l;}
-    entries.push({type:'pair',pair:p});
-  });
-  const pages=[];let cp=[],cnt=0;
-  entries.forEach(e=>{cp.push(e);cnt++;if(cnt>=22){pages.push(cp);cp=[];cnt=0;}});
-  if(cp.length>0)pages.push(cp);
-  for(let i=0;i<pages.length-1;i++){
-    const page=pages[i];
-    for(let j=page.length-1;j>=0;j--){
-      if(page[j].type==='letter'){
-        const hasPairAfter=page.slice(j+1).some(e=>e.type==='pair');
-        if(!hasPairAfter){
-          const letterEntry=page.splice(j,1)[0];
-          pages[i+1].unshift(letterEntry);
-        }
-        break;
-      }
-    }
-  }
-  dictPages=pages;
-}
-function capitalizeFirst(s){if(!s)return s;return s.charAt(0).toUpperCase()+s.slice(1);}
-function renderDictPage(){
-  const lc=document.getElementById('dictPageLeftContent'),rc=document.getElementById('dictPageRightContent');
-  lc.innerHTML='';rc.innerHTML='';
-  const page=dictPages[dictCurrentPage];if(!page)return;
-  const half=Math.ceil(page.length/2);
-  const le=page.slice(0,half),re=page.slice(half);
-  [le,re].forEach((entries,side)=>{
-    const ct=side===0?lc:rc;
-    ct.classList.add('distribute');
-    entries.forEach(entry=>{
-      if(entry.type==='letter'){
-        const d=document.createElement('div');
-        d.className='dict-section-title';
-        d.textContent=entry.letter;
-        ct.appendChild(d);
-      }else{
-        const pair=entry.pair;
-        const collected=collectedPhrases.has(pair.p);
-        const d=document.createElement('div');
-        d.className='dict-entry'+(collected?'':' empty');
-        const lk=document.createElement('span');
-        lk.className='lock';
-        lk.textContent=collected?'':'🔒';
-        const ph=document.createElement('span');
-        ph.className='entry-phrase';
-        ph.innerHTML=addNbsp(capitalizeFirst(pair.p));
-        if(collected&&pair.p===LAMP_PHRASE){
-          const l=document.createElement('span');
-          l.className='lamp-inline';l.textContent='💡';
-          l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};
-          ph.appendChild(l);
-        }
-        const dh=document.createElement('span');
-        dh.className='entry-dash';dh.textContent=collected?'—':'';
-        const mn=document.createElement('span');
-        mn.className='entry-meaning';
-        mn.innerHTML=collected?splitMeaning(pair.m).map((part,i)=>{
-          const cls=['','second','third'][i]||'third';
-          const sep=i<splitMeaning(pair.m).length-1?';':'';
-          return `<span class="${cls}">${addNbsp(part)}${sep}</span>`;
-        }).join(' '):'';
-        d.appendChild(lk);d.appendChild(ph);d.appendChild(dh);d.appendChild(mn);
-        ct.appendChild(d);
-      }
-    });
-  });
-  document.getElementById('dictArrowBack').classList.toggle('disabled',dictCurrentPage===0);
-  document.getElementById('dictArrowForward').classList.toggle('disabled',dictCurrentPage>=dictPages.length-1);
-}
-function openDict(){buildDictPages();dictCurrentPage=0;renderDictPage();document.getElementById('dictOverlay').classList.add('active');}
-function closeDict(){document.getElementById('dictOverlay').classList.remove('active');}
-function dictPrevPage(){if(dictCurrentPage>0){dictCurrentPage--;renderDictPage();}}
-function dictNextPage(){if(dictCurrentPage<dictPages.length-1){dictCurrentPage++;renderDictPage();}}
-
-function toggleSound(){soundOn=!soundOn;const b1=document.getElementById('soundBtn');const t=soundOn?'Звук 🔊':'Звук 🔇';if(b1){b1.textContent=t;b1.classList.toggle('muted',!soundOn);}}
-function togglePause(){paused=!paused;const o=document.getElementById('pauseOverlay');if(paused)o.classList.add('active');else o.classList.remove('active');}
-function restartGame(){document.getElementById('finalOverlay').classList.remove('active');document.getElementById('mainArea').style.visibility='';document.getElementById('rotateWrap').style.display='flex';initGame();}
-
-initGame();
-
-const mqlPortrait=window.matchMedia('(orientation: portrait)');
-function onOrientationMaybeChanged(){setTimeout(applyFixedRotation,50);}
-if(mqlPortrait.addEventListener)mqlPortrait.addEventListener('change',onOrientationMaybeChanged);
-else if(mqlPortrait.addListener)mqlPortrait.addListener(onOrientationMaybeChanged);
-window.addEventListener('resize',onOrientationMaybeChanged);
-window.addEventListener('orientationchange',onOrientationMaybeChanged);
+apply();
 </script>
+
 </body>
 </html>
