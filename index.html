@@ -992,11 +992,12 @@ function flipBookPage(){
   fr.className='flip-clone-front';
   fr.innerHTML=rp.innerHTML;
   cl.appendChild(fr);
-rp.innerHTML='';
-document.getElementById('pageLeft').innerHTML='';
-sp.appendChild(cl);
+  // Очищаем правую страницу сразу — под клоном должно быть пусто
+  rp.innerHTML='';
+  sp.appendChild(cl);
+  // Через 1250 мс (когда клон уже лёг на 180°) чистим данные и обе страницы.
+  // Клон ещё висит 150 мс и закрывает левую страницу, потом удаляется.
   setTimeout(()=>{
-    sp.querySelectorAll('.flip-clone').forEach(el=>el.remove());
     s.leftPairs=[];
     s.rightPairs=[];
     bookLeftPairsRef=0;
@@ -1004,7 +1005,10 @@ sp.appendChild(cl);
     renderBookFromState();
     isFlipping=false;
     syncGlobalToVariant();
-  },1300);
+    setTimeout(()=>{
+      sp.querySelectorAll('.flip-clone').forEach(el=>el.remove());
+    },150);
+  },1250);
 }
 
 function showFinal(){
