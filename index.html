@@ -89,7 +89,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .shelf::before{content:'';position:absolute;top:0;left:6px;right:6px;height:2px;background:linear-gradient(90deg,transparent,rgba(255,200,150,.5),transparent);border-radius:1px}
 .shelf::after{content:'';position:absolute;bottom:-3px;left:3px;right:3px;height:3px;background:linear-gradient(180deg,#3a0e04,#1a0400);border-radius:0 0 3px 3px;box-shadow:0 2px 5px rgba(0,0,0,.5)}
 @keyframes flipPage{0%{transform:rotateY(0)}100%{transform:rotateY(-180deg)}}
-.flip-clone{position:absolute;top:0;right:0;width:50%;height:100%;transform-origin:left center;transform-style:preserve-3d;animation:flipPage 1.3s cubic-bezier(.45,.05,.55,.95) forwards;z-index:10;background:#e0d4b8;background-image:radial-gradient(circle at 20% 30%,rgba(184,92,56,.1) .5px,transparent 1px),radial-gradient(circle at 70% 60%,rgba(166,138,58,.1) .5px,transparent 1px);border-radius:2px;box-shadow:0 0 12px rgba(0,0,0,.3)}
+.flip-clone{position:absolute;top:0;right:0;width:50%;height:100%;transform-origin:left center;transform-style:preserve-3d;animation:flipPage 1.3s cubic-bezier(.45,.05,.55,.95) forwards;z-index:10;background:#e0d4b8;background-image:radial-gradient(circle at 20% 30%,rgba(184,92,56,.1) .5px,transparent 1px),radial-gradient(circle at 70% 60%,rgba(166,138,58,.1) .5px,transparent 1px);border-radius:2px;box-shadow:0 0 12px rgba(0,0,0,.3);backface-visibility:hidden;-webkit-backface-visibility:hidden}
 .flip-clone-front{position:absolute;top:0;left:0;width:100%;height:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;padding:20px 10px;display:grid;grid-template-rows:repeat(4,minmax(0,1fr));gap:10px}
 .footer{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:4px 16px;position:relative;z-index:2100}
 .footer-buttons{display:flex;gap:6px}
@@ -665,8 +665,6 @@ let deviceParams=getParams();
 let collectedPhrases=new Set();
 let isFlipping=false;
 
-// ===== СОСТОЯНИЕ ВАРИАНТОВ =====
-// Книга хранится как ДАННЫЕ (массивы пар), а не HTML.
 let variantState=[
   {round:0,stackRemaining:0,gameStarted:false,
    leftPairs:[],rightPairs:[],pairsInBook:[],remainingPairs:[],
@@ -734,7 +732,6 @@ function applyPortraitTabletLayout(){
   }
 }
 
-// ===== РИСОВАНИЕ СТРАНИЦЫ КНИГИ ИЗ ДАННЫХ =====
 function renderBookPage(pageEl, pairs){
   pageEl.innerHTML='';
   pairs.forEach(item=>{
@@ -782,7 +779,6 @@ function syncGlobalToVariant(){
   s.remainingPairs=[...remainingPairs];
   s.bookLeftPairs=bookLeftPairsRef;
   s.bookRightPairs=bookRightPairsRef;
-  // leftPairs / rightPairs обновляются напрямую в addPairToBook и flipBookPage
 }
 
 function loadVariantToGlobal(i){
@@ -960,12 +956,10 @@ function checkPair(){if(isAnimating)return;isAnimating=true;const p=selectedPhra
 
 function animateToBook(p,m){const br=document.querySelector('.book').getBoundingClientRect();const pr=p.getBoundingClientRect();const mr=m.getBoundingClientRect();const pc=p.cloneNode(true);const mc=m.cloneNode(true);[pc,mc].forEach((cl,i)=>{const r=i===0?pr:mr;cl.style.position='fixed';cl.style.left=r.left+'px';cl.style.top=r.top+'px';cl.style.width=r.width+'px';cl.style.height=r.height+'px';cl.style.zIndex='9999';cl.style.transition='all .5s ease-in';cl.style.pointerEvents='none';document.body.appendChild(cl);});p.style.visibility='hidden';m.style.visibility='hidden';const matchedPhrase=p.dataset.phrase;requestAnimationFrame(()=>{const tx=br.left+br.width/2,ty=br.top+br.height/2;pc.style.left=(tx-40)+'px';pc.style.top=(ty-15)+'px';pc.style.width='60px';pc.style.height='30px';pc.style.opacity='0';mc.style.left=(tx+5)+'px';mc.style.top=(ty-15)+'px';mc.style.width='60px';mc.style.height='30px';mc.style.opacity='0';});setTimeout(()=>{pc.remove();mc.remove();p.classList.add('hidden');m.classList.add('hidden');addPairToBook(p.dataset.phrase,p.dataset.meaning);collectedPhrases.add(p.dataset.phrase);remainingPairs=remainingPairs.filter(x=>x.p!==matchedPhrase);isAnimating=false;syncGlobalToVariant();const rem=document.querySelectorAll('.tile:not(.hidden)').length;if(rem===0){setTimeout(()=>nextRound(),800);}},500);}
 
-// ===== ДОБАВЛЕНИЕ ПАРЫ В КНИГУ =====
 function addPairToBook(phrase,meaning){
   const s=variantState[currentVariant];
   const pp=deviceParams.bookPairsPerPage;
   const item={phrase,meaning};
-  // Определяем, на какую страницу положить
   if(s.leftPairs.length<pp){
     s.leftPairs.push(item);
   }else if(s.rightPairs.length<pp){
@@ -974,9 +968,7 @@ function addPairToBook(phrase,meaning){
   pairsInBook.push(item);
   bookLeftPairsRef=s.leftPairs.length;
   bookRightPairsRef=s.rightPairs.length;
-  // Перерисовываем ОБЕ страницы заново из данных
   renderBookFromState();
-  // Если обе страницы заполнены — перелистываем
   if(s.leftPairs.length>=pp && s.rightPairs.length>=pp){
     isFlipping=true;
     setTimeout(()=>{ flipBookPage(); },700);
@@ -987,7 +979,6 @@ function flipBookPage(){
   const s=variantState[currentVariant];
   const sp=document.getElementById('bookSpread');
   const rp=document.getElementById('pageRight');
-  // Убираем старые клоны
   sp.querySelectorAll('.flip-clone').forEach(el=>el.remove());
   const rr=rp.getBoundingClientRect(),sr=sp.getBoundingClientRect();
   const cl=document.createElement('div');
@@ -1001,10 +992,11 @@ function flipBookPage(){
   fr.className='flip-clone-front';
   fr.innerHTML=rp.innerHTML;
   cl.appendChild(fr);
+  // Очищаем правую страницу СРАЗУ, чтобы под переворачивающимся клоном было пусто
+  rp.innerHTML='';
   sp.appendChild(cl);
   setTimeout(()=>{
     sp.querySelectorAll('.flip-clone').forEach(el=>el.remove());
-    // Очищаем данные и обе страницы
     s.leftPairs=[];
     s.rightPairs=[];
     bookLeftPairsRef=0;
@@ -1130,7 +1122,6 @@ function restartGame(){document.getElementById('finalOverlay').classList.remove(
 
 let orientationTimer = null;
 function onOrientationChanged(){
-  // Если сейчас идёт перелистывание — отложить поворот
   if (isFlipping) {
     clearTimeout(orientationTimer);
     orientationTimer = setTimeout(onOrientationChanged, 300);
@@ -1149,7 +1140,6 @@ function onOrientationChanged(){
   } else if (!gameStarted) {
     f.innerHTML = '<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
   }
-  // Книга восстанавливается из данных, а не из HTML
   renderBookFromState();
 }
 
