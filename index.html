@@ -855,26 +855,185 @@ function renderField(skipAnimation){
     tile.style.setProperty('--arc-x', arcX+'px');
     tile.style.animation='none';
     tile.style.zIndex='500';
-    tile.style.position='relative';
-    tile.style.opacity='0';
+
+function renderField(skipAnimation){
+  const f=document.getElementById('gameField');
+  f.innerHTML='';
+  const tiles=[];
+  remainingPairs.forEach(p=>{tiles.push({type:'phrase',text:p.p,pair:p});tiles.push({type:'meaning',text:p.m,pair:p});});
+  let arr=shuffle(tiles);
+  const cols=deviceParams.cols;
+  function areNeighbors(i,j){
+    const ri=Math.floor(i/cols),ci=i%cols;
+    const rj=Math.floor(j/cols),cj=j%cols;
+    const dr=Math.abs(ri-rj),dc=Math.abs(ci-cj);
+    return (dr===1&&dc===0)||(dr===0&&dc===1);
+  }
+  function samePair(a,b){return a.pair===b.pair&&a.type!==b.type;}
+  let guard=0;
+  while(guard<3000){
+    let bad=-1;
+    for(let i=0;i<arr.length&&bad<0;i++){
+      for(let j=i+1;j<arr.length;j++){
+        if(areNeighbors(i,j)&&samePair(arr[i],arr[j])){bad=i;break;}
+      }
+    }
+    if(bad<0)break;
+    let other=Math.floor(Math.random()*arr.length);
+    [arr[bad],arr[other]]=[arr[other],arr[bad]];
+    guard++;
+  }
+  arr.forEach(d=>{
+    const tile=document.createElement('div');
+    tile.className='tile '+d.type;
+    const inner=document.createElement('div');
+    inner.className='tile-content';
+    if(d.type==='phrase')inner.innerHTML=addNbsp(d.text);
+    else inner.innerHTML=renderMeaningHTMLStacked(d.text);
+    tile.appendChild(inner);
+    tile.dataset.type=d.type;
+    tile.dataset.phrase=d.pair.p;
+    tile.dataset.meaning=d.pair.m;
+    tile.onclick=()=>selectTile(tile);
+    f.appendChild(tile);
   });
-  playDiceDrop(all.length);
+  const totalTiles=arr.length;
+  const actualRows=Math.ceil(totalTiles/cols);
+  const maxRows=Math.ceil((deviceParams.pairsPerRound*2)/cols);
+  const gap=deviceParams.gap;
+  const fieldH=f.clientHeight-2*gap-(gap+6);
+  const rowHActual=(fieldH-gap*(actualRows-1))/actualRows;
+  const rowHFull=(fieldH-gap*(maxRows-1))/maxRows;
+  const rowH=Math.max(30, Math.min(rowHActual, rowHFull));
+  f.style.gridTemplateColumns=`repeat(${cols}, minmax(0,1fr))`;
+  f.style.gridTemplateRows=`repeat(${actualRows}, ${rowH}px)`;
+  f.style.alignContent='start';
+  fitTiles();
 
-  const total=all.length;
-  const stagger=Math.max(120, Math.min(300, 3000/Math.max(1,total)));
-  const dur=1.8;
-  setTimeout(()=>{
-    all.forEach((tile,i)=>{
-      tile.style.animation = `tileFromChest ${dur}s cubic-bezier(0.22,0.75,0.3,1) ${i*stagger}ms forwards`;
+  if(skipAnimation)return;
+
+  // ===== Вылет плиток из сундука по дуге =====
+  // 1. Определяем точку старта (щель в сундуке)
+  const slotEl=document.getElementById('chestSlot');
+  const bodyEl=document.querySelector('#chest .chest-body');
+  const br=bodyEl?bodyEl.getBoundingClientRect():{left:0,top:0,width:0,height:0};
+  let startX, startY;
+  if(slotEl){
+    const sr=slotEl.getBoundingClientRect();
+    if(sr.width>0 || sr.left>0 || sr.top>0){
+      startX=sr.left+sr.width/2;
+      startY=sr.top+sr.height/2;
+    } else {
+      startX=br.left+br.width/2;
+      startY=br.top+br.height*0.12;
+    }
+  } else {
+    startX=br.left+br.width/2;
+    startY=br.top+br.height*0.12;
+  }
+  const spreadW=(br.width||200)*0.25;
+
+  // 2. Собираем "призраков" — копии плиток, которые полетят поверх всего
+  const allTiles=Array.from(f.querySelectorAll('.tile'));
+  const flyers=[];
+
+  // Сначала скрываем все настоящие плитки, чтобы они не мешали
+  allTiles.forEach(t=>{t.style.visibility='hidden';});
+
+  // 3. Создаём призраков
+  allTiles.forEach((tile, idx)=>{
+    const r=tile.getBoundingClientRect();
+    const targetX=r.left+r.width/2;
+    const targetY=r.top+r.height/2;
+
+    // Старт — щель в сундуке с небольшим разбросом
+    const jitterX=(Math.random()-0.5)*spreadW;
+    const jitterY=(Math.random()-0.5)*spreadW*0.3;
+    const sx=startX+jitterX;
+    const sy=startY+jitterY;
+
+    // Клон — визуальная копия плитки
+    const flyer=tile.cloneNode(true);
+    flyer.style.position='fixed';
+    flyer.style.left='0';
+    flyer.style.top='0';
+    flyer.style.width=r.width+'px';
+    flyer.style.height=r.height+'px';
+    flyer.style.zIndex=String(9000+idx);
+    flyer.style.pointerEvents='none';
+    flyer.style.transform=`translate(${sx-r.width/2}px, ${sy-r.height/2}px) scale(0.15)`;
+    flyer.style.opacity='0';
+    document.body.appendChild(flyer);
+
+    flyers.push({
+      el: flyer,
+      startX: sx - r.width/2,
+      startY: sy - r.height/2,
+      targetX: targetX - r.width/2,
+      targetY: targetY - r.height/2,
+      width: r.width,
+      height: r.height,
+      // дуга отклоняется в сторону: знак случайный
+      arcSign: Math.random()<0.5 ? -1 : 1,
+      arcAmount: 60 + Math.random()*40,
+      delay: idx*180,
+      tile: tile
     });
-    const totalTime=total*stagger+dur*1000+400;
-    setTimeout(()=>{
-      all.forEach(tile=>{tile.style.animation='';tile.style.transform='';tile.style.opacity='';tile.style.zIndex='';tile.style.position='';});
-      fitTiles();
-    }, totalTime);
-  }, 150);
-}
+  });
 
+  playDiceDrop(allTiles.length);
+
+  // 4. Анимируем через requestAnimationFrame
+  const flyDuration=1400;     // длительность полёта одной плитки, мс
+  const startTime=performance.now();
+
+  function easeOutCubic(t){return 1-Math.pow(1-t,3);}
+
+  function step(now){
+    let allDone=true;
+    flyers.forEach(flyer=>{
+      const elapsed=now-startTime-flyer.delay;
+      if(elapsed<0){
+        allDone=false;
+        return;
+      }
+      if(elapsed>=flyDuration){
+        // Полёт закончен — ставим плитку точно на место, убираем призрака
+        if(flyer.el){
+          flyer.el.remove();
+          flyer.el=null;
+        }
+        return;
+      }
+      allDone=false;
+      const t=Math.min(1, elapsed/flyDuration);
+      const e=easeOutCubic(t);
+
+      // Позиция по прямой от старта к цели
+      const px=flyer.startX + (flyer.targetX - flyer.startX)*e;
+      const py=flyer.startY + (flyer.targetY - flyer.startY)*e;
+
+      // Отклонение по дуге: в середине полёта максимально, в начале и конце — 0
+      const arcT=Math.sin(t*Math.PI); // 0 в начале, 1 в середине, 0 в конце
+      const offsetX=flyer.arcSign * flyer.arcAmount * arcT;
+      const offsetY=-40*arcT;
+
+      const scale=0.15 + (1-0.15)*e;
+      const opacity=Math.min(1, t*3); // проявляется в первые 30% пути
+
+      flyer.el.style.transform=`translate(${px+offsetX}px, ${py+offsetY}px) scale(${scale})`;
+      flyer.el.style.opacity=String(opacity);
+    });
+    if(!allDone){
+      requestAnimationFrame(step);
+    } else {
+      // Все призраки убраны, показываем настоящие плитки
+      allTiles.forEach(t=>{t.style.visibility='';});
+      fitTiles();
+    }
+  }
+  requestAnimationFrame(step);
+}
 function selectTile(tile){if(paused||!gameStarted||isAnimating||isFlipping)return;if(tile.classList.contains('hidden'))return;playWoodClick();document.querySelectorAll('.tile').forEach(t=>t.classList.remove('selected'));tile.classList.add('selected');if(tile.dataset.type==='phrase')selectedPhrase=tile;else selectedMeaning=tile;if(selectedPhrase&&selectedMeaning)checkPair();}
 
 function checkPair(){if(isAnimating)return;isAnimating=true;const p=selectedPhrase,m=selectedMeaning;if(p.dataset.phrase===m.dataset.phrase){p.classList.add('correct');m.classList.add('correct');p.classList.remove('selected');m.classList.remove('selected');selectedPhrase=null;selectedMeaning=null;animateToBook(p,m);}else{p.classList.add('wrong');m.classList.add('wrong');setTimeout(()=>{p.classList.remove('wrong','selected');m.classList.remove('wrong','selected');selectedPhrase=null;selectedMeaning=null;isAnimating=false;},500);}}
