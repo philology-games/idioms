@@ -72,7 +72,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .book-pages-edge-top,.book-pages-edge-bottom{position:absolute;left:3px;right:3px;height:4px;background:repeating-linear-gradient(to bottom,#e0d4b8,#e0d4b8 1px,#d4c8a8 1px,#d4c8a8 2px);z-index:2}
 .book-pages-edge-top{top:0;border-radius:2px 2px 0 0}
 .book-pages-edge-bottom{bottom:0;border-radius:0 0 2px 2px}
-.book-spread{position:relative;z-index:3;display:flex;height:100%;margin:4px 3px;border-radius:2px;perspective:1600px}
+.book-spread{position:relative;z-index:3;display:flex;height:100%;margin:4px 3px;border-radius:2px;perspective:1600px;overflow:hidden}
 .page{flex:1;min-width:0;background:#e0d4b8;background-image:radial-gradient(circle at 20% 30%,rgba(184,92,56,.1) .5px,transparent 1px),radial-gradient(circle at 70% 60%,rgba(166,138,58,.1) .5px,transparent 1px);padding:20px 10px;display:grid;grid-template-rows:repeat(4,minmax(0,1fr));gap:10px;position:relative}
 .book-fold{width:6px;flex-shrink:0;background:linear-gradient(to right,#d4c8a8,#c8bc9c 30%,#b8ac8c 50%,#c8bc9c 70%,#d4c8a8);position:relative}
 .book-fold::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:2px;height:100%;background:rgba(0,0,0,.15)}
@@ -574,8 +574,6 @@ const ALL_PAIRS = [
   { p: "язык не поворачивается", m: "не решаться что-либо сказать" }
 ];
 
-// ===== Группы похожих по смыслу фразеологизмов =====
-// Фразеологизмы из одной группы не попадают в один раунд.
 const SIMILAR_GROUPS = [
   ["без оглядки","в два счёта","в мгновение ока","во весь дух","в один миг","как ветром сдуло"],
   ["бок о бок","в двух шагах","глаза в глаза","лицом к лицу","рукой подать"],
@@ -586,7 +584,6 @@ const SIMILAR_GROUPS = [
   ["кот наплакал"]
 ];
 
-// Карта: фразеологизм -> номер группы (или undefined)
 const PHRASE_GROUP = (function(){
   const map = {};
   SIMILAR_GROUPS.forEach((group, idx)=>{
@@ -621,10 +618,6 @@ function normalizeMeaning(m){return m.toLowerCase().replace(/[;,.!?()]/g,' ').sp
 function meaningsAreSimilar(a,b){const n1=normalizeMeaning(a),n2=normalizeMeaning(b);if(n1===n2)return true;const w1=new Set(n1.split(' ')),w2=new Set(n2.split(' '));const i=[...w1].filter(w=>w2.has(w));const ms=Math.min(w1.size,w2.size);return ms>0&&i.length/ms>=.6;}
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
 
-// Проверяет, можно ли добавить кандидата в текущий раунд.
-// Запрещаем, если:
-//  - кандидат из той же "группы похожих", что уже есть в раунде,
-//  - значения кандидата и одного из уже добавленных слишком похожи (по ключевым словам).
 function conflictsWithRound(candidate, round){
   const candGroup = getGroupKey(candidate.p);
   for(const existing of round){
@@ -648,31 +641,24 @@ function buildVariants(){
     va.push(s.slice(st,st+sz));
     st+=sz;
   }
-  // Для каждого варианта — разбиваем на раунды с учётом групп
   return va.map(v=>{
     const rounds=[];
     let remaining=[...v];
-    // Сколько «попыток» подряд — защита от бесконечного цикла
     while(remaining.length>0){
       const round=[];
       const leftover=[];
       for(let i=0;i<remaining.length;i++){
         const cand=remaining[i];
         if(round.length>=pr){
-          // раунд заполнен — оставшееся идёт в следующий
           leftover.push(cand);
           continue;
         }
         if(conflictsWithRound(cand, round)){
-          // конфликтует — откладываем
           leftover.push(cand);
         } else {
           round.push(cand);
         }
       }
-      // Если в раунд ничего не попало (например, все конфликтуют между собой
-      // из-за одинаковых групп и раунд пуст) — принудительно добираем,
-      // иначе получим бесконечный цикл.
       if(round.length===0 && leftover.length>0){
         round.push(leftover.shift());
       }
@@ -943,7 +929,30 @@ function animateToBook(p,m){const br=document.querySelector('.book').getBounding
 
 function addPairToBook(phrase,meaning){const pl=document.getElementById('pageLeft'),pr=document.getElementById('pageRight');const pp=deviceParams.bookPairsPerPage;const pd=document.createElement('div');pd.className='book-pair';const ph=document.createElement('div');ph.className='pair-phrase';const phI=document.createElement('div');phI.className='pair-content';phI.innerHTML=addNbsp(phrase);ph.appendChild(phI);if(phrase===LAMP_PHRASE){const l=document.createElement('span');l.className='lamp-inline';l.textContent='💡';l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};ph.appendChild(l);}const dh=document.createElement('div');dh.className='pair-dash';dh.textContent='—';const mh=document.createElement('div');mh.className='pair-meaning';const mhI=document.createElement('div');mhI.className='pair-content';mhI.innerHTML=renderMeaningHTMLStacked(meaning);mh.appendChild(mhI);pd.appendChild(ph);pd.appendChild(dh);pd.appendChild(mh);if(bookLeftPairs<pp){pl.appendChild(pd);bookLeftPairs++;}else if(bookRightPairs<pp){pr.appendChild(pd);bookRightPairs++;}pairsInBook.push({phrase,meaning});setTimeout(fitBook,30);syncGlobalToVariant();if(bookLeftPairs>=pp&&bookRightPairs>=pp){isFlipping=true;setTimeout(()=>{flipBookPage(()=>{pl.innerHTML='';pr.innerHTML='';bookLeftPairs=0;bookRightPairs=0;isFlipping=false;syncGlobalToVariant();});},700);}}
 
-function flipBookPage(cb){const sp=document.getElementById('bookSpread'),rp=document.getElementById('pageRight');const rr=rp.getBoundingClientRect(),sr=sp.getBoundingClientRect();const cl=document.createElement('div');cl.className='flip-clone';cl.style.position='absolute';cl.style.left=(rr.left-sr.left)+'px';cl.style.top='0';cl.style.width=rr.width+'px';cl.style.height='100%';const fr=document.createElement('div');fr.className='flip-clone-front';fr.innerHTML=rp.innerHTML;cl.appendChild(fr);rp.innerHTML='';sp.appendChild(cl);setTimeout(()=>{cl.remove();if(cb)cb();},1300);}
+function flipBookPage(cb){
+  const sp=document.getElementById('bookSpread'),rp=document.getElementById('pageRight');
+  // Убираем все клоны перелистывания от предыдущих переворотов, если остались
+  sp.querySelectorAll('.flip-clone').forEach(el=>el.remove());
+  const rr=rp.getBoundingClientRect(),sr=sp.getBoundingClientRect();
+  const cl=document.createElement('div');
+  cl.className='flip-clone';
+  cl.style.position='absolute';
+  cl.style.left=(rr.left-sr.left)+'px';
+  cl.style.top='0';
+  cl.style.width=rr.width+'px';
+  cl.style.height='100%';
+  const fr=document.createElement('div');
+  fr.className='flip-clone-front';
+  fr.innerHTML=rp.innerHTML;
+  cl.appendChild(fr);
+  rp.innerHTML='';
+  sp.appendChild(cl);
+  setTimeout(()=>{
+    // Убираем ВСЕ клоны, а не только текущий
+    sp.querySelectorAll('.flip-clone').forEach(el=>el.remove());
+    if(cb)cb();
+  },1300);
+}
 
 function showFinal(){
   playChestClose();
@@ -1057,6 +1066,12 @@ function restartGame(){document.getElementById('finalOverlay').classList.remove(
 
 let orientationTimer = null;
 function onOrientationChanged(){
+  // Если сейчас идёт перелистывание — отложить поворот
+  if (isFlipping) {
+    clearTimeout(orientationTimer);
+    orientationTimer = setTimeout(onOrientationChanged, 300);
+    return;
+  }
   document.querySelectorAll('.flip-clone').forEach(el=>el.remove());
   isFlipping = false;
   syncGlobalToVariant();
