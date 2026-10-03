@@ -25,7 +25,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .tab.active:hover{background:#c8960b;color:#1a2a4a}
 .main{flex:1;display:flex;gap:10px;padding:0 16px 6px 16px;min-height:0}
 .left-part{flex:0 0 63%;min-height:0;min-width:0;display:flex}
-.game-field{flex:1;border:3px solid #b8860b;border-radius:8px;padding:5px;padding-bottom:11px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;min-height:0;min-width:0;position:relative;background:rgba(0,0,0,.05);overflow:hidden;grid-auto-rows:minmax(0,1fr)}
+.game-field{flex:1;border:3px solid #b8860b;border-radius:8px;padding:5px;padding-bottom:11px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;min-height:0;min-width:0;position:relative;background:rgba(0,0,0,.05);overflow:visible;grid-auto-rows:minmax(0,1fr)}
 .game-field .start-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Playfair Display',Georgia,serif;font-size:1rem;padding:8px 24px;background:#2a4a6a;color:#e0d4b8;border:2px solid #b8860b;border-radius:6px;cursor:pointer;z-index:10}
 .game-field .start-btn:hover{background:#3a5a7a}
 .tile{--edge1:#7a90ac;--edge2:#6a80a0;width:100%;height:100%;min-width:0;min-height:0;border-radius:5px 8px 8px 5px;cursor:pointer;text-align:center;font-family:'EB Garamond',Georgia,serif;font-size:1.05rem;font-weight:700;line-height:1.1;user-select:none;display:flex;align-items:center;justify-content:center;padding:2px 4px 4px 4px;overflow:hidden;position:relative;transition:box-shadow .15s,transform .15s;box-shadow:inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(0,0,0,.12),0 2px 0 var(--edge1),0 4px 0 var(--edge2),0 6px 6px rgba(0,0,0,.3);border:1px solid rgba(0,0,0,.15);border-bottom:none}
@@ -144,21 +144,6 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-page-content.distribute{justify-content:space-between}
 .dict-page-content.distribute .dict-entry{flex:0 0 auto}
 
-@keyframes tileFromChest{
-  0%{
-    transform:translate(var(--from-x), var(--from-y)) scale(0.15);
-    opacity:0;
-  }
-  40%{
-    transform:translate(calc(var(--from-x) * 0.55 + var(--arc-x)), calc(var(--from-y) * 0.55 - 70px)) scale(0.6);
-    opacity:1;
-  }
-  100%{
-    transform:translate(0, 0) scale(1);
-    opacity:1;
-  }
-}
-
 @media (orientation:portrait) and (min-width:600px) and (max-width:1100px){
 .main{flex-direction:column;padding:0 12px 5px 12px;gap:6px}
 .top-part{flex:0 0 35%;display:flex;flex-direction:row;gap:8px;min-height:0;min-width:0}
@@ -235,7 +220,6 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
               <div class="chest-key" id="chestKey">
                 <div class="key-head"></div>
               </div>
-              <div id="chestSlot" style="position:absolute;top:50%;left:50%;width:1px;height:1px;pointer-events:none;"></div>
             </div>
           </div>
         </div>
@@ -822,25 +806,12 @@ function renderField(skipAnimation){
 
   if(skipAnimation)return;
 
-  // координаты точки вылета — у маркера в замочной скважине
-  const slotEl=document.getElementById('chestSlot');
-  const bodyEl=document.querySelector('#chest .chest-body');
-  const br=bodyEl?bodyEl.getBoundingClientRect():{left:0,top:0,width:0,height:0};
-  let openX, openY;
-  if(slotEl){
-    const sr=slotEl.getBoundingClientRect();
-    if(sr.width>0 || sr.left>0 || sr.top>0){
-      openX=sr.left+sr.width/2;
-      openY=sr.top+sr.height/2;
-    } else {
-      openX=br.left+br.width/2;
-      openY=br.top+br.height*0.12;
-    }
-  } else {
-    openX=br.left+br.width/2;
-    openY=br.top+br.height*0.12;
-  }
-  const spreadW=(br.width||200)*0.25;
+  // Старт плиток — из сундука (щель под крышкой)
+  const chestEl=document.getElementById('chest');
+  const br=chestEl.getBoundingClientRect();
+  const openX=br.left+br.width/2;
+  const openY=br.top+br.height*0.3;
+  const spreadW=br.width*0.25;
 
   const all=f.querySelectorAll('.tile');
   all.forEach(tile=>{
@@ -849,191 +820,33 @@ function renderField(skipAnimation){
     const jitterY=(Math.random()-0.5)*spreadW*0.4;
     const dx=(openX+jitterX)-(r.left+r.width/2);
     const dy=(openY+jitterY)-(r.top+r.height/2);
-    const arcX=(Math.random()-0.5)*40;
-    tile.style.setProperty('--from-x', dx+'px');
-    tile.style.setProperty('--from-y', dy+'px');
-    tile.style.setProperty('--arc-x', arcX+'px');
-    tile.style.animation='none';
+    tile.style.transform=`translate(${dx}px, ${dy}px) scale(0.15)`;
+    tile.style.opacity='0';
+    tile.style.transition='none';
     tile.style.zIndex='500';
-
-function renderField(skipAnimation){
-  const f=document.getElementById('gameField');
-  f.innerHTML='';
-  const tiles=[];
-  remainingPairs.forEach(p=>{tiles.push({type:'phrase',text:p.p,pair:p});tiles.push({type:'meaning',text:p.m,pair:p});});
-  let arr=shuffle(tiles);
-  const cols=deviceParams.cols;
-  function areNeighbors(i,j){
-    const ri=Math.floor(i/cols),ci=i%cols;
-    const rj=Math.floor(j/cols),cj=j%cols;
-    const dr=Math.abs(ri-rj),dc=Math.abs(ci-cj);
-    return (dr===1&&dc===0)||(dr===0&&dc===1);
-  }
-  function samePair(a,b){return a.pair===b.pair&&a.type!==b.type;}
-  let guard=0;
-  while(guard<3000){
-    let bad=-1;
-    for(let i=0;i<arr.length&&bad<0;i++){
-      for(let j=i+1;j<arr.length;j++){
-        if(areNeighbors(i,j)&&samePair(arr[i],arr[j])){bad=i;break;}
-      }
-    }
-    if(bad<0)break;
-    let other=Math.floor(Math.random()*arr.length);
-    [arr[bad],arr[other]]=[arr[other],arr[bad]];
-    guard++;
-  }
-  arr.forEach(d=>{
-    const tile=document.createElement('div');
-    tile.className='tile '+d.type;
-    const inner=document.createElement('div');
-    inner.className='tile-content';
-    if(d.type==='phrase')inner.innerHTML=addNbsp(d.text);
-    else inner.innerHTML=renderMeaningHTMLStacked(d.text);
-    tile.appendChild(inner);
-    tile.dataset.type=d.type;
-    tile.dataset.phrase=d.pair.p;
-    tile.dataset.meaning=d.pair.m;
-    tile.onclick=()=>selectTile(tile);
-    f.appendChild(tile);
+    tile.style.position='relative';
   });
-  const totalTiles=arr.length;
-  const actualRows=Math.ceil(totalTiles/cols);
-  const maxRows=Math.ceil((deviceParams.pairsPerRound*2)/cols);
-  const gap=deviceParams.gap;
-  const fieldH=f.clientHeight-2*gap-(gap+6);
-  const rowHActual=(fieldH-gap*(actualRows-1))/actualRows;
-  const rowHFull=(fieldH-gap*(maxRows-1))/maxRows;
-  const rowH=Math.max(30, Math.min(rowHActual, rowHFull));
-  f.style.gridTemplateColumns=`repeat(${cols}, minmax(0,1fr))`;
-  f.style.gridTemplateRows=`repeat(${actualRows}, ${rowH}px)`;
-  f.style.alignContent='start';
-  fitTiles();
+  playDiceDrop(all.length);
 
-  if(skipAnimation)return;
-
-  // ===== Вылет плиток из сундука по дуге =====
-  // 1. Определяем точку старта (щель в сундуке)
-  const slotEl=document.getElementById('chestSlot');
-  const bodyEl=document.querySelector('#chest .chest-body');
-  const br=bodyEl?bodyEl.getBoundingClientRect():{left:0,top:0,width:0,height:0};
-  let startX, startY;
-  if(slotEl){
-    const sr=slotEl.getBoundingClientRect();
-    if(sr.width>0 || sr.left>0 || sr.top>0){
-      startX=sr.left+sr.width/2;
-      startY=sr.top+sr.height/2;
-    } else {
-      startX=br.left+br.width/2;
-      startY=br.top+br.height*0.12;
-    }
-  } else {
-    startX=br.left+br.width/2;
-    startY=br.top+br.height*0.12;
-  }
-  const spreadW=(br.width||200)*0.25;
-
-  // 2. Собираем "призраков" — копии плиток, которые полетят поверх всего
-  const allTiles=Array.from(f.querySelectorAll('.tile'));
-  const flyers=[];
-
-  // Сначала скрываем все настоящие плитки, чтобы они не мешали
-  allTiles.forEach(t=>{t.style.visibility='hidden';});
-
-  // 3. Создаём призраков
-  allTiles.forEach((tile, idx)=>{
-    const r=tile.getBoundingClientRect();
-    const targetX=r.left+r.width/2;
-    const targetY=r.top+r.height/2;
-
-    // Старт — щель в сундуке с небольшим разбросом
-    const jitterX=(Math.random()-0.5)*spreadW;
-    const jitterY=(Math.random()-0.5)*spreadW*0.3;
-    const sx=startX+jitterX;
-    const sy=startY+jitterY;
-
-    // Клон — визуальная копия плитки
-    const flyer=tile.cloneNode(true);
-    flyer.style.position='fixed';
-    flyer.style.left='0';
-    flyer.style.top='0';
-    flyer.style.width=r.width+'px';
-    flyer.style.height=r.height+'px';
-    flyer.style.zIndex=String(9000+idx);
-    flyer.style.pointerEvents='none';
-    flyer.style.transform=`translate(${sx-r.width/2}px, ${sy-r.height/2}px) scale(0.15)`;
-    flyer.style.opacity='0';
-    document.body.appendChild(flyer);
-
-    flyers.push({
-      el: flyer,
-      startX: sx - r.width/2,
-      startY: sy - r.height/2,
-      targetX: targetX - r.width/2,
-      targetY: targetY - r.height/2,
-      width: r.width,
-      height: r.height,
-      // дуга отклоняется в сторону: знак случайный
-      arcSign: Math.random()<0.5 ? -1 : 1,
-      arcAmount: 60 + Math.random()*40,
-      delay: idx*180,
-      tile: tile
+  const total=all.length;
+  const stagger=Math.max(90, Math.min(220, 2400/Math.max(1,total)));
+  const dur=1.35;
+  setTimeout(()=>{
+    all.forEach((tile,i)=>{
+      setTimeout(()=>{
+        tile.style.transition=`transform ${dur}s cubic-bezier(0.18,0.72,0.35,1), opacity 0.3s ease-out`;
+        tile.style.transform='translate(0,0) scale(1)';
+        tile.style.opacity='1';
+      }, i*stagger);
     });
-  });
-
-  playDiceDrop(allTiles.length);
-
-  // 4. Анимируем через requestAnimationFrame
-  const flyDuration=1400;     // длительность полёта одной плитки, мс
-  const startTime=performance.now();
-
-  function easeOutCubic(t){return 1-Math.pow(1-t,3);}
-
-  function step(now){
-    let allDone=true;
-    flyers.forEach(flyer=>{
-      const elapsed=now-startTime-flyer.delay;
-      if(elapsed<0){
-        allDone=false;
-        return;
-      }
-      if(elapsed>=flyDuration){
-        // Полёт закончен — ставим плитку точно на место, убираем призрака
-        if(flyer.el){
-          flyer.el.remove();
-          flyer.el=null;
-        }
-        return;
-      }
-      allDone=false;
-      const t=Math.min(1, elapsed/flyDuration);
-      const e=easeOutCubic(t);
-
-      // Позиция по прямой от старта к цели
-      const px=flyer.startX + (flyer.targetX - flyer.startX)*e;
-      const py=flyer.startY + (flyer.targetY - flyer.startY)*e;
-
-      // Отклонение по дуге: в середине полёта максимально, в начале и конце — 0
-      const arcT=Math.sin(t*Math.PI); // 0 в начале, 1 в середине, 0 в конце
-      const offsetX=flyer.arcSign * flyer.arcAmount * arcT;
-      const offsetY=-40*arcT;
-
-      const scale=0.15 + (1-0.15)*e;
-      const opacity=Math.min(1, t*3); // проявляется в первые 30% пути
-
-      flyer.el.style.transform=`translate(${px+offsetX}px, ${py+offsetY}px) scale(${scale})`;
-      flyer.el.style.opacity=String(opacity);
-    });
-    if(!allDone){
-      requestAnimationFrame(step);
-    } else {
-      // Все призраки убраны, показываем настоящие плитки
-      allTiles.forEach(t=>{t.style.visibility='';});
+    const totalTime=total*stagger+dur*1000+250;
+    setTimeout(()=>{
+      all.forEach(tile=>{tile.style.transition='';tile.style.transform='';tile.style.opacity='';tile.style.zIndex='';tile.style.position='';});
       fitTiles();
-    }
-  }
-  requestAnimationFrame(step);
+    }, totalTime);
+  }, 150);
 }
+
 function selectTile(tile){if(paused||!gameStarted||isAnimating||isFlipping)return;if(tile.classList.contains('hidden'))return;playWoodClick();document.querySelectorAll('.tile').forEach(t=>t.classList.remove('selected'));tile.classList.add('selected');if(tile.dataset.type==='phrase')selectedPhrase=tile;else selectedMeaning=tile;if(selectedPhrase&&selectedMeaning)checkPair();}
 
 function checkPair(){if(isAnimating)return;isAnimating=true;const p=selectedPhrase,m=selectedMeaning;if(p.dataset.phrase===m.dataset.phrase){p.classList.add('correct');m.classList.add('correct');p.classList.remove('selected');m.classList.remove('selected');selectedPhrase=null;selectedMeaning=null;animateToBook(p,m);}else{p.classList.add('wrong');m.classList.add('wrong');setTimeout(()=>{p.classList.remove('wrong','selected');m.classList.remove('wrong','selected');selectedPhrase=null;selectedMeaning=null;isAnimating=false;},500);}}
