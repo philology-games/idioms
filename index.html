@@ -233,9 +233,11 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
             <div class="body-strap-right"></div>
             <div class="body-strap-bottom"></div>
             <div class="chest-lock">
-              <div class="chest-key" id="chestKey">
-                <div class="key-head"></div>
-              </div>
+  <div class="chest-key" id="chestKey">
+    <div class="key-head"></div>
+  </div>
+  <div id="chestSlot" style="position:absolute;top:50%;left:50%;width:1px;height:1px;"></div>
+</div>
             </div>
           </div>
         </div>
@@ -823,11 +825,19 @@ function renderField(skipAnimation){
   if(skipAnimation)return;
 
   const chestEl=document.getElementById('chest');
-  const bodyEl=chestEl.querySelector('.chest-body');
-  const br=bodyEl.getBoundingClientRect();
-  const openX=br.left+br.width/2;
-  const openY=br.top + br.height * 0.12;
-  const spreadW=br.width*0.25;
+const bodyEl=chestEl.querySelector('.chest-body');
+const br=bodyEl.getBoundingClientRect();
+const slotEl=document.getElementById('chestSlot');
+let openX, openY;
+if(slotEl){
+  const sr=slotEl.getBoundingClientRect();
+  openX=sr.left+sr.width/2;
+  openY=sr.top+sr.height/2;
+} else {
+  openX=br.left+br.width/2;
+  openY=br.top+br.height*0.12;
+}
+const spreadW=br.width*0.25;
 
   const all=f.querySelectorAll('.tile');
   all.forEach(tile=>{
