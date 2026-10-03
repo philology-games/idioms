@@ -144,14 +144,13 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-page-content.distribute{justify-content:space-between}
 .dict-page-content.distribute .dict-entry{flex:0 0 auto}
 
-/* Анимация вылета плитки из сундука: по дуге, чуть отклоняясь в сторону */
 @keyframes tileFromChest{
   0%{
     transform:translate(var(--from-x), var(--from-y)) scale(0.15);
     opacity:0;
   }
   40%{
-    transform:translate(calc(var(--from-x) * 0.55 + var(--arc-x)), calc(var(--from-y) * 0.55 - 50px)) scale(0.6);
+    transform:translate(calc(var(--from-x) * 0.55 + var(--arc-x)), calc(var(--from-y) * 0.55 - 70px)) scale(0.6);
     opacity:1;
   }
   100%{
@@ -233,11 +232,10 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
             <div class="body-strap-right"></div>
             <div class="body-strap-bottom"></div>
             <div class="chest-lock">
-  <div class="chest-key" id="chestKey">
-    <div class="key-head"></div>
-  </div>
-  <div id="chestSlot" style="position:absolute;top:50%;left:50%;width:1px;height:1px;"></div>
-</div>
+              <div class="chest-key" id="chestKey">
+                <div class="key-head"></div>
+              </div>
+              <div id="chestSlot" style="position:absolute;top:50%;left:50%;width:1px;height:1px;pointer-events:none;"></div>
             </div>
           </div>
         </div>
@@ -824,20 +822,25 @@ function renderField(skipAnimation){
 
   if(skipAnimation)return;
 
-  const chestEl=document.getElementById('chest');
-const bodyEl=chestEl.querySelector('.chest-body');
-const br=bodyEl.getBoundingClientRect();
-const slotEl=document.getElementById('chestSlot');
-let openX, openY;
-if(slotEl){
-  const sr=slotEl.getBoundingClientRect();
-  openX=sr.left+sr.width/2;
-  openY=sr.top+sr.height/2;
-} else {
-  openX=br.left+br.width/2;
-  openY=br.top+br.height*0.12;
-}
-const spreadW=br.width*0.25;
+  // координаты точки вылета — у маркера в замочной скважине
+  const slotEl=document.getElementById('chestSlot');
+  const bodyEl=document.querySelector('#chest .chest-body');
+  const br=bodyEl?bodyEl.getBoundingClientRect():{left:0,top:0,width:0,height:0};
+  let openX, openY;
+  if(slotEl){
+    const sr=slotEl.getBoundingClientRect();
+    if(sr.width>0 || sr.left>0 || sr.top>0){
+      openX=sr.left+sr.width/2;
+      openY=sr.top+sr.height/2;
+    } else {
+      openX=br.left+br.width/2;
+      openY=br.top+br.height*0.12;
+    }
+  } else {
+    openX=br.left+br.width/2;
+    openY=br.top+br.height*0.12;
+  }
+  const spreadW=(br.width||200)*0.25;
 
   const all=f.querySelectorAll('.tile');
   all.forEach(tile=>{
