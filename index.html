@@ -587,9 +587,7 @@ const SIMILAR_GROUPS = [
 const PHRASE_GROUP = (function(){
   const map = {};
   SIMILAR_GROUPS.forEach((group, idx)=>{
-    group.forEach(p=>{
-      map[p] = idx;
-    });
+    group.forEach(p=>{ map[p] = idx; });
   });
   return map;
 })();
@@ -649,19 +647,10 @@ function buildVariants(){
       const leftover=[];
       for(let i=0;i<remaining.length;i++){
         const cand=remaining[i];
-        if(round.length>=pr){
-          leftover.push(cand);
-          continue;
-        }
-        if(conflictsWithRound(cand, round)){
-          leftover.push(cand);
-        } else {
-          round.push(cand);
-        }
+        if(round.length>=pr){ leftover.push(cand); continue; }
+        if(conflictsWithRound(cand, round)){ leftover.push(cand); } else { round.push(cand); }
       }
-      if(round.length===0 && leftover.length>0){
-        round.push(leftover.shift());
-      }
+      if(round.length===0 && leftover.length>0){ round.push(leftover.shift()); }
       rounds.push(round);
       remaining=leftover;
     }
@@ -676,10 +665,18 @@ let deviceParams=getParams();
 let collectedPhrases=new Set();
 let isFlipping=false;
 
+// ===== СОСТОЯНИЕ ВАРИАНТОВ =====
+// Книга хранится как ДАННЫЕ (массивы пар), а не HTML.
 let variantState=[
-  {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],remainingPairs:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:''},
-  {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],remainingPairs:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:''},
-  {round:0,stackRemaining:0,gameStarted:false,pairsInBook:[],remainingPairs:[],bookLeftPairs:0,bookRightPairs:0,pageLeftHTML:'',pageRightHTML:''}
+  {round:0,stackRemaining:0,gameStarted:false,
+   leftPairs:[],rightPairs:[],pairsInBook:[],remainingPairs:[],
+   bookLeftPairs:0,bookRightPairs:0},
+  {round:0,stackRemaining:0,gameStarted:false,
+   leftPairs:[],rightPairs:[],pairsInBook:[],remainingPairs:[],
+   bookLeftPairs:0,bookRightPairs:0},
+  {round:0,stackRemaining:0,gameStarted:false,
+   leftPairs:[],rightPairs:[],pairsInBook:[],remainingPairs:[],
+   bookLeftPairs:0,bookRightPairs:0}
 ];
 let currentRoundRef=0;
 let stackRemainingRef=0;
@@ -737,29 +734,66 @@ function applyPortraitTabletLayout(){
   }
 }
 
+// ===== РИСОВАНИЕ СТРАНИЦЫ КНИГИ ИЗ ДАННЫХ =====
+function renderBookPage(pageEl, pairs){
+  pageEl.innerHTML='';
+  pairs.forEach(item=>{
+    const pd=document.createElement('div');
+    pd.className='book-pair';
+    const ph=document.createElement('div');
+    ph.className='pair-phrase';
+    const phI=document.createElement('div');
+    phI.className='pair-content';
+    phI.innerHTML=addNbsp(item.phrase);
+    ph.appendChild(phI);
+    if(item.phrase===LAMP_PHRASE){
+      const l=document.createElement('span');
+      l.className='lamp-inline';l.textContent='💡';
+      l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};
+      ph.appendChild(l);
+    }
+    const dh=document.createElement('div');
+    dh.className='pair-dash';dh.textContent='—';
+    const mh=document.createElement('div');
+    mh.className='pair-meaning';
+    const mhI=document.createElement('div');
+    mhI.className='pair-content';
+    mhI.innerHTML=renderMeaningHTMLStacked(item.meaning);
+    mh.appendChild(mhI);
+    pd.appendChild(ph);pd.appendChild(dh);pd.appendChild(mh);
+    pageEl.appendChild(pd);
+  });
+}
+
+function renderBookFromState(){
+  const s=variantState[currentVariant];
+  renderBookPage(document.getElementById('pageLeft'), s.leftPairs);
+  renderBookPage(document.getElementById('pageRight'), s.rightPairs);
+  bookLeftPairsRef=s.leftPairs.length;
+  bookRightPairsRef=s.rightPairs.length;
+  setTimeout(fitBook,30);
+}
+
 function syncGlobalToVariant(){
   const s=variantState[currentVariant];
   s.round=currentRoundRef;
   s.stackRemaining=stackRemainingRef;
   s.gameStarted=gameStarted;
-  s.pairsInBook=[...pairsInBook];
   s.remainingPairs=[...remainingPairs];
   s.bookLeftPairs=bookLeftPairsRef;
   s.bookRightPairs=bookRightPairsRef;
-  s.pageLeftHTML=document.getElementById('pageLeft').innerHTML;
-  s.pageRightHTML=document.getElementById('pageRight').innerHTML;
+  // leftPairs / rightPairs обновляются напрямую в addPairToBook и flipBookPage
 }
+
 function loadVariantToGlobal(i){
   const s=variantState[i];
   currentRoundRef=s.round;
   stackRemainingRef=s.stackRemaining;
   gameStarted=s.gameStarted;
-  pairsInBook=[...s.pairsInBook];
   remainingPairs=[...s.remainingPairs];
   bookLeftPairsRef=s.bookLeftPairs;
   bookRightPairsRef=s.bookRightPairs;
-  document.getElementById('pageLeft').innerHTML=s.pageLeftHTML;
-  document.getElementById('pageRight').innerHTML=s.pageRightHTML;
+  renderBookFromState();
 }
 
 function initGame(){
@@ -768,10 +802,9 @@ function initGame(){
   currentVariant=0;
   currentRoundRef=0;
   stackRemainingRef=deviceParams.totalTiles;
-  pairsInBook=[];
   remainingPairs=[];
   bookLeftPairsRef=0;bookRightPairsRef=0;
-  pairsOnField=[];
+  pairsInBook=[];
   collectedPhrases=new Set();
   gameStarted=false;
   paused=false;
@@ -779,8 +812,8 @@ function initGame(){
   isAnimating=false;isFlipping=false;
   variantState.forEach(s=>{
     s.round=0;s.stackRemaining=deviceParams.totalTiles;s.gameStarted=false;
-    s.pairsInBook=[];s.remainingPairs=[];s.bookLeftPairs=0;s.bookRightPairs=0;
-    s.pageLeftHTML='';s.pageRightHTML='';
+    s.leftPairs=[];s.rightPairs=[];s.pairsInBook=[];s.remainingPairs=[];
+    s.bookLeftPairs=0;s.bookRightPairs=0;
   });
   document.getElementById('chestLid').classList.remove('open','closing');
   document.getElementById('chestKey').classList.remove('turned');
@@ -790,8 +823,8 @@ function initGame(){
   const f=document.getElementById('gameField');
   f.style.gridTemplateColumns = `repeat(${deviceParams.cols}, minmax(0,1fr))`;
   f.innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
-  document.getElementById('pageLeft').innerHTML='';
-  document.getElementById('pageRight').innerHTML='';
+  renderBookPage(document.getElementById('pageLeft'), []);
+  renderBookPage(document.getElementById('pageRight'), []);
   applyPortraitTabletLayout();
   document.getElementById('pauseOverlay').classList.remove('active');
   document.getElementById('dictOverlay').classList.remove('active');
@@ -927,11 +960,34 @@ function checkPair(){if(isAnimating)return;isAnimating=true;const p=selectedPhra
 
 function animateToBook(p,m){const br=document.querySelector('.book').getBoundingClientRect();const pr=p.getBoundingClientRect();const mr=m.getBoundingClientRect();const pc=p.cloneNode(true);const mc=m.cloneNode(true);[pc,mc].forEach((cl,i)=>{const r=i===0?pr:mr;cl.style.position='fixed';cl.style.left=r.left+'px';cl.style.top=r.top+'px';cl.style.width=r.width+'px';cl.style.height=r.height+'px';cl.style.zIndex='9999';cl.style.transition='all .5s ease-in';cl.style.pointerEvents='none';document.body.appendChild(cl);});p.style.visibility='hidden';m.style.visibility='hidden';const matchedPhrase=p.dataset.phrase;requestAnimationFrame(()=>{const tx=br.left+br.width/2,ty=br.top+br.height/2;pc.style.left=(tx-40)+'px';pc.style.top=(ty-15)+'px';pc.style.width='60px';pc.style.height='30px';pc.style.opacity='0';mc.style.left=(tx+5)+'px';mc.style.top=(ty-15)+'px';mc.style.width='60px';mc.style.height='30px';mc.style.opacity='0';});setTimeout(()=>{pc.remove();mc.remove();p.classList.add('hidden');m.classList.add('hidden');addPairToBook(p.dataset.phrase,p.dataset.meaning);collectedPhrases.add(p.dataset.phrase);remainingPairs=remainingPairs.filter(x=>x.p!==matchedPhrase);isAnimating=false;syncGlobalToVariant();const rem=document.querySelectorAll('.tile:not(.hidden)').length;if(rem===0){setTimeout(()=>nextRound(),800);}},500);}
 
-function addPairToBook(phrase,meaning){const pl=document.getElementById('pageLeft'),pr=document.getElementById('pageRight');const pp=deviceParams.bookPairsPerPage;const pd=document.createElement('div');pd.className='book-pair';const ph=document.createElement('div');ph.className='pair-phrase';const phI=document.createElement('div');phI.className='pair-content';phI.innerHTML=addNbsp(phrase);ph.appendChild(phI);if(phrase===LAMP_PHRASE){const l=document.createElement('span');l.className='lamp-inline';l.textContent='💡';l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};ph.appendChild(l);}const dh=document.createElement('div');dh.className='pair-dash';dh.textContent='—';const mh=document.createElement('div');mh.className='pair-meaning';const mhI=document.createElement('div');mhI.className='pair-content';mhI.innerHTML=renderMeaningHTMLStacked(meaning);mh.appendChild(mhI);pd.appendChild(ph);pd.appendChild(dh);pd.appendChild(mh);if(bookLeftPairs<pp){pl.appendChild(pd);bookLeftPairs++;}else if(bookRightPairs<pp){pr.appendChild(pd);bookRightPairs++;}pairsInBook.push({phrase,meaning});setTimeout(fitBook,30);syncGlobalToVariant();if(bookLeftPairs>=pp&&bookRightPairs>=pp){isFlipping=true;setTimeout(()=>{flipBookPage(()=>{pl.innerHTML='';pr.innerHTML='';bookLeftPairs=0;bookRightPairs=0;isFlipping=false;syncGlobalToVariant();});},700);}}
+// ===== ДОБАВЛЕНИЕ ПАРЫ В КНИГУ =====
+function addPairToBook(phrase,meaning){
+  const s=variantState[currentVariant];
+  const pp=deviceParams.bookPairsPerPage;
+  const item={phrase,meaning};
+  // Определяем, на какую страницу положить
+  if(s.leftPairs.length<pp){
+    s.leftPairs.push(item);
+  }else if(s.rightPairs.length<pp){
+    s.rightPairs.push(item);
+  }
+  pairsInBook.push(item);
+  bookLeftPairsRef=s.leftPairs.length;
+  bookRightPairsRef=s.rightPairs.length;
+  // Перерисовываем ОБЕ страницы заново из данных
+  renderBookFromState();
+  // Если обе страницы заполнены — перелистываем
+  if(s.leftPairs.length>=pp && s.rightPairs.length>=pp){
+    isFlipping=true;
+    setTimeout(()=>{ flipBookPage(); },700);
+  }
+}
 
-function flipBookPage(cb){
-  const sp=document.getElementById('bookSpread'),rp=document.getElementById('pageRight');
-  // Убираем все клоны перелистывания от предыдущих переворотов, если остались
+function flipBookPage(){
+  const s=variantState[currentVariant];
+  const sp=document.getElementById('bookSpread');
+  const rp=document.getElementById('pageRight');
+  // Убираем старые клоны
   sp.querySelectorAll('.flip-clone').forEach(el=>el.remove());
   const rr=rp.getBoundingClientRect(),sr=sp.getBoundingClientRect();
   const cl=document.createElement('div');
@@ -945,12 +1001,17 @@ function flipBookPage(cb){
   fr.className='flip-clone-front';
   fr.innerHTML=rp.innerHTML;
   cl.appendChild(fr);
-  rp.innerHTML='';
   sp.appendChild(cl);
   setTimeout(()=>{
-    // Убираем ВСЕ клоны, а не только текущий
     sp.querySelectorAll('.flip-clone').forEach(el=>el.remove());
-    if(cb)cb();
+    // Очищаем данные и обе страницы
+    s.leftPairs=[];
+    s.rightPairs=[];
+    bookLeftPairsRef=0;
+    bookRightPairsRef=0;
+    renderBookFromState();
+    isFlipping=false;
+    syncGlobalToVariant();
   },1300);
 }
 
@@ -967,12 +1028,15 @@ function showFinal(){
   setTimeout(()=>{lid.classList.remove('closing');},1400);
   variantState[currentVariant].gameStarted=false;
   variantState[currentVariant].round=0;
+  variantState[currentVariant].leftPairs=[];
+  variantState[currentVariant].rightPairs=[];
   variantState[currentVariant].pairsInBook=[];
   variantState[currentVariant].remainingPairs=[];
   variantState[currentVariant].bookLeftPairs=0;
   variantState[currentVariant].bookRightPairs=0;
-  variantState[currentVariant].pageLeftHTML='';
-  variantState[currentVariant].pageRightHTML='';
+  bookLeftPairsRef=0;
+  bookRightPairsRef=0;
+  renderBookFromState();
 }
 
 let dictPages=[],dictCurrentPage=0;
@@ -1073,7 +1137,6 @@ function onOrientationChanged(){
     return;
   }
   document.querySelectorAll('.flip-clone').forEach(el=>el.remove());
-  isFlipping = false;
   syncGlobalToVariant();
   deviceParams = getParams();
   applyPortraitTabletLayout();
@@ -1086,9 +1149,8 @@ function onOrientationChanged(){
   } else if (!gameStarted) {
     f.innerHTML = '<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
   }
-  document.getElementById('pageLeft').innerHTML = variantState[currentVariant].pageLeftHTML;
-  document.getElementById('pageRight').innerHTML = variantState[currentVariant].pageRightHTML;
-  setTimeout(()=>{ fitTiles(); fitBook(); }, 50);
+  // Книга восстанавливается из данных, а не из HTML
+  renderBookFromState();
 }
 
 const mqlPortrait = window.matchMedia('(orientation: portrait)');
