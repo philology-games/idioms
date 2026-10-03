@@ -992,9 +992,9 @@ function flipBookPage(){
   fr.className='flip-clone-front';
   fr.innerHTML=rp.innerHTML;
   cl.appendChild(fr);
-  // Очищаем правую страницу СРАЗУ, чтобы под переворачивающимся клоном было пусто
-  rp.innerHTML='';
-  sp.appendChild(cl);
+rp.innerHTML='';
+document.getElementById('pageLeft').innerHTML='';
+sp.appendChild(cl);
   setTimeout(()=>{
     sp.querySelectorAll('.flip-clone').forEach(el=>el.remove());
     s.leftPairs=[];
