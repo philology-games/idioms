@@ -574,6 +574,34 @@ const ALL_PAIRS = [
   { p: "язык не поворачивается", m: "не решаться что-либо сказать" }
 ];
 
+// ===== Группы похожих по смыслу фразеологизмов =====
+// Фразеологизмы из одной группы не попадают в один раунд.
+const SIMILAR_GROUPS = [
+  ["без оглядки","в два счёта","в мгновение ока","во весь дух","в один миг","как ветром сдуло"],
+  ["бок о бок","в двух шагах","глаза в глаза","лицом к лицу","рукой подать"],
+  ["водить за нос","заговаривать зубы"],
+  ["болеть душой","душа болит"],
+  ["не по нутру","душа не лежит"],
+  ["всё равно","нет дела","что толку"],
+  ["кот наплакал"]
+];
+
+// Карта: фразеологизм -> номер группы (или undefined)
+const PHRASE_GROUP = (function(){
+  const map = {};
+  SIMILAR_GROUPS.forEach((group, idx)=>{
+    group.forEach(p=>{
+      map[p] = idx;
+    });
+  });
+  return map;
+})();
+
+function getGroupKey(phrase){
+  const g = PHRASE_GROUP[phrase];
+  return (g === undefined) ? null : g;
+}
+
 const DEVICE_TYPE = (function(){
   const longSide = Math.max(window.innerWidth, window.innerHeight);
   if (longSide >= 900) return 'tablet';
@@ -592,7 +620,68 @@ function getParams(){
 function normalizeMeaning(m){return m.toLowerCase().replace(/[;,.!?()]/g,' ').split(/\s+/).filter(w=>w.length>2).sort().join(' ');}
 function meaningsAreSimilar(a,b){const n1=normalizeMeaning(a),n2=normalizeMeaning(b);if(n1===n2)return true;const w1=new Set(n1.split(' ')),w2=new Set(n2.split(' '));const i=[...w1].filter(w=>w2.has(w));const ms=Math.min(w1.size,w2.size);return ms>0&&i.length/ms>=.6;}
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
-function buildVariants(){const p=getParams();const s=shuffle(ALL_PAIRS);const t=s.length;const tabs=p.tabs;const pr=p.pairsPerRound;const vs=Math.floor(t/tabs);const va=[];let st=0;for(let i=0;i<tabs;i++){const sz=(i===tabs-1)?(t-st):vs;va.push(s.slice(st,st+sz));st+=sz;}return va.map(v=>{const r=[];const rem=[...v];while(rem.length>0){const round=[];const used=new Set();for(let i=0;i<rem.length;i++){if(round.length>=pr)break;const c=rem[i];if(used.has(i))continue;let hc=false;for(const e of round){if(meaningsAreSimilar(c.m,e.m)){hc=true;break;}}if(!hc){round.push(c);used.add(i);}}if(round.length<pr){for(let i=0;i<rem.length;i++){if(round.length>=pr)break;if(used.has(i))continue;round.push(rem[i]);used.add(i);}}const nr=[];rem.forEach((it,i)=>{if(!used.has(i))nr.push(it);});r.push(round);rem.length=0;rem.push(...nr);}return r;});}
+
+// Проверяет, можно ли добавить кандидата в текущий раунд.
+// Запрещаем, если:
+//  - кандидат из той же "группы похожих", что уже есть в раунде,
+//  - значения кандидата и одного из уже добавленных слишком похожи (по ключевым словам).
+function conflictsWithRound(candidate, round){
+  const candGroup = getGroupKey(candidate.p);
+  for(const existing of round){
+    if(candGroup !== null && candGroup === getGroupKey(existing.p)) return true;
+    if(meaningsAreSimilar(candidate.m, existing.m)) return true;
+  }
+  return false;
+}
+
+function buildVariants(){
+  const p=getParams();
+  const s=shuffle(ALL_PAIRS);
+  const t=s.length;
+  const tabs=p.tabs;
+  const pr=p.pairsPerRound;
+  const vs=Math.floor(t/tabs);
+  const va=[];
+  let st=0;
+  for(let i=0;i<tabs;i++){
+    const sz=(i===tabs-1)?(t-st):vs;
+    va.push(s.slice(st,st+sz));
+    st+=sz;
+  }
+  // Для каждого варианта — разбиваем на раунды с учётом групп
+  return va.map(v=>{
+    const rounds=[];
+    let remaining=[...v];
+    // Сколько «попыток» подряд — защита от бесконечного цикла
+    while(remaining.length>0){
+      const round=[];
+      const leftover=[];
+      for(let i=0;i<remaining.length;i++){
+        const cand=remaining[i];
+        if(round.length>=pr){
+          // раунд заполнен — оставшееся идёт в следующий
+          leftover.push(cand);
+          continue;
+        }
+        if(conflictsWithRound(cand, round)){
+          // конфликтует — откладываем
+          leftover.push(cand);
+        } else {
+          round.push(cand);
+        }
+      }
+      // Если в раунд ничего не попало (например, все конфликтуют между собой
+      // из-за одинаковых групп и раунд пуст) — принудительно добираем,
+      // иначе получим бесконечный цикл.
+      if(round.length===0 && leftover.length>0){
+        round.push(leftover.shift());
+      }
+      rounds.push(round);
+      remaining=leftover;
+    }
+    return rounds;
+  });
+}
 
 let variants=[],currentVariant=0,pairsOnField=[],remainingPairs=[],pairsInBook=[];
 let selectedPhrase=null,selectedMeaning=null;
@@ -806,7 +895,6 @@ function renderField(skipAnimation){
 
   if(skipAnimation)return;
 
-  // Старт плиток — из сундука (щель под крышкой)
   const chestEl=document.getElementById('chest');
   const br=chestEl.getBoundingClientRect();
   const openX=br.left+br.width/2;
