@@ -1284,6 +1284,7 @@ if (mqlPortrait.addEventListener) mqlPortrait.addEventListener('change', schedul
 else if (mqlPortrait.addListener) mqlPortrait.addListener(scheduleOrientationCheck);
 
 initGame();
+document.body.innerHTML = '<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:#fff;color:#000;font-size:2rem;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;z-index:999999;font-family:monospace">' + DEVICE_TYPE + '<br>' + window.innerWidth + 'x' + window.innerHeight + '</div>';
 </script>
 </body>
 </html>
