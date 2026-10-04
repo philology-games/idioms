@@ -173,12 +173,6 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .top-part .book-open{height:88%}
 .main .left-part{flex:1;width:100%}
 .header{padding:4px 0 2px}
-  .final-book{width:min(260px,68vw);height:calc(min(260px,68vw)*1.5)}
-.final-book::before{left:calc(-1*min(260px,68vw)*0.13);width:calc(min(260px,68vw)*0.14);top:-5px;bottom:-5px}
-.final-book::after{left:calc(-1*min(260px,68vw)*0.095);top:22px;bottom:22px}
-.final-book-title{font-size:clamp(.9rem,2.6vh,1.4rem);padding:clamp(12px,2.4vh,24px) clamp(10px,3vw,24px)}
-.final-btn{font-size:clamp(.85rem,2vh,1rem);padding:clamp(8px,1.4vh,12px) clamp(18px,4vw,30px)}
-.dict-container{width:88%;height:auto;max-height:calc(100vh - 140px)}
 .header h1{font-size:1.05rem;letter-spacing:1px;margin-bottom:2px}
 .instruction{font-size:.68rem;gap:4px}
 .label-phrase,.label-meaning{font-size:.62rem;padding:1px 5px}
@@ -192,6 +186,25 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .book-pair .pair-phrase,.book-pair .pair-meaning{font-size:.57rem}
 .page{padding:10px 6px;gap:4px;grid-template-rows:1fr}
 .flip-clone-front{padding:10px 6px;gap:4px;grid-template-rows:1fr}
+.final-book{width:min(260px,68vw);height:calc(min(260px,68vw)*1.5)}
+.final-book::before{left:calc(-1*min(260px,68vw)*0.13);width:calc(min(260px,68vw)*0.14);top:-5px;bottom:-5px}
+.final-book::after{left:calc(-1*min(260px,68vw)*0.095);top:22px;bottom:22px}
+.final-book-title{font-size:clamp(.9rem,2.6vh,1.4rem);padding:clamp(12px,2.4vh,24px) clamp(10px,3vw,24px)}
+.final-btn{font-size:clamp(.85rem,2vh,1rem);padding:clamp(8px,1.4vh,12px) clamp(18px,4vw,30px)}
+.dict-overlay{align-items:flex-start;padding-top:120px;padding-bottom:50px}
+.dict-container{width:88%;height:auto;max-height:none;flex:1;min-height:0}
+.dict-page{padding:10px 14px 40px 12px}
+.dict-page .arrow{bottom:6px;font-size:1.8rem;color:#c0392b;text-shadow:0 1px 3px rgba(0,0,0,.35);font-weight:900}
+.dict-page .arrow.disabled{color:#b8a89a;text-shadow:none}
+.dict-section-title{font-size:1.4rem;margin:4px 0 6px}
+.dict-entry{display:flex;flex-direction:column;align-items:flex-start;gap:0;padding:3px 0;min-height:auto}
+.dict-entry.empty{padding:3px 0}
+.dict-entry .lock{font-size:.85rem;width:auto;flex:0 0 auto;text-align:left}
+.dict-entry-top{display:flex;align-items:baseline;width:100%;gap:4px}
+.dict-entry .entry-phrase{flex:0 0 auto;width:auto;font-size:.85rem;padding-right:0;line-height:1.15}
+.dict-entry .entry-dash{flex:0 0 auto;padding:0;font-size:.85rem}
+.dict-entry-bottom{display:block;width:100%;padding-left:0;margin-top:1px}
+.dict-entry .entry-meaning{flex:0 0 auto;width:100%;font-size:.8rem;padding-right:0;line-height:1.15}
 .footer{padding:3px 10px}
 .btn{font-size:.62rem;padding:3px 8px}
 .watermark{font-size:.55rem}
@@ -765,7 +778,7 @@ function addNbsp(t){
     t=t.replace(/несмотря ни на что/gi,'несмотря<br>ни&nbsp;на&nbsp;что');
     t=t.replace(/как бы то ни было/gi,'как&nbsp;бы&nbsp;то<br>ни&nbsp;было');
     t=t.replace(/ни с того ни с сего/gi,'ни&nbsp;с&nbsp;того<br>ни&nbsp;с&nbsp;сего');
-    t=t.replace(/(^|\s)(не|ни)\s+/gi,'$1$2&nbsp;');
+    t=t.replace(/(^|\s)(не|ни)\s+([а-яёА-ЯЁ]{4,})/gi,'$1$2&nbsp;$3');
     ONE_LETTER_WORDS.forEach(w=>{
       const re=new RegExp('(^|\\s)('+w+')\\s+','gi');
       t=t.replace(re,'$1$2&nbsp;');
@@ -1233,6 +1246,42 @@ function renderDictPage(){
         const collected=collectedPhrases.has(pair.p);
         const d=document.createElement('div');
         d.className='dict-entry'+(collected?'':' empty');
+        if(DEVICE_TYPE==='phone'){
+          if(!collected){
+            const lk=document.createElement('span');
+            lk.className='lock';
+            lk.textContent='🔒';
+            d.appendChild(lk);
+          }else{
+            const top=document.createElement('div');
+            top.className='dict-entry-top';
+            const ph=document.createElement('span');
+            ph.className='entry-phrase';
+            ph.innerHTML=addNbsp(capitalizeFirst(pair.p));
+            if(pair.p===LAMP_PHRASE){
+              const l=document.createElement('span');
+              l.className='lamp-inline';l.textContent='💡';
+              l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};
+              ph.appendChild(l);
+            }
+            const dh=document.createElement('span');
+            dh.className='entry-dash';dh.textContent='—';
+            top.appendChild(ph);top.appendChild(dh);
+            const bottom=document.createElement('div');
+            bottom.className='dict-entry-bottom';
+            const mn=document.createElement('span');
+            mn.className='entry-meaning';
+            mn.innerHTML=splitMeaning(pair.m).map((part,i)=>{
+              const cls=['','second','third'][i]||'third';
+              const sep=i<splitMeaning(pair.m).length-1?';':'';
+              return `<span class="${cls}">${addNbsp(part)}${sep}</span>`;
+            }).join(' ');
+            bottom.appendChild(mn);
+            d.appendChild(top);d.appendChild(bottom);
+          }
+          ct.appendChild(d);
+          return;
+        }
         const lk=document.createElement('span');
         lk.className='lock';
         lk.textContent=collected?'':'🔒';
