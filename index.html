@@ -165,7 +165,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .game-field{gap:2px}
 .tile{font-size:.8rem}
 .top-part{flex:0 0 25%;display:flex;flex-direction:row;gap:2px;min-height:0;min-width:0}
-.top-part .chest{flex:0.9;min-width:0;height:100%;margin-top:0;padding:12px 2px 4px 2px}
+.top-part .chest{flex:0.7;min-width:0;height:80%;align-self:flex-end;margin-top:0;padding:12px 2px 4px 2px}
 .top-part .chest-inner{width:88%}
 .top-part .chest-body{overflow:visible}
 .top-part .book-shelf{flex:1;min-width:0;padding:0 2px}
@@ -791,6 +791,8 @@ function applySmartBookLayout(){
     const meaningEl=pairEl.querySelector('.pair-meaning');
     const dashEl=pairEl.querySelector('.pair-dash');
     if(!phraseEl||!meaningEl) return;
+    pairEl.style.fontSize='';
+    phraseEl.style.flex='';
     const phraseText=phraseEl.textContent.replace('💡','').trim();
     const meaningText=meaningEl.textContent.trim();
     const phraseStyle=getComputedStyle(phraseEl);
@@ -801,6 +803,7 @@ function applySmartBookLayout(){
     const meaningMax=longestWordWidth(meaningText,meaningFont,meaningStyle.fontFamily,meaningStyle.fontWeight);
     const dashW=dashEl?dashEl.offsetWidth:14;
     const pairW=pairEl.clientWidth;
+    if(pairW<=0) return;
     const phraseW=Math.ceil(phraseMax)+4;
     let available=pairW-phraseW-dashW;
     let scale=1;
@@ -875,7 +878,14 @@ function renderBookFromState(){
   bookLeftPairsRef=s.leftPairs.length;
   bookRightPairsRef=s.rightPairs.length;
   if(DEVICE_TYPE === 'phone'){
-    requestAnimationFrame(()=>{ applySmartBookLayout(); });
+    requestAnimationFrame(()=>{
+      applySmartBookLayout();
+      setTimeout(applySmartBookLayout, 150);
+      setTimeout(applySmartBookLayout, 500);
+    });
+    if(document.fonts && document.fonts.ready){
+      document.fonts.ready.then(()=>applySmartBookLayout());
+    }
   } else {
     setTimeout(fitBook,30);
   }
@@ -1284,7 +1294,6 @@ if (mqlPortrait.addEventListener) mqlPortrait.addEventListener('change', schedul
 else if (mqlPortrait.addListener) mqlPortrait.addListener(scheduleOrientationCheck);
 
 initGame();
-document.body.innerHTML = '<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:#fff;color:#000;font-size:2rem;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;z-index:999999;font-family:monospace">' + DEVICE_TYPE + '<br>' + window.innerWidth + 'x' + window.innerHeight + '</div>';
 </script>
 </body>
 </html>
