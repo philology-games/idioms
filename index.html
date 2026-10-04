@@ -183,6 +183,31 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .final-book-title{font-size:clamp(.85rem,2.4vh,1.5rem);padding:clamp(10px,2vh,22px) clamp(10px,2vw,24px)}
 .final-btn{font-size:clamp(.75rem,1.6vh,.95rem);padding:clamp(6px,1.2vh,10px) clamp(16px,3vw,30px);box-shadow:0 3px 0 #2e7d32,0 5px 10px rgba(0,0,0,.35)}
 }
+  /* Альбомная ориентация с малой высотой: смартфоны и низкие окна */
+@media (orientation:landscape) and (max-height:640px){
+
+  /* Финальный экран: прижимаем контент вниз, чтобы не перекрывать
+     шапку и вкладки сверху. Инструкция остаётся видна. */
+  .final-center{justify-content:flex-end;padding:4px 4px 6px 4px;gap:clamp(6px,1.4vh,14px);overflow:hidden}
+  .final-book{width:min(300px,50vh);height:min(400px,58vh);margin-left:calc(min(300px,50vh)*0.13)}
+  .final-book::before{left:calc(-1*min(300px,50vh)*0.13);width:calc(min(300px,50vh)*0.14)}
+  .final-book::after{left:calc(-1*min(300px,50vh)*0.095);top:18px;bottom:18px}
+  .final-book-title{font-size:clamp(.8rem,2.2vh,1.4rem);padding:clamp(8px,1.8vh,20px) clamp(10px,2vw,22px)}
+  .final-btn{font-size:clamp(.72rem,1.5vh,.9rem);padding:clamp(5px,1vh,9px) clamp(14px,2.6vw,26px);box-shadow:0 3px 0 #2e7d32,0 5px 10px rgba(0,0,0,.35)}
+
+  /* Открытый словарь: уменьшаем высоту и поднимаем стрелки,
+     чтобы они всегда были видны. */
+  .dict-container{height:min(85%,calc(100vh - 90px));max-height:calc(100vh - 90px)}
+  .dict-header{padding:4px 12px;font-size:.85rem}
+  .dict-page{padding:8px 20px 34px 14px}
+  .dict-page .arrow{bottom:4px;font-size:1.5rem}
+  .dict-page-content.distribute .dict-entry{padding:2px 0;min-height:1.5rem}
+  .dict-section-title{font-size:1.3rem;margin:2px 0 4px}
+  .dict-entry{padding:2px 0;min-height:1.5rem}
+  .dict-entry .entry-phrase{font-size:.85rem}
+  .dict-entry .entry-meaning{font-size:.85rem}
+  .dict-entry .lock{font-size:.75rem;width:16px}
+}
 </style>
 </head>
 <body>
