@@ -76,12 +76,12 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .page{flex:1;min-width:0;background:#e0d4b8;background-image:radial-gradient(circle at 20% 30%,rgba(184,92,56,.1) .5px,transparent 1px),radial-gradient(circle at 70% 60%,rgba(166,138,58,.1) .5px,transparent 1px);padding:20px 10px;display:grid;grid-template-rows:repeat(4,minmax(0,1fr));gap:10px;position:relative}
 .book-fold{width:6px;flex-shrink:0;background:linear-gradient(to right,#d4c8a8,#c8bc9c 30%,#b8ac8c 50%,#c8bc9c 70%,#d4c8a8);position:relative}
 .book-fold::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:2px;height:100%;background:rgba(0,0,0,.15)}
-.book-pair{display:flex;flex-direction:row;gap:4px;align-items:center;min-width:0;min-height:0;padding:2px 0}
+.book-pair{display:flex;flex-direction:row;align-items:baseline;min-width:0;min-height:0;padding:2px 0}
 .book-pair .pair-phrase{flex:0 0 45%;min-width:0;padding:1px;color:#152040;text-align:left;font-family:'EB Garamond',Georgia,serif;font-weight:700;font-size:.61rem;position:relative}
 .pair-content{display:block;width:100%;text-align:left;line-height:1.15;overflow-wrap:normal;word-break:keep-all;hyphens:none;-webkit-hyphens:none}
 .pair-content i{font-style:italic;font-weight:400;opacity:.85}
 .book-pair .pair-phrase .lamp-inline{font-size:.7rem;margin-left:2px;cursor:pointer;flex-shrink:0}
-.book-pair .pair-dash{flex:0 0 auto;display:flex;align-items:center;color:#152040;font-weight:700;padding:0 1px;font-size:.61rem}
+.book-pair .pair-dash{flex:0 0 14px;display:flex;align-items:center;justify-content:center;color:#152040;font-weight:700;padding:0;font-size:.61rem}
 .book-pair .pair-meaning{flex:1;min-width:0;padding:1px;color:#152040;text-align:left;font-size:.61rem;font-weight:400}
 .book-pair .pair-meaning .second{color:#2a4a7a}
 .book-pair .pair-meaning .third{color:#3a6a9a}
@@ -102,6 +102,9 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .pause-overlay.active{display:flex}
 .pause-overlay .coffee{font-size:5rem;margin-bottom:20px}
 .pause-overlay .btn{font-size:1rem;padding:10px 30px}
+#rotateNotice{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(26,42,74,.7);z-index:9999;align-items:center;justify-content:center;text-align:center;padding:20px}
+#rotateNotice.active{display:flex}
+.rotate-text{font-family:'Playfair Display',Georgia,serif;font-size:1.3rem;color:#e6b800;letter-spacing:1px;line-height:1.4;max-width:280px;text-shadow:0 2px 4px rgba(0,0,0,.5)}
 .tooltip{position:absolute;background:#f5f0e1;border:2.5px solid #1a2a4a;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#1a2a4a;z-index:3500;box-shadow:0 3px 10px rgba(0,0,0,.35);max-width:240px;line-height:1.4}
 .tooltip .example{font-style:italic;color:#1a2a4a;font-weight:600}
 .tooltip .warning{display:block;margin-top:3px}
@@ -161,8 +164,8 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .main{flex-direction:column;padding:0 8px 4px 8px;gap:5px}
 .game-field{gap:2px}
 .tile{font-size:.8rem}
-.top-part{flex:0 0 25%;display:flex;flex-direction:row;gap:6px;min-height:0;min-width:0}
-.top-part .chest{flex:1;min-width:0;height:100%;margin-top:0;padding:12px 2px 4px 2px}
+.top-part{flex:0 0 25%;display:flex;flex-direction:row;gap:2px;min-height:0;min-width:0}
+.top-part .chest{flex:0.9;min-width:0;height:100%;margin-top:0;padding:12px 2px 4px 2px}
 .top-part .chest-inner{width:88%}
 .top-part .chest-body{overflow:visible}
 .top-part .book-shelf{flex:1;min-width:0;padding:0 2px}
@@ -289,6 +292,10 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
     </div>
     <div class="watermark">© Анна Сазонова, 2026</div>
   </div>
+</div>
+
+<div id="rotateNotice">
+  <div class="rotate-text">Поверните устройство вертикально</div>
 </div>
 
 <div class="final-overlay" id="finalOverlay">
@@ -766,6 +773,19 @@ let tooltipEl=null;
 function showTooltip(a){if(tooltipEl){tooltipEl.remove();tooltipEl=null;}const r=a.getBoundingClientRect();tooltipEl=document.createElement('div');tooltipEl.className='tooltip';tooltipEl.innerHTML=TOOLTIP_TEXT;tooltipEl.style.left=Math.min(r.left,window.innerWidth-260)+'px';tooltipEl.style.top=(r.bottom+6)+'px';document.body.appendChild(tooltipEl);setTimeout(()=>{document.addEventListener('click',hideTooltipOnce,{once:true});},100);}
 function hideTooltipOnce(){if(tooltipEl){tooltipEl.remove();tooltipEl=null;}}
 
+function applyAdaptiveFontSize(pairEl, phrase, meaning){
+  const words = phrase.split(/\s+/).concat(meaning.split(/\s+/));
+  let maxLen = 0;
+  words.forEach(w=>{ const clean = w.replace(/[;,.\-()]/g,''); if(clean.length > maxLen) maxLen = clean.length; });
+  let scale = 1;
+  if(maxLen >= 16) scale = 0.65;
+  else if(maxLen >= 13) scale = 0.75;
+  else if(maxLen >= 10) scale = 0.85;
+  if(scale < 1){
+    pairEl.style.fontSize = (scale * 100) + '%';
+  }
+}
+
 function applyPortraitTabletLayout(){
   const main=document.getElementById('mainArea'),lp=document.getElementById('leftPart'),rc=document.getElementById('rightColumn'),ch=document.getElementById('chest'),bs=document.getElementById('bookShelf');
   const tp=!isLandscape();
@@ -805,6 +825,7 @@ function renderBookPage(pageEl, pairs){
     mhI.innerHTML=renderMeaningHTMLStacked(item.meaning);
     mh.appendChild(mhI);
     pd.appendChild(ph);pd.appendChild(dh);pd.appendChild(mh);
+    applyAdaptiveFontSize(pd, item.phrase, item.meaning);
     pageEl.appendChild(pd);
   });
 }
@@ -837,6 +858,13 @@ function loadVariantToGlobal(i){
   bookLeftPairsRef=s.bookLeftPairs;
   bookRightPairsRef=s.bookRightPairs;
   renderBookFromState();
+}
+
+function checkRotateNotice(){
+  const el=document.getElementById('rotateNotice');
+  if(!el) return;
+  const isPhoneLandscape = (DEVICE_TYPE==='phone' && isLandscape());
+  el.classList.toggle('active', isPhoneLandscape);
 }
 
 function initGame(){
@@ -873,6 +901,7 @@ function initGame(){
   document.getElementById('dictOverlay').classList.remove('active');
   document.getElementById('finalOverlay').classList.remove('active');
   document.getElementById('mainArea').style.visibility='';
+  checkRotateNotice();
 }
 
 function switchVariant(i){
@@ -1201,6 +1230,7 @@ function onOrientationChanged(){
     f.innerHTML = '<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
   }
   renderBookFromState();
+  checkRotateNotice();
 }
 
 const mqlPortrait = window.matchMedia('(orientation: portrait)');
