@@ -159,11 +159,13 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 }
 @media (orientation:portrait) and (max-width:600px){
 .main{flex-direction:column;padding:0 8px 4px 8px;gap:5px}
-.top-part{flex:0 0 34%;display:flex;flex-direction:row;gap:6px;min-height:0;min-width:0}
-.top-part .chest{flex:1;min-width:0;height:100%;margin-top:0;padding:10px 2px 4px 2px}
-.top-part .chest-inner{width:72%}
+.game-field{gap:2px}
+.tile{font-size:.8rem}
+.top-part{flex:0 0 25%;display:flex;flex-direction:row;gap:6px;min-height:0;min-width:0}
+.top-part .chest{flex:1;min-width:0;height:100%;margin-top:0;padding:6px 2px 4px 2px}
+.top-part .chest-inner{width:66%}
 .top-part .book-shelf{flex:1;min-width:0;padding:0 2px}
-.top-part .book-open{height:90%}
+.top-part .book-open{height:88%}
 .main .left-part{flex:1;width:100%}
 .header{padding:4px 0 2px}
 .header h1{font-size:1.05rem;letter-spacing:1px;margin-bottom:2px}
@@ -644,7 +646,7 @@ function isLandscape(){ return window.innerWidth >= window.innerHeight; }
 function getParams(){
   const land = isLandscape();
   if(DEVICE_TYPE === 'phone'){
-    return { pairsPerRound:4, tabs:3, cols:2, rows:4, gap:5, bookPairsPerPage:2, totalTiles:190 };
+    return { pairsPerRound:9, tabs:3, cols:3, rows:6, gap:2, bookPairsPerPage:2, totalTiles:190 };
   }
   return { pairsPerRound:15, tabs:3, cols:land?6:5, rows:land?5:6, gap:5, bookPairsPerPage:land?3:4, totalTiles:190 };
 }
@@ -734,13 +736,14 @@ const SHORT_WORDS=['в','на','с','к','по','за','из','от','до','у'
 
 function addNbsp(t){
   t=t.replace(/\(([^)]*)\)/g,'<i>($1)</i>');
+  t=t.replace(/(\S)-(\S)/g,'$1\u2011$2');
+  t=t.replace(/один\u2011одинёшенек/g,'один-одинёшенек');
+  if(DEVICE_TYPE === 'phone') return t;
   t=t.replace(/во что бы то ни стало/gi,'во&nbsp;что&nbsp;бы&nbsp;то<br>ни&nbsp;стало');
   t=t.replace(/несмотря ни на что/gi,'несмотря<br>ни&nbsp;на&nbsp;что');
   t=t.replace(/ни с того ни с сего/gi,'ни&nbsp;с&nbsp;того<br>ни&nbsp;с&nbsp;сего');
   SHORT_WORDS.forEach(w=>{const re=new RegExp('(^|\\s)('+w+')\\s+','gi');t=t.replace(re,'$1$2&nbsp;');});
   t=t.replace(/(^|\s)(ни|не)\s+/gi,'$1$2&nbsp;');
-  t=t.replace(/(\S)-(\S)/g,'$1\u2011$2');
-  t=t.replace(/один\u2011одинёшенек/g,'один-одинёшенек');
   return t;
 }
 function splitMeaning(m){return m.split(';').map(s=>s.trim());}
@@ -917,7 +920,7 @@ function renderField(skipAnimation){
   }
   function samePair(a,b){return a.pair===b.pair&&a.type!==b.type;}
   let guard=0;
-  while(guard<3000){
+  while(guard<8000){
     let bad=-1;
     for(let i=0;i<arr.length&&bad<0;i++){
       for(let j=i+1;j<arr.length;j++){
@@ -952,6 +955,7 @@ function renderField(skipAnimation){
   const rowHFull=(fieldH-gap*(maxRows-1))/maxRows;
   const rowH=Math.max(30, Math.min(rowHActual, rowHFull));
   f.style.gridTemplateColumns=`repeat(${cols}, minmax(0,1fr))`;
+  f.style.gap=gap+'px';
   f.style.gridTemplateRows=`repeat(${actualRows}, ${rowH}px)`;
   f.style.alignContent='start';
   fitTiles();
