@@ -208,6 +208,26 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
   .dict-entry .entry-meaning{font-size:.85rem}
   .dict-entry .lock{font-size:.75rem;width:16px}
 }
+  @media (orientation:portrait) and (max-width:600px){
+  .header{padding:4px 0 2px}
+  .header h1{font-size:1.15rem;letter-spacing:1px;margin-bottom:2px}
+  .instruction{font-size:.72rem;gap:4px}
+  .label-phrase,.label-meaning{font-size:.66rem;padding:1px 5px}
+  .tabs-row{padding:2px 12px 3px 12px;gap:4px}
+  .tab{font-size:.72rem;padding:2px 10px}
+  .main{padding:0 10px 4px 10px;gap:5px}
+  .top-part{flex:0 0 36%}
+  .top-part .chest{padding:16px 4px 6px 4px}
+  .top-part .chest-inner{width:70%}
+  .top-part .book-open{height:88%}
+  .page{padding:12px 6px;gap:5px;grid-template-rows:repeat(2,minmax(0,1fr))}
+  .book-pair .pair-phrase,.book-pair .pair-meaning{font-size:.55rem}
+  .book-pair .pair-dash{font-size:.55rem}
+  .flip-clone-front{padding:12px 6px;gap:5px;grid-template-rows:repeat(2,minmax(0,1fr))}
+  .footer{padding:3px 12px}
+  .btn{font-size:.65rem;padding:3px 8px}
+  .watermark{font-size:.58rem}
+}
 </style>
 </head>
 <body>
@@ -637,7 +657,7 @@ function isLandscape(){ return window.innerWidth >= window.innerHeight; }
 function getParams(){
   const land = isLandscape();
   if(DEVICE_TYPE === 'phone'){
-    return { pairsPerRound:6, tabs:3, cols:3, rows:4, gap:5, bookPairsPerPage:3, totalTiles:190 };
+    return { pairsPerRound:4, tabs:3, cols:2, rows:4, gap:5, bookPairsPerPage:2, totalTiles:190 };
   }
   return { pairsPerRound:15, tabs:3, cols:land?6:5, rows:land?5:6, gap:5, bookPairsPerPage:land?3:4, totalTiles:190 };
 }
@@ -750,7 +770,7 @@ function hideTooltipOnce(){if(tooltipEl){tooltipEl.remove();tooltipEl=null;}}
 
 function applyPortraitTabletLayout(){
   const main=document.getElementById('mainArea'),lp=document.getElementById('leftPart'),rc=document.getElementById('rightColumn'),ch=document.getElementById('chest'),bs=document.getElementById('bookShelf');
-  const tp=DEVICE_TYPE==='tablet'&&!isLandscape();
+  const tp=!isLandscape();
   if(tp){
     let t=document.getElementById('topPart');
     if(!t){t=document.createElement('div');t.id='topPart';t.className='top-part';main.insertBefore(t,lp);}
