@@ -131,11 +131,10 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-fold{width:6px;flex-shrink:0;background:linear-gradient(to right,#d4c8a8,#c8bc9c 30%,#b8ac8c 50%,#c8bc9c 70%,#d4c8a8);position:relative}
 .dict-fold::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:2px;height:100%;background:rgba(0,0,0,.15)}
 .dict-section-title{font-family:'Playfair Display',Georgia,serif;font-weight:900;font-size:2rem;color:#c0392b;margin:6px 0 8px;text-align:center;text-shadow:0 1px 2px rgba(0,0,0,.15);letter-spacing:1px}
-.dict-page .arrow{position:absolute;bottom:10px;font-size:2rem;font-weight:800;color:#e74c3c;cursor:pointer;user-select:none;line-height:1;text-shadow:0 1px 2px rgba(0,0,0,.25)}
-.dict-page .arrow:hover{color:#ff6b5b}
-.dict-page .arrow.disabled{color:#d0a0a0;cursor:default;text-shadow:none}
-.dict-page .arrow.back{left:16px}
-.dict-page .arrow.forward{right:16px}
+.dict-arrows{display:flex;justify-content:space-between;align-items:center;padding:4px 16px 6px 16px;flex-shrink:0}
+.dict-arrows .arrow{font-size:1.8rem;font-weight:900;color:#c0392b;cursor:pointer;user-select:none;line-height:1;text-shadow:0 1px 3px rgba(0,0,0,.35)}
+.dict-arrows .arrow:hover{color:#e74c3c}
+.dict-arrows .arrow.disabled{color:#b8a89a;cursor:default;text-shadow:none}
 .dict-entry{display:flex;align-items:center;gap:6px;padding:4px 0;min-height:2rem;flex:0 0 auto}
 .dict-entry .lock{font-size:.85rem;flex-shrink:0;width:20px;text-align:center}
 .dict-entry .entry-phrase{font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:1.05rem;color:#5a2a2a;flex:0 0 40%;line-height:1.15}
@@ -148,6 +147,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-entry.empty .entry-phrase,.dict-entry.empty .entry-dash,.dict-entry.empty .entry-meaning{visibility:hidden}
 .dict-page-content.distribute{justify-content:space-between}
 .dict-page-content.distribute .dict-entry{flex:0 0 auto}
+.dict-measure-host{position:absolute;left:-9999px;top:0;visibility:hidden;pointer-events:none;z-index:-1}
 
 @media (orientation:portrait) and (min-width:600px) and (max-width:1100px){
 .main{flex-direction:column;padding:0 12px 5px 12px;gap:6px}
@@ -192,19 +192,20 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .final-book-title{font-size:clamp(.9rem,2.6vh,1.4rem);padding:clamp(12px,2.4vh,24px) clamp(10px,3vw,24px)}
 .final-btn{font-size:clamp(.85rem,2vh,1rem);padding:clamp(8px,1.4vh,12px) clamp(18px,4vw,30px)}
 .dict-overlay{align-items:flex-start;padding-top:120px;padding-bottom:50px}
-.dict-container{width:88%;height:auto;max-height:none;flex:1;min-height:0}
-.dict-page{padding:10px 14px 40px 12px}
-.dict-page .arrow{bottom:6px;font-size:1.8rem;color:#c0392b;text-shadow:0 1px 3px rgba(0,0,0,.35);font-weight:900}
-.dict-page .arrow.disabled{color:#b8a89a;text-shadow:none}
+.dict-container{width:88%;height:100%;max-height:none;flex:1;min-height:0}
+.dict-page{padding:10px 14px 40px 12px;overflow-y:hidden}
+.dict-page .arrow{display:none}
 .dict-section-title{font-size:1.4rem;margin:4px 0 6px}
-.dict-entry{display:flex;flex-direction:column;align-items:flex-start;gap:0;padding:3px 0;min-height:auto}
-.dict-entry.empty{padding:3px 0}
+.dict-entry{display:flex;flex-direction:column;align-items:flex-start;gap:0;padding:4px 0;min-height:auto}
+.dict-entry.empty{padding:4px 0}
 .dict-entry .lock{font-size:.85rem;width:auto;flex:0 0 auto;text-align:left}
 .dict-entry-top{display:block;width:100%}
 .dict-entry .entry-phrase{display:inline;font-size:.85rem;line-height:1.15}
 .dict-entry .entry-dash{display:none}
-.dict-entry-bottom{display:block;width:100%;padding-left:0;margin-top:1px}
+.dict-entry-bottom{display:block;width:100%;padding-left:0;margin-top:0}
 .dict-entry .entry-meaning{flex:0 0 auto;width:100%;font-size:.8rem;padding-right:0;line-height:1.15}
+.dict-arrows{padding:4px 16px 8px 16px}
+.dict-arrows .arrow{font-size:1.6rem}
 .footer{padding:3px 10px}
 .btn{font-size:.62rem;padding:3px 8px}
 .watermark{font-size:.55rem}
@@ -345,13 +346,15 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
     <div class="dict-pages">
       <div class="dict-page" id="dictPageLeft">
         <div class="dict-page-content" id="dictPageLeftContent"></div>
-        <div class="arrow back" id="dictArrowBack" onclick="dictPrevPage()">←</div>
       </div>
       <div class="dict-fold"></div>
       <div class="dict-page" id="dictPageRight">
         <div class="dict-page-content" id="dictPageRightContent"></div>
-        <div class="arrow forward" id="dictArrowForward" onclick="dictNextPage()">→</div>
       </div>
+    </div>
+    <div class="dict-arrows">
+      <span class="arrow back" id="dictArrowBack" onclick="dictPrevPage()">←</span>
+      <span class="arrow forward" id="dictArrowForward" onclick="dictNextPage()">→</span>
     </div>
   </div>
 </div>
@@ -735,6 +738,12 @@ let deviceParams=getParams();
 let collectedPhrases=new Set();
 let isFlipping=false;
 
+const pairHeightsCache = new Map();
+let lockHeight = 0;
+let letterHeight = 0;
+let dictMeasured = false;
+let dictMeasurePending = false;
+
 let variantState=[
   {round:0,stackRemaining:0,gameStarted:false,
    leftPairs:[],rightPairs:[],pairsInBook:[],remainingPairs:[],
@@ -977,6 +986,7 @@ function initGame(){
   document.getElementById('finalOverlay').classList.remove('active');
   document.getElementById('mainArea').style.visibility='';
   checkRotateNotice();
+  scheduleDictMeasure();
 }
 
 function switchVariant(i){
@@ -1195,6 +1205,112 @@ function showFinal(){
   renderBookFromState();
 }
 
+function makeDictEntryNode(pair, collected){
+  const d=document.createElement('div');
+  d.className='dict-entry'+(collected?'':' empty');
+  if(DEVICE_TYPE==='phone'){
+    if(!collected){
+      const lk=document.createElement('span');
+      lk.className='lock';
+      lk.textContent='🔒';
+      d.appendChild(lk);
+    }else{
+      const top=document.createElement('div');
+      top.className='dict-entry-top';
+      const ph=document.createElement('span');
+      ph.className='entry-phrase';
+      ph.innerHTML=addNbsp(capitalizeFirst(pair.p))+'\u00A0—';
+      if(pair.p===LAMP_PHRASE){
+        const l=document.createElement('span');
+        l.className='lamp-inline';l.textContent='💡';
+        l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};
+        ph.appendChild(l);
+      }
+      top.appendChild(ph);
+      const bottom=document.createElement('div');
+      bottom.className='dict-entry-bottom';
+      const mn=document.createElement('span');
+      mn.className='entry-meaning';
+      mn.innerHTML=splitMeaning(pair.m).map((part,i)=>{
+        const cls=['','second','third'][i]||'third';
+        const sep=i<splitMeaning(pair.m).length-1?';':'';
+        return `<span class="${cls}">${addNbsp(part)}${sep}</span>`;
+      }).join('<br>');
+      bottom.appendChild(mn);
+      d.appendChild(top);d.appendChild(bottom);
+    }
+    return d;
+  }
+  const lk=document.createElement('span');
+  lk.className='lock';
+  lk.textContent=collected?'':'🔒';
+  const ph=document.createElement('span');
+  ph.className='entry-phrase';
+  ph.innerHTML=addNbsp(capitalizeFirst(pair.p));
+  if(collected&&pair.p===LAMP_PHRASE){
+    const l=document.createElement('span');
+    l.className='lamp-inline';l.textContent='💡';
+    l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};
+    ph.appendChild(l);
+  }
+  const dh=document.createElement('span');
+  dh.className='entry-dash';dh.textContent=collected?'—':'';
+  const mn=document.createElement('span');
+  mn.className='entry-meaning';
+  mn.innerHTML=collected?splitMeaning(pair.m).map((part,i)=>{
+    const cls=['','second','third'][i]||'third';
+    const sep=i<splitMeaning(pair.m).length-1?';':'';
+    return `<span class="${cls}">${addNbsp(part)}${sep}</span>`;
+  }).join(' '):'';
+  d.appendChild(lk);d.appendChild(ph);d.appendChild(dh);d.appendChild(mn);
+  return d;
+}
+
+function measureDictHeights(){
+  if(DEVICE_TYPE !== 'phone') return;
+  const host=document.createElement('div');
+  host.className='dict-measure-host';
+  document.body.appendChild(host);
+  const w=Math.max(80, Math.floor((window.innerWidth * 0.88 - 8 - 6 - 26) / 2));
+  host.style.width=w+'px';
+  const probe=document.createElement('div');
+  probe.style.width=w+'px';
+  host.appendChild(probe);
+  pairHeightsCache.clear();
+  ALL_PAIRS.forEach(pair=>{
+    const node=makeDictEntryNode(pair, true);
+    probe.innerHTML='';
+    probe.appendChild(node);
+    const h=node.offsetHeight;
+    pairHeightsCache.set(pair.p, h);
+  });
+  const lockNode=makeDictEntryNode({p:'',m:''}, false);
+  probe.innerHTML='';
+  probe.appendChild(lockNode);
+  lockHeight=lockNode.offsetHeight;
+  const letterNode=document.createElement('div');
+  letterNode.className='dict-section-title';
+  letterNode.textContent='А';
+  probe.innerHTML='';
+  probe.appendChild(letterNode);
+  letterHeight=letterNode.offsetHeight + 10;
+  probe.innerHTML='';
+  host.remove();
+  dictMeasured=true;
+}
+
+function scheduleDictMeasure(){
+  if(DEVICE_TYPE !== 'phone') return;
+  if(dictMeasured || dictMeasurePending) return;
+  dictMeasurePending=true;
+  const run=()=>{ if(dictMeasured){dictMeasurePending=false;return;} measureDictHeights(); dictMeasurePending=false; };
+  if(document.fonts && document.fonts.ready){
+    document.fonts.ready.then(()=>{ setTimeout(run, 100); });
+  } else {
+    setTimeout(run, 500);
+  }
+}
+
 let dictPages=[],dictCurrentPage=0;
 function sortKey(phrase){return phrase.replace(/^\s*\([^)]*\)\s*/,'').trim();}
 function buildDictPages(){
@@ -1207,22 +1323,44 @@ function buildDictPages(){
     if(l!==lastLetter){entries.push({type:'letter',letter:l});lastLetter=l;}
     entries.push({type:'pair',pair:p});
   });
-  const pages=[];let cp=[],cnt=0;
-  entries.forEach(e=>{cp.push(e);cnt++;if(cnt>=22){pages.push(cp);cp=[];cnt=0;}});
-  if(cp.length>0)pages.push(cp);
-  for(let i=0;i<pages.length-1;i++){
-    const page=pages[i];
-    for(let j=page.length-1;j>=0;j--){
-      if(page[j].type==='letter'){
-        const hasPairAfter=page.slice(j+1).some(e=>e.type==='pair');
-        if(!hasPairAfter){
-          const letterEntry=page.splice(j,1)[0];
-          pages[i+1].unshift(letterEntry);
+  if(DEVICE_TYPE !== 'phone'){
+    const pages=[];let cp=[],cnt=0;
+    entries.forEach(e=>{cp.push(e);cnt++;if(cnt>=22){pages.push(cp);cp=[];cnt=0;}});
+    if(cp.length>0)pages.push(cp);
+    for(let i=0;i<pages.length-1;i++){
+      const page=pages[i];
+      for(let j=page.length-1;j>=0;j--){
+        if(page[j].type==='letter'){
+          const hasPairAfter=page.slice(j+1).some(e=>e.type==='pair');
+          if(!hasPairAfter){
+            const letterEntry=page.splice(j,1)[0];
+            pages[i+1].unshift(letterEntry);
+          }
+          break;
         }
-        break;
       }
     }
+    dictPages=pages;
+    return;
   }
+  const pageLimit = 400;
+  const pages=[];
+  let cp=[];
+  let used=0;
+  entries.forEach(e=>{
+    let h=0;
+    if(e.type==='letter') h = letterHeight || 40;
+    else if(collectedPhrases.has(e.pair.p)) h = pairHeightsCache.get(e.pair.p) || 60;
+    else h = lockHeight || 30;
+    if(used + h > pageLimit && cp.length>0){
+      pages.push(cp);
+      cp=[];
+      used=0;
+    }
+    cp.push(e);
+    used += h;
+  });
+  if(cp.length>0)pages.push(cp);
   dictPages=pages;
 }
 function capitalizeFirst(s){if(!s)return s;return s.charAt(0).toUpperCase()+s.slice(1);}
@@ -1244,79 +1382,39 @@ function renderDictPage(){
       }else{
         const pair=entry.pair;
         const collected=collectedPhrases.has(pair.p);
-        const d=document.createElement('div');
-        d.className='dict-entry'+(collected?'':' empty');
-        if(DEVICE_TYPE==='phone'){
-          if(!collected){
-            const lk=document.createElement('span');
-            lk.className='lock';
-            lk.textContent='🔒';
-            d.appendChild(lk);
-          }else{
-            const top=document.createElement('div');
-            top.className='dict-entry-top';
-            const ph=document.createElement('span');
-            ph.className='entry-phrase';
-            ph.innerHTML=addNbsp(capitalizeFirst(pair.p))+'\u00A0—';
-            if(pair.p===LAMP_PHRASE){
-              const l=document.createElement('span');
-              l.className='lamp-inline';l.textContent='💡';
-              l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};
-              ph.appendChild(l);
-            }
-            top.appendChild(ph);
-            const bottom=document.createElement('div');
-            bottom.className='dict-entry-bottom';
-            const mn=document.createElement('span');
-            mn.className='entry-meaning';
-            mn.innerHTML=splitMeaning(pair.m).map((part,i)=>{
-              const cls=['','second','third'][i]||'third';
-              const sep=i<splitMeaning(pair.m).length-1?';':'';
-              return `<span class="${cls}">${addNbsp(part)}${sep}</span>`;
-            }).join('<br>');
-            bottom.appendChild(mn);
-            d.appendChild(top);d.appendChild(bottom);
-          }
-          ct.appendChild(d);
-          return;
-        }
-        const lk=document.createElement('span');
-        lk.className='lock';
-        lk.textContent=collected?'':'🔒';
-        const ph=document.createElement('span');
-        ph.className='entry-phrase';
-        ph.innerHTML=addNbsp(capitalizeFirst(pair.p));
-        if(collected&&pair.p===LAMP_PHRASE){
-          const l=document.createElement('span');
-          l.className='lamp-inline';l.textContent='💡';
-          l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};
-          ph.appendChild(l);
-        }
-        const dh=document.createElement('span');
-        dh.className='entry-dash';dh.textContent=collected?'—':'';
-        const mn=document.createElement('span');
-        mn.className='entry-meaning';
-        mn.innerHTML=collected?splitMeaning(pair.m).map((part,i)=>{
-          const cls=['','second','third'][i]||'third';
-          const sep=i<splitMeaning(pair.m).length-1?';':'';
-          return `<span class="${cls}">${addNbsp(part)}${sep}</span>`;
-        }).join(' '):'';
-        d.appendChild(lk);d.appendChild(ph);d.appendChild(dh);d.appendChild(mn);
-        ct.appendChild(d);
+        ct.appendChild(makeDictEntryNode(pair, collected));
       }
     });
   });
   document.getElementById('dictArrowBack').classList.toggle('disabled',dictCurrentPage===0);
   document.getElementById('dictArrowForward').classList.toggle('disabled',dictCurrentPage>=dictPages.length-1);
 }
-function openDict(){buildDictPages();dictCurrentPage=0;renderDictPage();document.getElementById('dictOverlay').classList.add('active');}
+function openDict(){
+  if(DEVICE_TYPE === 'phone' && !dictMeasured && !dictMeasurePending){
+    scheduleDictMeasure();
+  }
+  buildDictPages();
+  dictCurrentPage=0;
+  renderDictPage();
+  document.getElementById('dictOverlay').classList.add('active');
+}
 function closeDict(){document.getElementById('dictOverlay').classList.remove('active');}
 function dictPrevPage(){if(dictCurrentPage>0){dictCurrentPage--;renderDictPage();}}
 function dictNextPage(){if(dictCurrentPage<dictPages.length-1){dictCurrentPage++;renderDictPage();}}
 
 function toggleSound(){soundOn=!soundOn;const b1=document.getElementById('soundBtn');const t=soundOn?'Звук 🔊':'Звук 🔇';if(b1){b1.textContent=t;b1.classList.toggle('muted',!soundOn);}}
 function togglePause(){paused=!paused;const o=document.getElementById('pauseOverlay');if(paused)o.classList.add('active');else o.classList.remove('active');}
-function restartGame(){document.getElementById('finalOverlay').classList.remove('active');document.getElementById('mainArea').style.visibility='';document.getElementById('rotateWrap').style.display='flex';initGame();}
+function restartGame(){
+  document.getElementById('finalOverlay').classList.remove('active');
+  document.getElementById('mainArea').style.visibility='';
+  document.getElementById('rotateWrap').style.display='flex';
+  pairHeightsCache.clear();
+  lockHeight=0;
+  letterHeight=0;
+  dictMeasured=false;
+  dictMeasurePending=false;
+  initGame();
+}
 
 let orientationTimer = null;
 function onOrientationChanged(){
@@ -1340,6 +1438,13 @@ function onOrientationChanged(){
   }
   renderBookFromState();
   checkRotateNotice();
+  if(DEVICE_TYPE==='phone'){
+    pairHeightsCache.clear();
+    lockHeight=0;
+    letterHeight=0;
+    dictMeasured=false;
+    scheduleDictMeasure();
+  }
 }
 
 const mqlPortrait = window.matchMedia('(orientation: portrait)');
