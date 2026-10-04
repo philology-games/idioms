@@ -157,6 +157,28 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-entry .entry-phrase{font-size:1rem}
 .dict-entry .entry-meaning{font-size:1rem}
 }
+@media (orientation:portrait) and (max-width:600px){
+.main{flex-direction:column;padding:0 8px 4px 8px;gap:5px}
+.top-part{flex:0 0 34%;display:flex;flex-direction:row;gap:6px;min-height:0;min-width:0}
+.top-part .chest{flex:1;min-width:0;height:100%;margin-top:0;padding:10px 2px 4px 2px}
+.top-part .chest-inner{width:72%}
+.top-part .book-shelf{flex:1;min-width:0;padding:0 2px}
+.top-part .book-open{height:90%}
+.main .left-part{flex:1;width:100%}
+.header{padding:4px 0 2px}
+.header h1{font-size:1.05rem;letter-spacing:1px;margin-bottom:2px}
+.instruction{font-size:.68rem;gap:4px}
+.label-phrase,.label-meaning{font-size:.62rem;padding:1px 5px}
+.tabs-row{padding:2px 10px 3px 10px;gap:4px}
+.tab{font-size:.7rem;padding:2px 9px}
+.page{padding:10px 6px;gap:4px;grid-template-rows:repeat(2,minmax(0,1fr))}
+.book-pair .pair-phrase,.book-pair .pair-meaning{font-size:.5rem}
+.book-pair .pair-dash{font-size:.5rem}
+.flip-clone-front{padding:10px 6px;gap:4px;grid-template-rows:repeat(2,minmax(0,1fr))}
+.footer{padding:3px 10px}
+.btn{font-size:.62rem;padding:3px 8px}
+.watermark{font-size:.55rem}
+}
 @media (orientation:landscape) and (min-width:750px) and (max-width:1400px){
 .chest{flex:0 0 55%;margin-top:calc(-1.2cm);margin-bottom:8px}
 .chest-inner{width:78%}
@@ -175,58 +197,23 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-entry .entry-phrase{font-size:.98rem}
 .dict-entry .entry-meaning{font-size:.98rem}
 }
-  @media (orientation:landscape) and (max-height:640px){
-.final-center{gap:clamp(6px,1.6vh,16px);padding:6px;overflow:hidden}
-.final-book{width:min(320px,52vh);height:min(440px,62vh);margin-left:calc(min(320px,52vh)*0.13)}
-.final-book::before{left:calc(-1*min(320px,52vh)*0.13);width:calc(min(320px,52vh)*0.14)}
-.final-book::after{left:calc(-1*min(320px,52vh)*0.095);top:20px;bottom:20px}
-.final-book-title{font-size:clamp(.85rem,2.4vh,1.5rem);padding:clamp(10px,2vh,22px) clamp(10px,2vw,24px)}
-.final-btn{font-size:clamp(.75rem,1.6vh,.95rem);padding:clamp(6px,1.2vh,10px) clamp(16px,3vw,30px);box-shadow:0 3px 0 #2e7d32,0 5px 10px rgba(0,0,0,.35)}
-}
-  /* Альбомная ориентация с малой высотой: смартфоны и низкие окна */
 @media (orientation:landscape) and (max-height:640px){
-
-  /* Финальный экран: прижимаем контент вниз, чтобы не перекрывать
-     шапку и вкладки сверху. Инструкция остаётся видна. */
-  .final-center{justify-content:flex-end;padding:4px 4px 6px 4px;gap:clamp(6px,1.4vh,14px);overflow:hidden}
-  .final-book{width:min(300px,50vh);height:min(400px,58vh);margin-left:calc(min(300px,50vh)*0.13)}
-  .final-book::before{left:calc(-1*min(300px,50vh)*0.13);width:calc(min(300px,50vh)*0.14)}
-  .final-book::after{left:calc(-1*min(300px,50vh)*0.095);top:18px;bottom:18px}
-  .final-book-title{font-size:clamp(.8rem,2.2vh,1.4rem);padding:clamp(8px,1.8vh,20px) clamp(10px,2vw,22px)}
-  .final-btn{font-size:clamp(.72rem,1.5vh,.9rem);padding:clamp(5px,1vh,9px) clamp(14px,2.6vw,26px);box-shadow:0 3px 0 #2e7d32,0 5px 10px rgba(0,0,0,.35)}
-
-  /* Открытый словарь: уменьшаем высоту и поднимаем стрелки,
-     чтобы они всегда были видны. */
-  .dict-container{height:min(85%,calc(100vh - 90px));max-height:calc(100vh - 90px)}
-  .dict-header{padding:4px 12px;font-size:.85rem}
-  .dict-page{padding:8px 20px 34px 14px}
-  .dict-page .arrow{bottom:4px;font-size:1.5rem}
-  .dict-page-content.distribute .dict-entry{padding:2px 0;min-height:1.5rem}
-  .dict-section-title{font-size:1.3rem;margin:2px 0 4px}
-  .dict-entry{padding:2px 0;min-height:1.5rem}
-  .dict-entry .entry-phrase{font-size:.85rem}
-  .dict-entry .entry-meaning{font-size:.85rem}
-  .dict-entry .lock{font-size:.75rem;width:16px}
-}
-  @media (orientation:portrait) and (max-width:600px){
-  .header{padding:4px 0 2px}
-  .header h1{font-size:1.15rem;letter-spacing:1px;margin-bottom:2px}
-  .instruction{font-size:.72rem;gap:4px}
-  .label-phrase,.label-meaning{font-size:.66rem;padding:1px 5px}
-  .tabs-row{padding:2px 12px 3px 12px;gap:4px}
-  .tab{font-size:.72rem;padding:2px 10px}
-  .main{padding:0 10px 4px 10px;gap:5px}
-  .top-part{flex:0 0 36%}
-  .top-part .chest{padding:16px 4px 6px 4px}
-  .top-part .chest-inner{width:70%}
-  .top-part .book-open{height:88%}
-  .page{padding:12px 6px;gap:5px;grid-template-rows:repeat(2,minmax(0,1fr))}
-  .book-pair .pair-phrase,.book-pair .pair-meaning{font-size:.55rem}
-  .book-pair .pair-dash{font-size:.55rem}
-  .flip-clone-front{padding:12px 6px;gap:5px;grid-template-rows:repeat(2,minmax(0,1fr))}
-  .footer{padding:3px 12px}
-  .btn{font-size:.65rem;padding:3px 8px}
-  .watermark{font-size:.58rem}
+.final-center{gap:clamp(6px,1.6vh,16px);padding:6px;overflow:hidden;justify-content:flex-end}
+.final-book{width:min(300px,50vh);height:min(400px,58vh);margin-left:calc(min(300px,50vh)*0.13)}
+.final-book::before{left:calc(-1*min(300px,50vh)*0.13);width:calc(min(300px,50vh)*0.14)}
+.final-book::after{left:calc(-1*min(300px,50vh)*0.095);top:18px;bottom:18px}
+.final-book-title{font-size:clamp(.8rem,2.2vh,1.4rem);padding:clamp(8px,1.8vh,20px) clamp(10px,2vw,22px)}
+.final-btn{font-size:clamp(.72rem,1.5vh,.9rem);padding:clamp(5px,1vh,9px) clamp(14px,2.6vw,26px);box-shadow:0 3px 0 #2e7d32,0 5px 10px rgba(0,0,0,.35)}
+.dict-container{height:min(85%,calc(100vh - 90px));max-height:calc(100vh - 90px)}
+.dict-header{padding:4px 12px;font-size:.85rem}
+.dict-page{padding:8px 20px 34px 14px}
+.dict-page .arrow{bottom:4px;font-size:1.5rem}
+.dict-page-content.distribute .dict-entry{padding:2px 0;min-height:1.5rem}
+.dict-section-title{font-size:1.3rem;margin:2px 0 4px}
+.dict-entry{padding:2px 0;min-height:1.5rem}
+.dict-entry .entry-phrase{font-size:.85rem}
+.dict-entry .entry-meaning{font-size:.85rem}
+.dict-entry .lock{font-size:.75rem;width:16px}
 }
 </style>
 </head>
