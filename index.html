@@ -759,6 +759,7 @@ function addNbsp(t){
     t=t.replace(/несмотря ни на что/gi,'несмотря<br>ни&nbsp;на&nbsp;что');
     t=t.replace(/как бы то ни было/gi,'как&nbsp;бы&nbsp;то<br>ни&nbsp;было');
     t=t.replace(/ни с того ни с сего/gi,'ни&nbsp;с&nbsp;того<br>ни&nbsp;с&nbsp;сего');
+    t=t.replace(/(^|\s)(не|ни)\s+/gi,'$1$2&nbsp;');
     ONE_LETTER_WORDS.forEach(w=>{
       const re=new RegExp('(^|\\s)('+w+')\\s+','gi');
       t=t.replace(re,'$1$2&nbsp;');
