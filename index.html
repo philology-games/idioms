@@ -140,4 +140,1167 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-entry .lock{font-size:.85rem;flex-shrink:0;width:20px;text-align:center}
 .dict-entry .entry-phrase{font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:1.05rem;color:#5a2a2a;flex:0 0 40%;line-height:1.15}
 .dict-entry .entry-phrase i{font-style:italic;font-weight:400;opacity:.85}
-.dict-entry .entry-phrase .lamp-inline{font-size
+.dict-entry .entry-phrase .lamp-inline{font-size:.95rem;margin-left:3px;cursor:pointer}
+.dict-entry .entry-dash{color:#1a2a4a;padding:0 4px;flex-shrink:0}
+.dict-entry .entry-meaning{font-family:'EB Garamond',Georgia,serif;font-size:1.08rem;font-weight:600;color:#152040;flex:1;line-height:1.15;padding-right:14px}
+.dict-entry .entry-meaning .second{color:#2a4a7a}
+.dict-entry .entry-meaning .third{color:#3a6a9a}
+.dict-entry.empty .entry-phrase,.dict-entry.empty .entry-dash,.dict-entry.empty .entry-meaning{visibility:hidden}
+.dict-page-content.distribute{justify-content:space-between}
+.dict-page-content.distribute .dict-entry{flex:0 0 auto}
+
+@media (orientation:portrait) and (min-width:600px) and (max-width:1100px){
+.main{flex-direction:column;padding:0 12px 5px 12px;gap:6px}
+.top-part{flex:0 0 35%;display:flex;flex-direction:row;gap:8px;min-height:0;min-width:0}
+.top-part .chest{flex:1;min-width:0;height:100%;margin-top:0}
+.top-part .book-shelf{flex:1;min-width:0;padding:0 4px}
+.top-part .book-open{height:92%}
+.main .left-part{flex:1;width:100%}
+.dict-container{width:96%;height:92%}
+.dict-entry .entry-phrase{font-size:1rem}
+.dict-entry .entry-meaning{font-size:1rem}
+}
+@media (orientation:portrait) and (max-width:600px){
+.main{flex-direction:column;padding:0 8px 4px 8px;gap:5px}
+.game-field{gap:2px}
+.tile{font-size:.8rem}
+.top-part{flex:0 0 25%;display:flex;flex-direction:row;gap:2px;min-height:0;min-width:0}
+.top-part .chest{flex:0.7;min-width:0;height:80%;align-self:flex-end;margin-top:0;padding:12px 2px 4px 2px}
+.top-part .chest-inner{width:88%}
+.top-part .chest-body{overflow:visible}
+.top-part .book-shelf{flex:1;min-width:0;padding:0 2px}
+.top-part .book-open{height:88%}
+.main .left-part{flex:1;width:100%}
+.header{padding:4px 0 2px}
+.header h1{font-size:1.05rem;letter-spacing:1px;margin-bottom:2px}
+.instruction{font-size:.68rem;gap:4px}
+.label-phrase,.label-meaning{font-size:.62rem;padding:1px 5px}
+.tabs-row{padding:2px 10px 3px 10px;gap:4px}
+.tab{font-size:.7rem;padding:2px 9px}
+.page{padding:10px 6px;gap:4px;grid-template-rows:repeat(2,minmax(0,1fr))}
+.book-pair .pair-phrase,.book-pair .pair-meaning{font-size:.5rem}
+.book-pair .pair-dash{font-size:.5rem}
+.flip-clone-front{padding:10px 6px;gap:4px;grid-template-rows:repeat(2,minmax(0,1fr))}
+.footer{padding:3px 10px}
+.btn{font-size:.62rem;padding:3px 8px}
+.watermark{font-size:.55rem}
+}
+@media (orientation:landscape) and (min-width:750px) and (max-width:1400px){
+.chest{flex:0 0 55%;margin-top:calc(-1.2cm);margin-bottom:8px}
+.chest-inner{width:78%}
+.book-open{height:calc(82% + 0.5cm)}
+.page{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
+.book-pair{padding:3px 0}
+.flip-clone-front{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
+}
+@media (max-width:900px) and (max-height:600px){
+.page{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:8px;align-content:space-between;padding:18px 10px}
+.flip-clone-front{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:8px;align-content:space-between;padding:18px 10px}
+.final-book{width:min(240px,52vh);height:min(340px,74vh);margin-left:calc(min(240px,52vh)*0.13)}
+.final-book::before{left:calc(-1*min(240px,52vh)*0.13);width:calc(min(240px,52vh)*0.14)}
+.final-book::after{left:calc(-1*min(240px,52vh)*0.095)}
+.dict-container{width:96%;height:92%}
+.dict-entry .entry-phrase{font-size:.98rem}
+.dict-entry .entry-meaning{font-size:.98rem}
+}
+@media (orientation:landscape) and (max-height:640px){
+.final-center{gap:clamp(6px,1.6vh,16px);padding:6px;overflow:hidden;justify-content:flex-end}
+.final-book{width:min(300px,50vh);height:min(400px,58vh);margin-left:calc(min(300px,50vh)*0.13)}
+.final-book::before{left:calc(-1*min(300px,50vh)*0.13);width:calc(min(300px,50vh)*0.14)}
+.final-book::after{left:calc(-1*min(300px,50vh)*0.095);top:18px;bottom:18px}
+.final-book-title{font-size:clamp(.8rem,2.2vh,1.4rem);padding:clamp(8px,1.8vh,20px) clamp(10px,2vw,22px)}
+.final-btn{font-size:clamp(.72rem,1.5vh,.9rem);padding:clamp(5px,1vh,9px) clamp(14px,2.6vw,26px);box-shadow:0 3px 0 #2e7d32,0 5px 10px rgba(0,0,0,.35)}
+.dict-container{height:min(85%,calc(100vh - 90px));max-height:calc(100vh - 90px)}
+.dict-header{padding:4px 12px;font-size:.85rem}
+.dict-page{padding:8px 20px 34px 14px}
+.dict-page .arrow{bottom:4px;font-size:1.5rem}
+.dict-page-content.distribute .dict-entry{padding:2px 0;min-height:1.5rem}
+.dict-section-title{font-size:1.3rem;margin:2px 0 4px}
+.dict-entry{padding:2px 0;min-height:1.5rem}
+.dict-entry .entry-phrase{font-size:.85rem}
+.dict-entry .entry-meaning{font-size:.85rem}
+.dict-entry .lock{font-size:.75rem;width:16px}
+}
+</style>
+</head>
+<body>
+
+<div id="rotateWrap">
+  <div class="header">
+    <h1>Фразеологизмы. Знаток</h1>
+    <p class="instruction">
+      Соедините <span class="label-phrase">фразеологизм</span> и его <span class="label-meaning">значение</span>
+    </p>
+  </div>
+
+  <div class="tabs-row empty" id="tabsRow">
+    <button class="tab active" data-variant="0">Вариант 1</button>
+    <button class="tab" data-variant="1">Вариант 2</button>
+    <button class="tab" data-variant="2">Вариант 3</button>
+  </div>
+
+  <div class="main" id="mainArea">
+    <div class="left-part" id="leftPart">
+      <div class="game-field" id="gameField">
+        <button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>
+      </div>
+    </div>
+    <div class="right-column" id="rightColumn">
+      <div class="chest" id="chest">
+        <div class="chest-inner">
+          <div class="chest-lid" id="chestLid">
+            <div class="lid-wood"></div>
+            <div class="lid-strap-left"></div>
+            <div class="lid-strap-right"></div>
+          </div>
+          <div class="chest-body">
+            <div class="body-wood"></div>
+            <div class="body-strap-left"></div>
+            <div class="body-strap-right"></div>
+            <div class="body-strap-bottom"></div>
+            <div class="chest-lock">
+              <div class="chest-key" id="chestKey">
+                <div class="key-head"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="book-shelf" id="bookShelf">
+        <div class="book">
+          <div class="book-open">
+            <div class="book-cover"></div>
+            <div class="book-pages-edge-top"></div>
+            <div class="book-pages-edge-bottom"></div>
+            <div class="book-spread" id="bookSpread">
+              <div class="page" id="pageLeft"></div>
+              <div class="book-fold"></div>
+              <div class="page" id="pageRight"></div>
+            </div>
+          </div>
+        </div>
+        <div class="shelf"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-buttons">
+      <button class="btn" id="soundBtn" onclick="toggleSound()">Звук 🔊</button>
+      <button class="btn" onclick="togglePause()">Пауза</button>
+      <button class="btn" onclick="restartGame()">Играть снова</button>
+    </div>
+    <div class="watermark">© Анна Сазонова, 2026</div>
+  </div>
+</div>
+
+<div id="rotateNotice">
+  <div class="rotate-text">Поверните устройство вертикально</div>
+</div>
+
+<div class="final-overlay" id="finalOverlay">
+  <div class="final-center">
+    <div class="final-book" onclick="openDict()">
+      <div class="final-book-title">Словарь<br>фразеологизмов</div>
+    </div>
+    <button class="final-btn" onclick="openDict()">Открыть словарь</button>
+  </div>
+</div>
+
+<div class="pause-overlay" id="pauseOverlay">
+  <div class="coffee">☕</div>
+  <button class="btn" onclick="togglePause()">Продолжить</button>
+</div>
+
+<div class="dict-overlay" id="dictOverlay">
+  <div class="dict-container">
+    <div class="dict-header">
+      <span>Словарь фразеологизмов</span>
+      <button class="dict-close" onclick="closeDict()">✕</button>
+    </div>
+    <div class="dict-pages">
+      <div class="dict-page" id="dictPageLeft">
+        <div class="dict-page-content" id="dictPageLeftContent"></div>
+        <div class="arrow back" id="dictArrowBack" onclick="dictPrevPage()">←</div>
+      </div>
+      <div class="dict-fold"></div>
+      <div class="dict-page" id="dictPageRight">
+        <div class="dict-page-content" id="dictPageRightContent"></div>
+        <div class="arrow forward" id="dictArrowForward" onclick="dictNextPage()">→</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const ALL_PAIRS = [
+  { p: "альфа и омега", m: "суть, основа; начало и конец" },
+  { p: "без оглядки", m: "быстро, не оглядываясь" },
+  { p: "без устали", m: "не переставая" },
+  { p: "без толку", m: "бесполезно" },
+  { p: "без ума", m: "в восхищении от кого-то/чего-то" },
+  { p: "без царя в голове", m: "глупый, легкомысленный" },
+  { p: "без числа", m: "очень много" },
+  { p: "белая ворона", m: "человек, отличающийся от других" },
+  { p: "белый свет / на белом свете", m: "мир вокруг нас" },
+  { p: "бить ключом", m: "бурно протекать; активно проявляться" },
+  { p: "бить через край", m: "активно проявляться; бурно протекать" },
+  { p: "бок о бок", m: "рядом, близко" },
+  { p: "более или менее", m: "средне" },
+  { p: "более того / больше того", m: "сверх чего-либо" },
+  { p: "болеть душой", m: "переживать" },
+  { p: "большей частью / по большей части", m: "главным образом" },
+  { p: "брать верх", m: "преобладать, побеждать" },
+  { p: "брать в свои руки", m: "возглавить" },
+  { p: "брать за горло", m: "заставлять, принуждать" },
+  { p: "взять себя в руки", m: "успокоиться, собраться" },
+  { p: "бросаться в глаза", m: "быть заметным, выделяться" },
+  { p: "будь здоров", m: "хорошо" },
+  { p: "быть / держаться в тени", m: "оставаться незаметным" },
+  { p: "всё валится из рук", m: "ничего не получается" },
+  { p: "вверх дном", m: "в беспорядке" },
+  { p: "вверх ногами", m: "наоборот, в перевёрнутом виде" },
+  { p: "в глаза не видел", m: "никогда не видел" },
+  { p: "в два счёта", m: "очень быстро" },
+  { p: "в двух словах", m: "кратко" },
+  { p: "в двух шагах", m: "очень близко" },
+  { p: "в добрый час", m: "пожелание удачи" },
+  { p: "в добрый путь", m: "пожелание уезжающему" },
+  { p: "вдоль и поперёк", m: "во всех подробностях" },
+  { p: "вести себя", m: "поступать определённым образом" },
+  { p: "повесить голову", m: "расстроиться, приуныть" },
+  { p: "взять на заметку", m: "запомнить" },
+  { p: "в конечном счёте", m: "в итоге" },
+  { p: "в конце концов", m: "наконец" },
+  { p: "в крайнем случае", m: "при острой необходимости" },
+  { p: "в любом случае", m: "при любых обстоятельствах" },
+  { p: "в мгновение ока", m: "очень быстро" },
+  { p: "вместе с тем", m: "в то же время" },
+  { p: "во весь дух", m: "очень быстро" },
+  { p: "во весь рост", m: "выпрямившись; с очевидностью" },
+  { p: "во всяком случае", m: "при любых обстоятельствах; однако" },
+  { p: "в один голос", m: "вместе" },
+  { p: "в один миг", m: "очень быстро" },
+  { p: "водить за нос", m: "обманывать" },
+  { p: "во имя", m: "ради кого-то/чего-то" },
+  { p: "войти в положение", m: "понять кого-то" },
+  { p: "воспрянуть духом", m: "преодолеть отчаяние" },
+  { p: "во что бы то ни стало", m: "в любом случае" },
+  { p: "впиться глазами", m: "пристально смотреть" },
+  { p: "в порядке вещей", m: "обыкновенно" },
+  { p: "в последнее время", m: "сейчас, с недавних пор" },
+  { p: "в последнюю очередь", m: "после всего" },
+  { p: "в противном случае", m: "иначе" },
+  { p: "в самый раз", m: "впору" },
+  { p: "в своё время", m: "в прошлом; своевременно" },
+  { p: "в свою очередь", m: "также, тоже" },
+  { p: "в сердцах", m: "гневно, раздражённо" },
+  { p: "все до одного", m: "абсолютно все" },
+  { p: "всё в порядке", m: "всё хорошо" },
+  { p: "всё на свете", m: "абсолютно всё" },
+  { p: "всё равно", m: "без разницы" },
+  { p: "выжимать соки", m: "доводить до изнеможения" },
+  { p: "выше головы", m: "нельзя преодолеть" },
+  { p: "выше сил", m: "невозможно справиться" },
+  { p: "главным образом", m: "преимущественно; самое важное" },
+  { p: "глаза в глаза", m: "рядом, близко" },
+  { p: "глаза горят", m: "желание что-то получить; воодушевление" },
+  { p: "глаза разбегаются", m: "слишком много всего" },
+  { p: "глазом не моргнул", m: "не отреагировал" },
+  { p: "гнуть спину", m: "тяжело работать; унижаться" },
+  { p: "горя не знать", m: "не испытывать беспокойства" },
+  { p: "грешным делом", m: "признание оплошности" },
+  { p: "далеко пойдёт", m: "добьётся успехов" },
+  { p: "дать волю", m: "не сдерживать; много позволять" },
+  { p: "преподать урок", m: "проучить" },
+  { p: "делать нечего", m: "необходимость смириться" },
+  { p: "дело в шляпе", m: "успешное завершение" },
+  { p: "дело житейское", m: "что-то обыденное" },
+  { p: "день за днём", m: "каждый день" },
+  { p: "держать себя в руках", m: "сдерживаться" },
+  { p: "держать ухо востро", m: "быть бдительным" },
+  { p: "днём с огнём", m: "невозможно найти" },
+  { p: "добро пожаловать", m: "приветствие" },
+  { p: "до глубины души", m: "сильно впечатлить" },
+  { p: "до нитки вымокнуть", m: "полностью промокнуть" },
+  { p: "до сих пор", m: "до сегодняшнего дня" },
+  { p: "достать из-под земли", m: "получить любой ценой" },
+  { p: "друг друга", m: "взаимно, один другого" },
+  { p: "душа болит", m: "переживать из-за чего-то/кого-то" },
+  { p: "душа в душу", m: "дружно" },
+  { p: "душа не лежит", m: "что-то не нравится" },
+  { p: "души не чаять", m: "обожать, очень любить" },
+  { p: "душой и телом", m: "целиком и полностью" },
+  { p: "едва таскать ноги", m: "обессилеть" },
+  { p: "еле дышать", m: "быть в крайне тяжёлом состоянии" },
+  { p: "ещё бы", m: "конечно, разумеется" },
+  { p: "забивать голову", m: "думать о ненужном" },
+  { p: "заговаривать зубы", m: "обманывать" },
+  { p: "задеть за живое", m: "затронуть болезненную тему" },
+  { p: "закидывать камнями", m: "обвинять кого-то" },
+  { p: "заметать следы", m: "уничтожать улики" },
+  { p: "за плечами", m: "то, что было в прошлом" },
+  { p: "засучив рукава", m: "усердно" },
+  { p: "затаив дыхание", m: "с интересом; очень тихо" },
+  { p: "играть важную роль", m: "иметь большое значение" },
+  { p: "из конца в конец", m: "от края до края" },
+  { p: "изливать душу", m: "доверительно рассказывать" },
+  { p: "изо всех сил", m: "с напряжением" },
+  { p: "из рук в руки", m: "от одного к другому" },
+  { p: "иметь в виду", m: "учитывать что-либо" },
+  { p: "иметь дело", m: "о взаимодействии с кем-то/чем-то" },
+  { p: "иметь значение", m: "о чём-то важном" },
+  { p: "искра божья", m: "талант; благородные задатки" },
+  { p: "испокон веков", m: "издавна" },
+  { p: "и так и сяк", m: "по-разному, по-всякому" },
+  { p: "как бы то ни было", m: "несмотря ни на что" },
+  { p: "как ветром сдуло", m: "о внезапном исчезновении" },
+  { p: "как из ведра", m: "о проливном дожде" },
+  { p: "как миленький", m: "о беспрекословном подчинении" },
+  { p: "как назло", m: "как будто нарочно" },
+  { p: "как правило", m: "обычно" },
+  { p: "как раз", m: "точно; именно; впору" },
+  { p: "как следует", m: "как нужно; в полной мере" },
+  { p: "камень на сердце", m: "тревога, тяжесть" },
+  { p: "каши не сваришь", m: "о невозможности договориться" },
+  { p: "конец пришёл", m: "о трудном положении; о смерти" },
+  { p: "кот наплакал", m: "очень мало" },
+  { p: "кровь из носу", m: "обязательно" },
+  { p: "кроме того", m: "вдобавок" },
+  { p: "кто знает", m: "неизвестно" },
+  { p: "кто куда", m: "в разные стороны" },
+  { p: "куда деваться", m: "нет иного выхода" },
+  { p: "куда ни шло", m: "как-нибудь, худо-бедно" },
+  { p: "лезть в голову", m: "настойчиво возникать в мыслях" },
+  { p: "лить слёзы", m: "плакать" },
+  { p: "лицом к лицу", m: "близко" },
+  { p: "лишь только", m: "после чего-то, как только" },
+  { p: "локти кусать", m: "жалеть о чём-то" },
+  { p: "ломать голову", m: "мучительно думать" },
+  { p: "ломать копья", m: "спорить; бороться за что-либо" },
+  { p: "любой ценой", m: "не считаясь с потерями" },
+  { p: "мало ли что", m: "неважно; на всякий случай" },
+  { p: "махнуть рукой", m: "перестать интересоваться кем-то/чем-то" },
+  { p: "между делом", m: "попутно" },
+  { p: "между прочим", m: "кстати; не уделяя особого внимания" },
+  { p: "между тем", m: "тем временем; однако" },
+  { p: "мёртвая хватка", m: "крайняя степень упорства" },
+  { p: "может быть", m: "возможно" },
+  { p: "на всякий случай", m: "вдруг понадобится" },
+  { p: "на край света", m: "куда угодно; очень далеко" },
+  { p: "на первых порах", m: "в самом начале" },
+  { p: "поле брани", m: "сфера столкновения мнений, интересов" },
+  { p: "направить стопы", m: "пойти куда-либо" },
+  { p: "на произвол судьбы", m: "оставить без поддержки" },
+  { p: "на равных", m: "одинаково" },
+  { p: "на самом деле", m: "действительно" },
+  { p: "на своей шкуре", m: "испытать самому" },
+  { p: "на седьмом небе", m: "состояние счастья" },
+  { p: "на совесть", m: "добротно" },
+  { p: "на точке замерзания", m: "без развития" },
+  { p: "на ходу", m: "во время движения; без усилий" },
+  { p: "на худой конец", m: "в худшем случае" },
+  { p: "не верить глазам/ушам", m: "удивление, недоверие" },
+  { p: "не в силах", m: "о бессилии, об отсутствии возможностей" },
+  { p: "не давать покоя", m: "постоянно тревожить" },
+  { p: "не ко двору", m: "не соответствовать чьим-либо требованиям" },
+  { p: "не иметь понятия", m: "не знать, не разбираться" },
+  { p: "не по нутру", m: "кто-то/что-то не нравится" },
+  { p: "не подать виду", m: "не показывать своих чувств" },
+  { p: "не по себе", m: "внутренний дискомфорт" },
+  { p: "не сводить глаз", m: "внимательно смотреть" },
+  { p: "несмотря ни на что", m: "вопреки" },
+  { p: "нести крест", m: "переносить испытания" },
+  { p: "нести на своих плечах", m: "без помощи, без содействия" },
+  { p: "нет дела", m: "всё равно" },
+  { p: "ни в жизнь", m: "никогда" },
+  { p: "ни в коем случае", m: "ни при каких условиях" },
+  { p: "никуда не годится", m: "очень плохо" },
+  { p: "ни с того ни с сего", m: "неожиданно" },
+  { p: "один-одинёшенек", m: "в полном одиночестве" },
+  { p: "одним словом", m: "коротко говоря" },
+  { p: "одно время", m: "когда-то в прошлом" },
+  { p: "опустить руки", m: "сдаться, отчаяться" },
+  { p: "остаться в памяти", m: "запомниться" },
+  { p: "отвести глаза (кому-то)", m: "умышленно отвлечь внимание" },
+  { p: "отдавать должное", m: "признавать достоинства" },
+  { p: "открыть глаза", m: "избавить от заблуждения" },
+  { p: "от нечего делать", m: "от скуки, от безделья" },
+  { p: "падать духом", m: "отчаиваться" },
+  { p: "пальцем не тронуть", m: "не применять физического воздействия" },
+  { p: "пасть духом", m: "отчаяться" },
+  { p: "первым делом", m: "в первую очередь" },
+  { p: "перебежать дорогу", m: "помешать" },
+  { p: "перевести дух", m: "отдохнуть" },
+  { p: "по белу свету", m: "повсюду" },
+  { p: "поднять на ноги", m: "разбудить; взбудоражить" },
+  { p: "подступить к горлу", m: "неожиданно взволновать" },
+  { p: "(говорить, лезть) под руку", m: "мешать" },
+  { p: "по душе", m: "о том, что нравится" },
+  { p: "подумать только", m: "выражение удивления, недоумения" },
+  { p: "пойти в ход", m: "использоваться" },
+  { p: "по крайней мере", m: "самое меньшее; во всяком случае" },
+  { p: "по правде", m: "честно, без обмана" },
+  { p: "по правде говоря", m: "откровенно" },
+  { p: "по совести", m: "справедливо" },
+  { p: "по совести сказать / по совести говоря", m: "откровенно, искренне" },
+  { p: "поставить крест (на ком-то/чём-то)", m: "разувериться; потерять надежду" },
+  { p: "представь себе", m: "вообрази" },
+  { p: "прежде всего", m: "в первую очередь" },
+  { p: "прийти в голову", m: "возникнуть в сознании" },
+  { p: "прийти в себя", m: "очнуться" },
+  { p: "принять меры", m: "осуществить необходимые действия" },
+  { p: "приятного аппетита", m: "пожелание перед едой" },
+  { p: "проникнуть в душу", m: "понять человека; сильно взволновать" },
+  { p: "пропасть без вести", m: "находиться неизвестно где" },
+  { p: "пуля не берёт", m: "о том, кто остаётся невредимым" },
+  { p: "путаться под ногами", m: "мешать" },
+  { p: "разводить руками", m: "недоумевать; не знать, как поступить" },
+  { p: "раз и навсегда", m: "окончательно, на всё время; решительное предупреждение" },
+  { p: "рано или поздно", m: "о том, что неизбежно произойдёт" },
+  { p: "речь идёт о...", m: "вопрос касается кого-либо/чего-либо" },
+  { p: "рука об руку", m: "вместе" },
+  { p: "рукой подать", m: "близко" },
+  { p: "сам не свой", m: "поведение/настроение отличается от обычного" },
+  { p: "самое большее", m: "не больше, чем; в лучшем случае" },
+  { p: "сам по себе", m: "самостоятельно, обособленно; отдельно взятый" },
+  { p: "сбыть с рук", m: "избавиться" },
+  { p: "сверху донизу", m: "целиком и полностью" },
+  { p: "свести на нет", m: "лишить смысла; уничтожить" },
+  { p: "свет клином сошёлся", m: "о единственно желаемом" },
+  { p: "своими словами", m: "передавая содержание, а не форму" },
+  { p: "с глазу на глаз", m: "без свидетелей" },
+  { p: "с грехом пополам", m: "еле-еле" },
+  { p: "с дороги", m: "сразу после поездки" },
+  { p: "сидеть на шее", m: "быть на иждивении у кого-то" },
+  { p: "сидеть сложа руки", m: "ничего не делать" },
+  { p: "скажи на милость", m: "выражение удивления, возмущения" },
+  { p: "скорее всего", m: "наиболее вероятно" },
+  { p: "скрепя сердце", m: "неохотно" },
+  { p: "слово за слово", m: "постепенно в ходе разговора; пререкаясь" },
+  { p: "сложить оружие", m: "сдаться; отказаться от продолжения борьбы" },
+  { p: "смотреть в оба", m: "внимательно следить; быть начеку" },
+  { p: "сойти с рук", m: "о том, что осталось безнаказанным" },
+  { p: "сойти с ума / сходить с ума", m: "поступать безрассудно; сильно увлечься кем-то/чем-то" },
+  { p: "сослужить службу", m: "принести пользу" },
+  { p: "со спокойной душой", m: "без переживаний" },
+  { p: "спать мёртвым сном", m: "очень крепко" },
+  { p: "с первого взгляда / на первый взгляд", m: "сразу, по первому впечатлению" },
+  { p: "сплошь и рядом", m: "везде" },
+  { p: "спокойной ночи", m: "пожелание перед сном" },
+  { p: "с пылу с жару", m: "о только что приготовленном; о недавно появившемся" },
+  { p: "с рук на руки", m: "передать лично" },
+  { p: "стало быть", m: "следовательно" },
+  { p: "с тех пор", m: "с определённого момента в прошлом" },
+  { p: "стоять насмерть", m: "не уступать, не сдаваться" },
+  { p: "с чистого листа", m: "о возможности начать заново" },
+  { p: "так и быть", m: "уступка, вынужденное согласие" },
+  { p: "так или иначе", m: "тем или иным способом; в любом случае" },
+  { p: "таким образом", m: "следовательно" },
+  { p: "так сказать", m: "если можно так выразиться" },
+  { p: "телячьи нежности", m: "неуместное проявление ласки" },
+  { p: "тем не менее", m: "и всё-таки" },
+  { p: "то и дело", m: "часто, регулярно" },
+  { p: "только что", m: "прямо сейчас" },
+  { p: "точка зрения", m: "чьё-либо мнение" },
+  { p: "тут как тут", m: "в тот самый момент" },
+  { p: "уписывать за обе щеки", m: "есть с большим аппетитом" },
+  { p: "хлеб насущный", m: "средства к существованию; жизненно необходимое" },
+  { p: "час пик", m: "время наибольшей загруженности" },
+  { p: "честно говоря", m: "откровенно" },
+  { p: "честное слово", m: "уверение в правдивости" },
+  { p: "честь по чести", m: "по всем правилам" },
+  { p: "читать мораль", m: "поучать" },
+  { p: "что есть силы / что есть мочи", m: "с предельным напряжением" },
+  { p: "что и говорить", m: "вне всякого сомнения" },
+  { p: "что касается", m: "если говорить о чём-то/ком-то, то…" },
+  { p: "что поделаешь", m: "о необходимости примириться с чем-либо" },
+  { p: "что толку", m: "бесполезно" },
+  { p: "чувствовать себя...", m: "испытывать какое-либо состояние" },
+  { p: "язык не поворачивается", m: "не решаться что-либо сказать" }
+];
+
+const SIMILAR_GROUPS = [
+  ["без оглядки","в два счёта","в мгновение ока","во весь дух","в один миг","как ветром сдуло"],
+  ["бок о бок","в двух шагах","глаза в глаза","лицом к лицу","рукой подать"],
+  ["водить за нос","заговаривать зубы"],
+  ["болеть душой","душа болит"],
+  ["не по нутру","душа не лежит"],
+  ["всё равно","нет дела","что толку"],
+  ["кот наплакал"]
+];
+
+const PHRASE_GROUP = (function(){
+  const map = {};
+  SIMILAR_GROUPS.forEach((group, idx)=>{
+    group.forEach(p=>{ map[p] = idx; });
+  });
+  return map;
+})();
+
+function getGroupKey(phrase){
+  const g = PHRASE_GROUP[phrase];
+  return (g === undefined) ? null : g;
+}
+
+const DEVICE_TYPE = (function(){
+  const shortSide = Math.min(window.innerWidth, window.innerHeight);
+  if (shortSide >= 600) return 'tablet';
+  return 'phone';
+})();
+
+function isLandscape(){ return window.innerWidth >= window.innerHeight; }
+
+function getParams(){
+  const land = isLandscape();
+  if(DEVICE_TYPE === 'phone'){
+    return { pairsPerRound:9, tabs:3, cols:3, rows:6, gap:2, bookPairsPerPage:2, totalTiles:190 };
+  }
+  return { pairsPerRound:15, tabs:3, cols:land?6:5, rows:land?5:6, gap:5, bookPairsPerPage:land?3:4, totalTiles:190 };
+}
+function normalizeMeaning(m){return m.toLowerCase().replace(/[;,.!?()]/g,' ').split(/\s+/).filter(w=>w.length>2).sort().join(' ');}
+function meaningsAreSimilar(a,b){const n1=normalizeMeaning(a),n2=normalizeMeaning(b);if(n1===n2)return true;const w1=new Set(n1.split(' ')),w2=new Set(n2.split(' '));const i=[...w1].filter(w=>w2.has(w));const ms=Math.min(w1.size,w2.size);return ms>0&&i.length/ms>=.6;}
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+
+function conflictsWithRound(candidate, round){
+  const candGroup = getGroupKey(candidate.p);
+  for(const existing of round){
+    if(candGroup !== null && candGroup === getGroupKey(existing.p)) return true;
+    if(meaningsAreSimilar(candidate.m, existing.m)) return true;
+  }
+  return false;
+}
+
+function buildVariants(){
+  const p=getParams();
+  const s=shuffle(ALL_PAIRS);
+  const t=s.length;
+  const tabs=p.tabs;
+  const pr=p.pairsPerRound;
+  const vs=Math.floor(t/tabs);
+  const va=[];
+  let st=0;
+  for(let i=0;i<tabs;i++){
+    const sz=(i===tabs-1)?(t-st):vs;
+    va.push(s.slice(st,st+sz));
+    st+=sz;
+  }
+  return va.map(v=>{
+    const rounds=[];
+    let remaining=[...v];
+    while(remaining.length>0){
+      const round=[];
+      const leftover=[];
+      for(let i=0;i<remaining.length;i++){
+        const cand=remaining[i];
+        if(round.length>=pr){ leftover.push(cand); continue; }
+        if(conflictsWithRound(cand, round)){ leftover.push(cand); } else { round.push(cand); }
+      }
+      if(round.length===0 && leftover.length>0){ round.push(leftover.shift()); }
+      rounds.push(round);
+      remaining=leftover;
+    }
+    return rounds;
+  });
+}
+
+let variants=[],currentVariant=0,pairsOnField=[],remainingPairs=[],pairsInBook=[];
+let selectedPhrase=null,selectedMeaning=null;
+let soundOn=true,paused=false,gameStarted=false,isAnimating=false;
+let deviceParams=getParams();
+let collectedPhrases=new Set();
+let isFlipping=false;
+
+let variantState=[
+  {round:0,stackRemaining:0,gameStarted:false,
+   leftPairs:[],rightPairs:[],pairsInBook:[],remainingPairs:[],
+   bookLeftPairs:0,bookRightPairs:0},
+  {round:0,stackRemaining:0,gameStarted:false,
+   leftPairs:[],rightPairs:[],pairsInBook:[],remainingPairs:[],
+   bookLeftPairs:0,bookRightPairs:0},
+  {round:0,stackRemaining:0,gameStarted:false,
+   leftPairs:[],rightPairs:[],pairsInBook:[],remainingPairs:[],
+   bookLeftPairs:0,bookRightPairs:0}
+];
+let currentRoundRef=0;
+let stackRemainingRef=0;
+let bookLeftPairsRef=0;
+let bookRightPairsRef=0;
+Object.defineProperty(window,'currentRound',{get(){return currentRoundRef;},set(v){currentRoundRef=v;}});
+Object.defineProperty(window,'stackRemaining',{get(){return stackRemainingRef;},set(v){stackRemainingRef=v;}});
+Object.defineProperty(window,'bookLeftPairs',{get(){return bookLeftPairsRef;},set(v){bookLeftPairsRef=v;}});
+Object.defineProperty(window,'bookRightPairs',{get(){return bookRightPairsRef;},set(v){bookRightPairsRef=v;}});
+
+let audioCtx=null;
+function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
+function playWoodClick(){if(!soundOn)return;try{const c=getAudioCtx(),n=c.currentTime;const nl=Math.floor(c.sampleRate*.012);const nb=c.createBuffer(1,nl,c.sampleRate);const nd=nb.getChannelData(0);for(let i=0;i<nl;i++){const t=i/nl;nd[i]=(Math.random()*2-1)*Math.pow(1-t,4);}const ns=c.createBufferSource();ns.buffer=nb;const bp=c.createBiquadFilter();bp.type='bandpass';bp.frequency.value=1500;bp.Q.value=1;const ng=c.createGain();ng.gain.value=.28;ns.connect(bp);bp.connect(ng);ng.connect(c.destination);ns.start(n);const o=c.createOscillator(),og=c.createGain();o.type='sine';o.frequency.setValueAtTime(340,n);o.frequency.exponentialRampToValueAtTime(180,n+.04);og.gain.setValueAtTime(.001,n);og.gain.exponentialRampToValueAtTime(.14,n+.003);og.gain.exponentialRampToValueAtTime(.001,n+.045);o.connect(og);og.connect(c.destination);o.start(n);o.stop(n+.05);}catch(e){}}
+function playDiceDrop(count){if(!soundOn)return;try{const c=getAudioCtx(),n=c.currentTime;for(let k=0;k<count;k++){const t=n+k*.14+Math.random()*.015;const f=900+Math.random()*600;const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(f*.55,t+.025);g.gain.setValueAtTime(.001,t);g.gain.exponentialRampToValueAtTime(.07,t+.002);g.gain.exponentialRampToValueAtTime(.001,t+.035);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+.04);}}catch(e){}}
+function playFanfare(){if(!soundOn)return;try{const c=getAudioCtx();[523.25,659.25,783.99,1046.5].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(.1,c.currentTime+i*.15);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+i*.15+.4);o.connect(g);g.connect(c.destination);o.start(c.currentTime+i*.15);o.stop(c.currentTime+i*.15+.4);});}catch(e){}}
+function playKeyTurn(){if(!soundOn)return;try{const c=getAudioCtx();[880,1108,1318].forEach((f,i)=>{const t=c.currentTime+i*.1;const o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(.001,t);g.gain.exponentialRampToValueAtTime(.14,t+.008);g.gain.exponentialRampToValueAtTime(.001,t+.18);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+.2);});}catch(e){}}
+function playChestOpen(){if(!soundOn)return;try{const c=getAudioCtx(),n=c.currentTime,d=3.2;const o=c.createOscillator();o.type='sawtooth';o.frequency.setValueAtTime(180,n);o.frequency.linearRampToValueAtTime(200,n+d*.5);o.frequency.linearRampToValueAtTime(170,n+d);const v=c.createOscillator();v.frequency.value=8;const vg=c.createGain();vg.gain.value=25;v.connect(vg);vg.connect(o.frequency);const g=c.createGain();g.gain.setValueAtTime(.001,n);g.gain.linearRampToValueAtTime(.08,n+.15);g.gain.setValueAtTime(.08,n+d*.7);g.gain.linearRampToValueAtTime(.001,n+d);const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=800;f.Q.value=1.5;o.connect(f);f.connect(g);g.connect(c.destination);o.start(n);o.stop(n+d);v.start(n);v.stop(n+d);}catch(e){}}
+function playChestClose(){if(!soundOn)return;try{const c=getAudioCtx(),n=c.currentTime,d=1.2;const o=c.createOscillator();o.type='sawtooth';o.frequency.setValueAtTime(150,n);o.frequency.linearRampToValueAtTime(170,n+d*.5);o.frequency.linearRampToValueAtTime(140,n+d);const v=c.createOscillator();v.frequency.value=9;const vg=c.createGain();vg.gain.value=22;v.connect(vg);vg.connect(o.frequency);const g=c.createGain();g.gain.setValueAtTime(.001,n);g.gain.linearRampToValueAtTime(.08,n+.15);g.gain.setValueAtTime(.08,n+d*.7);g.gain.linearRampToValueAtTime(.001,n+d);const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=700;f.Q.value=1.5;o.connect(f);f.connect(g);g.connect(c.destination);o.start(n);o.stop(n+d);v.start(n);v.stop(n+d);const tt=n+d+.05;const to=c.createOscillator(),tg=c.createGain();to.type='sine';to.frequency.setValueAtTime(90,tt);to.frequency.exponentialRampToValueAtTime(45,tt+.15);tg.gain.setValueAtTime(.001,tt);tg.gain.exponentialRampToValueAtTime(.35,tt+.005);tg.gain.exponentialRampToValueAtTime(.001,tt+.18);to.connect(tg);tg.connect(c.destination);to.start(tt);to.stop(tt+.2);}catch(e){}}
+
+const SHORT_WORDS=['в','на','с','к','по','за','из','от','до','у','о','об','во','со','ко','под','над','при','про','без','для','через','между','перед','и','а','но','да','или','либо','что','как','то','же','бы','ли'];
+const ONE_LETTER_WORDS=['в','к','с','у','о','и','а'];
+
+function addNbsp(t){
+  t=t.replace(/\(([^)]*)\)/g,'<i>($1)</i>');
+  t=t.replace(/\s+\//g,'&nbsp;/');
+  t=t.replace(/один-одинёшенек/g,'один\u0001одинёшенек');
+  t=t.replace(/(\S)-(\S)/g,'$1\u2011$2');
+  t=t.replace(/один\u0001одинёшенек/g,'один-одинёшенек');
+  if(DEVICE_TYPE === 'phone'){
+    ONE_LETTER_WORDS.forEach(w=>{
+      const re=new RegExp('(^|\\s)('+w+')\\s+','gi');
+      t=t.replace(re,'$1$2&nbsp;');
+    });
+    return t;
+  }
+  t=t.replace(/во что бы то ни стало/gi,'во&nbsp;что&nbsp;бы&nbsp;то<br>ни&nbsp;стало');
+  t=t.replace(/несмотря ни на что/gi,'несмотря<br>ни&nbsp;на&nbsp;что');
+  t=t.replace(/ни с того ни с сего/gi,'ни&nbsp;с&nbsp;того<br>ни&nbsp;с&nbsp;сего');
+  SHORT_WORDS.forEach(w=>{const re=new RegExp('(^|\\s)('+w+')\\s+','gi');t=t.replace(re,'$1$2&nbsp;');});
+  t=t.replace(/(^|\s)(ни|не)\s+/gi,'$1$2&nbsp;');
+  return t;
+}
+function splitMeaning(m){return m.split(';').map(s=>s.trim());}
+function renderMeaningHTMLStacked(m){const p=splitMeaning(m);const cl=['','second','third'];return p.map((part,i)=>{const cls=cl[i]||'third';const sep=i<p.length-1?';':'';return cls?`<span class="${cls}">${addNbsp(part)}${sep}</span>`:`<span>${addNbsp(part)}${sep}</span>`;}).join('<br>');}
+
+function fitTiles(){document.querySelectorAll('.tile').forEach(tile=>{tile.style.fontSize='';const cs=parseFloat(getComputedStyle(tile).fontSize);const mn=8;let s=cs,it=0;while((tile.scrollHeight>tile.clientHeight+1||tile.scrollWidth>tile.clientWidth+1)&&s>mn&&it<40){s-=.5;tile.style.fontSize=s+'px';it++;}});}
+function fitBook(){document.querySelectorAll('.pair-phrase, .pair-meaning').forEach(item=>{item.style.fontSize='';const cs=parseFloat(getComputedStyle(item).fontSize);const mn=6;let s=cs,it=0;while((item.scrollHeight>item.clientHeight+1||item.scrollWidth>item.clientWidth+1)&&s>mn&&it<40){s-=.3;item.style.fontSize=s+'px';it++;}});}
+
+const _measureCanvas=document.createElement('canvas');
+const _measureCtx=_measureCanvas.getContext('2d');
+function measureWordWidth(word,fontSizePx,fontFamily,fontWeight){
+  _measureCtx.font=fontWeight+' '+fontSizePx+'px '+fontFamily;
+  return _measureCtx.measureText(word).width;
+}
+function longestWordWidth(text,fontSizePx,fontFamily,fontWeight){
+  const words=text.split(/\s+/).filter(w=>w.length>0);
+  let max=0;
+  words.forEach(w=>{
+    const clean=w.replace(/&nbsp;/g,' ').replace(/[;,()]/g,'');
+    let parts=[clean];
+    if(clean==='один-одинёшенек'){
+      parts=clean.split('-');
+    }
+    parts.forEach(part=>{
+      const ww=measureWordWidth(part,fontSizePx,fontFamily,fontWeight);
+      if(ww>max)max=ww;
+    });
+  });
+  return max;
+}
+function applySmartBookLayout(){
+  if(DEVICE_TYPE !== 'phone') return;
+  document.querySelectorAll('.page .book-pair').forEach(pairEl=>{
+    const phraseEl=pairEl.querySelector('.pair-phrase');
+    const meaningEl=pairEl.querySelector('.pair-meaning');
+    const dashEl=pairEl.querySelector('.pair-dash');
+    if(!phraseEl||!meaningEl) return;
+    pairEl.style.fontSize='';
+    phraseEl.style.flex='';
+    const phraseText=phraseEl.textContent.replace('💡','').trim();
+    const meaningText=meaningEl.textContent.trim();
+    const phraseStyle=getComputedStyle(phraseEl);
+    const meaningStyle=getComputedStyle(meaningEl);
+    const phraseFont=parseFloat(phraseStyle.fontSize);
+    const meaningFont=parseFloat(meaningStyle.fontSize);
+    const phraseMax=longestWordWidth(phraseText,phraseFont,phraseStyle.fontFamily,phraseStyle.fontWeight);
+    const meaningMax=longestWordWidth(meaningText,meaningFont,meaningStyle.fontFamily,meaningStyle.fontWeight);
+    const dashW=dashEl?dashEl.offsetWidth:14;
+    const pairW=pairEl.clientWidth;
+    if(pairW<=0) return;
+    const phraseW=Math.ceil(phraseMax)+4;
+    let available=pairW-phraseW-dashW;
+    let scale=1;
+    if(meaningMax>available && meaningMax>0){
+      scale=Math.max(0.6,available/meaningMax);
+    }
+    if(scale<1){
+      pairEl.style.fontSize=(scale*100)+'%';
+      const phraseStyle2=getComputedStyle(phraseEl);
+      const phraseFont2=parseFloat(phraseStyle2.fontSize);
+      const phraseMax2=longestWordWidth(phraseText,phraseFont2,phraseStyle2.fontFamily,phraseStyle2.fontWeight);
+      phraseEl.style.flex='0 0 '+Math.ceil(phraseMax2+4)+'px';
+    } else {
+      phraseEl.style.flex='0 0 '+phraseW+'px';
+    }
+  });
+}
+
+const LAMP_PHRASE='будь здоров';
+const TOOLTIP_TEXT='Например, <span class="example">Дела идут будь здоров!</span><span class="warning">Не путать с пожеланием здоровья</span>';
+let tooltipEl=null;
+function showTooltip(a){if(tooltipEl){tooltipEl.remove();tooltipEl=null;}const r=a.getBoundingClientRect();tooltipEl=document.createElement('div');tooltipEl.className='tooltip';tooltipEl.innerHTML=TOOLTIP_TEXT;tooltipEl.style.left=Math.min(r.left,window.innerWidth-260)+'px';tooltipEl.style.top=(r.bottom+6)+'px';document.body.appendChild(tooltipEl);setTimeout(()=>{document.addEventListener('click',hideTooltipOnce,{once:true});},100);}
+function hideTooltipOnce(){if(tooltipEl){tooltipEl.remove();tooltipEl=null;}}
+
+function applyPortraitTabletLayout(){
+  const main=document.getElementById('mainArea'),lp=document.getElementById('leftPart'),rc=document.getElementById('rightColumn'),ch=document.getElementById('chest'),bs=document.getElementById('bookShelf');
+  const tp=!isLandscape();
+  if(tp){
+    let t=document.getElementById('topPart');
+    if(!t){t=document.createElement('div');t.id='topPart';t.className='top-part';main.insertBefore(t,lp);}
+    t.appendChild(ch);t.appendChild(bs);rc.style.display='none';
+  }else{
+    const t=document.getElementById('topPart');
+    if(t){rc.style.display='flex';rc.appendChild(ch);rc.appendChild(bs);t.remove();}
+  }
+}
+
+function renderBookPage(pageEl, pairs){
+  pageEl.innerHTML='';
+  pairs.forEach(item=>{
+    const pd=document.createElement('div');
+    pd.className='book-pair';
+    const ph=document.createElement('div');
+    ph.className='pair-phrase';
+    const phI=document.createElement('div');
+    phI.className='pair-content';
+    phI.innerHTML=addNbsp(item.phrase);
+    ph.appendChild(phI);
+    if(item.phrase===LAMP_PHRASE){
+      const l=document.createElement('span');
+      l.className='lamp-inline';l.textContent='💡';
+      l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};
+      ph.appendChild(l);
+    }
+    const dh=document.createElement('div');
+    dh.className='pair-dash';dh.textContent='—';
+    const mh=document.createElement('div');
+    mh.className='pair-meaning';
+    const mhI=document.createElement('div');
+    mhI.className='pair-content';
+    mhI.innerHTML=renderMeaningHTMLStacked(item.meaning);
+    mh.appendChild(mhI);
+    pd.appendChild(ph);pd.appendChild(dh);pd.appendChild(mh);
+    pageEl.appendChild(pd);
+  });
+}
+
+function renderBookFromState(){
+  const s=variantState[currentVariant];
+  renderBookPage(document.getElementById('pageLeft'), s.leftPairs);
+  renderBookPage(document.getElementById('pageRight'), s.rightPairs);
+  bookLeftPairsRef=s.leftPairs.length;
+  bookRightPairsRef=s.rightPairs.length;
+  if(DEVICE_TYPE === 'phone'){
+    requestAnimationFrame(()=>{
+      applySmartBookLayout();
+      setTimeout(applySmartBookLayout, 150);
+      setTimeout(applySmartBookLayout, 500);
+    });
+    if(document.fonts && document.fonts.ready){
+      document.fonts.ready.then(()=>applySmartBookLayout());
+    }
+  } else {
+    setTimeout(fitBook,30);
+  }
+}
+
+function syncGlobalToVariant(){
+  const s=variantState[currentVariant];
+  s.round=currentRoundRef;
+  s.stackRemaining=stackRemainingRef;
+  s.gameStarted=gameStarted;
+  s.remainingPairs=[...remainingPairs];
+  s.bookLeftPairs=bookLeftPairsRef;
+  s.bookRightPairs=bookRightPairsRef;
+}
+
+function loadVariantToGlobal(i){
+  const s=variantState[i];
+  currentRoundRef=s.round;
+  stackRemainingRef=s.stackRemaining;
+  gameStarted=s.gameStarted;
+  remainingPairs=[...s.remainingPairs];
+  bookLeftPairsRef=s.bookLeftPairs;
+  bookRightPairsRef=s.bookRightPairs;
+  renderBookFromState();
+}
+
+function checkRotateNotice(){
+  const el=document.getElementById('rotateNotice');
+  if(!el) return;
+  const isPhoneLandscape = (DEVICE_TYPE==='phone' && isLandscape());
+  el.classList.toggle('active', isPhoneLandscape);
+}
+
+function initGame(){
+  deviceParams=getParams();
+  variants=buildVariants();
+  currentVariant=0;
+  currentRoundRef=0;
+  stackRemainingRef=deviceParams.totalTiles;
+  remainingPairs=[];
+  bookLeftPairsRef=0;bookRightPairsRef=0;
+  pairsInBook=[];
+  collectedPhrases=new Set();
+  gameStarted=false;
+  paused=false;
+  selectedPhrase=null;selectedMeaning=null;
+  isAnimating=false;isFlipping=false;
+  variantState.forEach(s=>{
+    s.round=0;s.stackRemaining=deviceParams.totalTiles;s.gameStarted=false;
+    s.leftPairs=[];s.rightPairs=[];s.pairsInBook=[];s.remainingPairs=[];
+    s.bookLeftPairs=0;s.bookRightPairs=0;
+  });
+  document.getElementById('chestLid').classList.remove('open','closing');
+  document.getElementById('chestKey').classList.remove('turned');
+  const tr=document.getElementById('tabsRow');
+  if(deviceParams.tabs>1)tr.classList.remove('empty');else tr.classList.add('empty');
+  document.querySelectorAll('.tab').forEach((tab,i)=>{tab.style.display=i<deviceParams.tabs?'inline-block':'none';tab.classList.toggle('active',i===0);tab.onclick=()=>switchVariant(i);});
+  const f=document.getElementById('gameField');
+  f.style.gridTemplateColumns = `repeat(${deviceParams.cols}, minmax(0,1fr))`;
+  f.innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
+  renderBookPage(document.getElementById('pageLeft'), []);
+  renderBookPage(document.getElementById('pageRight'), []);
+  applyPortraitTabletLayout();
+  document.getElementById('pauseOverlay').classList.remove('active');
+  document.getElementById('dictOverlay').classList.remove('active');
+  document.getElementById('finalOverlay').classList.remove('active');
+  document.getElementById('mainArea').style.visibility='';
+  checkRotateNotice();
+}
+
+function switchVariant(i){
+  if(i===currentVariant && gameStarted) return;
+  if(isFlipping){
+    document.querySelectorAll('.flip-clone').forEach(el=>el.remove());
+    isFlipping=false;
+  }
+  isAnimating=false;
+  paused=false;
+  document.getElementById('pauseOverlay').classList.remove('active');
+  document.getElementById('dictOverlay').classList.remove('active');
+  document.getElementById('finalOverlay').classList.remove('active');
+  syncGlobalToVariant();
+  currentVariant=i;
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',j===i));
+  loadVariantToGlobal(i);
+  document.getElementById('mainArea').style.visibility='';
+  const f=document.getElementById('gameField');
+  f.style.gridTemplateColumns = `repeat(${deviceParams.cols}, minmax(0,1fr))`;
+  f.innerHTML='';
+  if(!gameStarted){
+    f.innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
+    document.getElementById('chestLid').classList.remove('open','closing');
+    document.getElementById('chestKey').classList.remove('turned');
+  }else{
+    renderField(true);
+    document.getElementById('chestLid').classList.add('open');
+    document.getElementById('chestKey').classList.add('turned');
+  }
+}
+
+function startGame(){gameStarted=true;syncGlobalToVariant();const b=document.getElementById('startBtn');if(b)b.remove();playKeyTurn();document.getElementById('chestKey').classList.add('turned');setTimeout(()=>{playChestOpen();document.getElementById('chestLid').classList.add('open');},700);setTimeout(()=>nextRound(),3200);}
+
+function nextRound(){const r=variants[currentVariant];if(currentRound>=r.length){showFinal();return;}pairsOnField=[...r[currentRound]];remainingPairs=[...pairsOnField];const t=pairsOnField.length*2;stackRemaining=Math.max(0,stackRemaining-t);renderField();currentRound++;syncGlobalToVariant();}
+
+function renderField(skipAnimation){
+  const f=document.getElementById('gameField');
+  f.innerHTML='';
+  const tiles=[];
+  remainingPairs.forEach(p=>{tiles.push({type:'phrase',text:p.p,pair:p});tiles.push({type:'meaning',text:p.m,pair:p});});
+  let arr=shuffle(tiles);
+  const cols=deviceParams.cols;
+  function areNeighbors(i,j){
+    const ri=Math.floor(i/cols),ci=i%cols;
+    const rj=Math.floor(j/cols),cj=j%cols;
+    const dr=Math.abs(ri-rj),dc=Math.abs(ci-cj);
+    return (dr===1&&dc===0)||(dr===0&&dc===1);
+  }
+  function samePair(a,b){return a.pair===b.pair&&a.type!==b.type;}
+  let guard=0;
+  while(guard<8000){
+    let bad=-1;
+    for(let i=0;i<arr.length&&bad<0;i++){
+      for(let j=i+1;j<arr.length;j++){
+        if(areNeighbors(i,j)&&samePair(arr[i],arr[j])){bad=i;break;}
+      }
+    }
+    if(bad<0)break;
+    let other=Math.floor(Math.random()*arr.length);
+    [arr[bad],arr[other]]=[arr[other],arr[bad]];
+    guard++;
+  }
+  arr.forEach(d=>{
+    const tile=document.createElement('div');
+    tile.className='tile '+d.type;
+    const inner=document.createElement('div');
+    inner.className='tile-content';
+    if(d.type==='phrase')inner.innerHTML=addNbsp(d.text);
+    else inner.innerHTML=renderMeaningHTMLStacked(d.text);
+    tile.appendChild(inner);
+    tile.dataset.type=d.type;
+    tile.dataset.phrase=d.pair.p;
+    tile.dataset.meaning=d.pair.m;
+    tile.onclick=()=>selectTile(tile);
+    f.appendChild(tile);
+  });
+  const totalTiles=arr.length;
+  const actualRows=Math.ceil(totalTiles/cols);
+  const maxRows=Math.ceil((deviceParams.pairsPerRound*2)/cols);
+  const gap=deviceParams.gap;
+  const fieldH=f.clientHeight-2*gap-(gap+6);
+  const rowHActual=(fieldH-gap*(actualRows-1))/actualRows;
+  const rowHFull=(fieldH-gap*(maxRows-1))/maxRows;
+  const rowH=Math.max(30, Math.min(rowHActual, rowHFull));
+  f.style.gridTemplateColumns=`repeat(${cols}, minmax(0,1fr))`;
+  f.style.gap=gap+'px';
+  f.style.gridTemplateRows=`repeat(${actualRows}, ${rowH}px)`;
+  f.style.alignContent='start';
+  fitTiles();
+
+  if(skipAnimation)return;
+
+  const chestEl=document.getElementById('chest');
+  const br=chestEl.getBoundingClientRect();
+  const openX=br.left+br.width/2;
+  const openY=br.top+br.height*0.3;
+  const spreadW=br.width*0.25;
+
+  const all=f.querySelectorAll('.tile');
+  all.forEach(tile=>{
+    const r=tile.getBoundingClientRect();
+    const jitterX=(Math.random()-0.5)*spreadW;
+    const jitterY=(Math.random()-0.5)*spreadW*0.4;
+    const dx=(openX+jitterX)-(r.left+r.width/2);
+    const dy=(openY+jitterY)-(r.top+r.height/2);
+    tile.style.transform=`translate(${dx}px, ${dy}px) scale(0.15)`;
+    tile.style.opacity='0';
+    tile.style.transition='none';
+    tile.style.zIndex='500';
+    tile.style.position='relative';
+  });
+  playDiceDrop(all.length);
+
+  const total=all.length;
+  const stagger=Math.max(90, Math.min(220, 2400/Math.max(1,total)));
+  const dur=1.35;
+  setTimeout(()=>{
+    all.forEach((tile,i)=>{
+      setTimeout(()=>{
+        tile.style.transition=`transform ${dur}s cubic-bezier(0.18,0.72,0.35,1), opacity 0.3s ease-out`;
+        tile.style.transform='translate(0,0) scale(1)';
+        tile.style.opacity='1';
+      }, i*stagger);
+    });
+    const totalTime=total*stagger+dur*1000+250;
+    setTimeout(()=>{
+      all.forEach(tile=>{tile.style.transition='';tile.style.transform='';tile.style.opacity='';tile.style.zIndex='';tile.style.position='';});
+      fitTiles();
+    }, totalTime);
+  }, 150);
+}
+
+function selectTile(tile){if(paused||!gameStarted||isAnimating||isFlipping)return;if(tile.classList.contains('hidden'))return;playWoodClick();document.querySelectorAll('.tile').forEach(t=>t.classList.remove('selected'));tile.classList.add('selected');if(tile.dataset.type==='phrase')selectedPhrase=tile;else selectedMeaning=tile;if(selectedPhrase&&selectedMeaning)checkPair();}
+
+function checkPair(){if(isAnimating)return;isAnimating=true;const p=selectedPhrase,m=selectedMeaning;if(p.dataset.phrase===m.dataset.phrase){p.classList.add('correct');m.classList.add('correct');p.classList.remove('selected');m.classList.remove('selected');selectedPhrase=null;selectedMeaning=null;animateToBook(p,m);}else{p.classList.add('wrong');m.classList.add('wrong');setTimeout(()=>{p.classList.remove('wrong','selected');m.classList.remove('wrong','selected');selectedPhrase=null;selectedMeaning=null;isAnimating=false;},500);}}
+
+function animateToBook(p,m){const br=document.querySelector('.book').getBoundingClientRect();const pr=p.getBoundingClientRect();const mr=m.getBoundingClientRect();const pc=p.cloneNode(true);const mc=m.cloneNode(true);[pc,mc].forEach((cl,i)=>{const r=i===0?pr:mr;cl.style.position='fixed';cl.style.left=r.left+'px';cl.style.top=r.top+'px';cl.style.width=r.width+'px';cl.style.height=r.height+'px';cl.style.zIndex='9999';cl.style.transition='all .5s ease-in';cl.style.pointerEvents='none';document.body.appendChild(cl);});p.style.visibility='hidden';m.style.visibility='hidden';const matchedPhrase=p.dataset.phrase;requestAnimationFrame(()=>{const tx=br.left+br.width/2,ty=br.top+br.height/2;pc.style.left=(tx-40)+'px';pc.style.top=(ty-15)+'px';pc.style.width='60px';pc.style.height='30px';pc.style.opacity='0';mc.style.left=(tx+5)+'px';mc.style.top=(ty-15)+'px';mc.style.width='60px';mc.style.height='30px';mc.style.opacity='0';});setTimeout(()=>{pc.remove();mc.remove();p.classList.add('hidden');m.classList.add('hidden');addPairToBook(p.dataset.phrase,p.dataset.meaning);collectedPhrases.add(p.dataset.phrase);remainingPairs=remainingPairs.filter(x=>x.p!==matchedPhrase);isAnimating=false;syncGlobalToVariant();const rem=document.querySelectorAll('.tile:not(.hidden)').length;if(rem===0){setTimeout(()=>nextRound(),800);}},500);}
+
+function addPairToBook(phrase,meaning){
+  const s=variantState[currentVariant];
+  const pp=deviceParams.bookPairsPerPage;
+  const item={phrase,meaning};
+  if(s.leftPairs.length<pp){
+    s.leftPairs.push(item);
+  }else if(s.rightPairs.length<pp){
+    s.rightPairs.push(item);
+  }
+  pairsInBook.push(item);
+  bookLeftPairsRef=s.leftPairs.length;
+  bookRightPairsRef=s.rightPairs.length;
+  renderBookFromState();
+  if(s.leftPairs.length>=pp && s.rightPairs.length>=pp){
+    isFlipping=true;
+    setTimeout(()=>{ flipBookPage(); },700);
+  }
+}
+
+function flipBookPage(){
+  const s=variantState[currentVariant];
+  const sp=document.getElementById('bookSpread');
+  const rp=document.getElementById('pageRight');
+  sp.querySelectorAll('.flip-clone').forEach(el=>el.remove());
+  const rr=rp.getBoundingClientRect(),sr=sp.getBoundingClientRect();
+  const cl=document.createElement('div');
+  cl.className='flip-clone';
+  cl.style.position='absolute';
+  cl.style.left=(rr.left-sr.left)+'px';
+  cl.style.top='0';
+  cl.style.width=rr.width+'px';
+  cl.style.height='100%';
+  const fr=document.createElement('div');
+  fr.className='flip-clone-front';
+  fr.innerHTML=rp.innerHTML;
+  cl.appendChild(fr);
+  const bk=document.createElement('div');
+  bk.className='flip-clone-back';
+  cl.appendChild(bk);
+  rp.innerHTML='';
+  sp.appendChild(cl);
+  setTimeout(()=>{
+    s.leftPairs=[];
+    s.rightPairs=[];
+    bookLeftPairsRef=0;
+    bookRightPairsRef=0;
+    renderBookFromState();
+    isFlipping=false;
+    syncGlobalToVariant();
+    setTimeout(()=>{
+      sp.querySelectorAll('.flip-clone').forEach(el=>el.remove());
+    },150);
+  },1250);
+}
+
+function showFinal(){
+  playChestClose();
+  const lid=document.getElementById('chestLid');
+  const key=document.getElementById('chestKey');
+  lid.classList.remove('open');
+  lid.classList.add('closing');
+  key.classList.remove('turned');
+  document.getElementById('mainArea').style.visibility='hidden';
+  document.getElementById('finalOverlay').classList.add('active');
+  playFanfare();
+  setTimeout(()=>{lid.classList.remove('closing');},1400);
+  variantState[currentVariant].gameStarted=false;
+  variantState[currentVariant].round=0;
+  variantState[currentVariant].leftPairs=[];
+  variantState[currentVariant].rightPairs=[];
+  variantState[currentVariant].pairsInBook=[];
+  variantState[currentVariant].remainingPairs=[];
+  variantState[currentVariant].bookLeftPairs=0;
+  variantState[currentVariant].bookRightPairs=0;
+  bookLeftPairsRef=0;
+  bookRightPairsRef=0;
+  renderBookFromState();
+}
+
+let dictPages=[],dictCurrentPage=0;
+function sortKey(phrase){return phrase.replace(/^\s*\([^)]*\)\s*/,'').trim();}
+function buildDictPages(){
+  const sorted=[...ALL_PAIRS].sort((a,b)=>sortKey(a.p).localeCompare(sortKey(b.p),'ru'));
+  const entries=[];
+  let lastLetter='';
+  sorted.forEach(p=>{
+    const k=sortKey(p.p);
+    const l=k[0].toUpperCase();
+    if(l!==lastLetter){entries.push({type:'letter',letter:l});lastLetter=l;}
+    entries.push({type:'pair',pair:p});
+  });
+  const pages=[];let cp=[],cnt=0;
+  entries.forEach(e=>{cp.push(e);cnt++;if(cnt>=22){pages.push(cp);cp=[];cnt=0;}});
+  if(cp.length>0)pages.push(cp);
+  for(let i=0;i<pages.length-1;i++){
+    const page=pages[i];
+    for(let j=page.length-1;j>=0;j--){
+      if(page[j].type==='letter'){
+        const hasPairAfter=page.slice(j+1).some(e=>e.type==='pair');
+        if(!hasPairAfter){
+          const letterEntry=page.splice(j,1)[0];
+          pages[i+1].unshift(letterEntry);
+        }
+        break;
+      }
+    }
+  }
+  dictPages=pages;
+}
+function capitalizeFirst(s){if(!s)return s;return s.charAt(0).toUpperCase()+s.slice(1);}
+function renderDictPage(){
+  const lc=document.getElementById('dictPageLeftContent'),rc=document.getElementById('dictPageRightContent');
+  lc.innerHTML='';rc.innerHTML='';
+  const page=dictPages[dictCurrentPage];if(!page)return;
+  const half=Math.ceil(page.length/2);
+  const le=page.slice(0,half),re=page.slice(half);
+  [le,re].forEach((entries,side)=>{
+    const ct=side===0?lc:rc;
+    ct.classList.add('distribute');
+    entries.forEach(entry=>{
+      if(entry.type==='letter'){
+        const d=document.createElement('div');
+        d.className='dict-section-title';
+        d.textContent=entry.letter;
+        ct.appendChild(d);
+      }else{
+        const pair=entry.pair;
+        const collected=collectedPhrases.has(pair.p);
+        const d=document.createElement('div');
+        d.className='dict-entry'+(collected?'':' empty');
+        const lk=document.createElement('span');
+        lk.className='lock';
+        lk.textContent=collected?'':'🔒';
+        const ph=document.createElement('span');
+        ph.className='entry-phrase';
+        ph.innerHTML=addNbsp(capitalizeFirst(pair.p));
+        if(collected&&pair.p===LAMP_PHRASE){
+          const l=document.createElement('span');
+          l.className='lamp-inline';l.textContent='💡';
+          l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};
+          ph.appendChild(l);
+        }
+        const dh=document.createElement('span');
+        dh.className='entry-dash';dh.textContent=collected?'—':'';
+        const mn=document.createElement('span');
+        mn.className='entry-meaning';
+        mn.innerHTML=collected?splitMeaning(pair.m).map((part,i)=>{
+          const cls=['','second','third'][i]||'third';
+          const sep=i<splitMeaning(pair.m).length-1?';':'';
+          return `<span class="${cls}">${addNbsp(part)}${sep}</span>`;
+        }).join(' '):'';
+        d.appendChild(lk);d.appendChild(ph);d.appendChild(dh);d.appendChild(mn);
+        ct.appendChild(d);
+      }
+    });
+  });
+  document.getElementById('dictArrowBack').classList.toggle('disabled',dictCurrentPage===0);
+  document.getElementById('dictArrowForward').classList.toggle('disabled',dictCurrentPage>=dictPages.length-1);
+}
+function openDict(){buildDictPages();dictCurrentPage=0;renderDictPage();document.getElementById('dictOverlay').classList.add('active');}
+function closeDict(){document.getElementById('dictOverlay').classList.remove('active');}
+function dictPrevPage(){if(dictCurrentPage>0){dictCurrentPage--;renderDictPage();}}
+function dictNextPage(){if(dictCurrentPage<dictPages.length-1){dictCurrentPage++;renderDictPage();}}
+
+function toggleSound(){soundOn=!soundOn;const b1=document.getElementById('soundBtn');const t=soundOn?'Звук 🔊':'Звук 🔇';if(b1){b1.textContent=t;b1.classList.toggle('muted',!soundOn);}}
+function togglePause(){paused=!paused;const o=document.getElementById('pauseOverlay');if(paused)o.classList.add('active');else o.classList.remove('active');}
+function restartGame(){document.getElementById('finalOverlay').classList.remove('active');document.getElementById('mainArea').style.visibility='';document.getElementById('rotateWrap').style.display='flex';initGame();}
+
+let orientationTimer = null;
+function onOrientationChanged(){
+  if (isFlipping) {
+    clearTimeout(orientationTimer);
+    orientationTimer = setTimeout(onOrientationChanged, 300);
+    return;
+  }
+  document.querySelectorAll('.flip-clone').forEach(el=>el.remove());
+  syncGlobalToVariant();
+  deviceParams = getParams();
+  applyPortraitTabletLayout();
+  const f = document.getElementById('gameField');
+  f.style.gridTemplateColumns = `repeat(${deviceParams.cols}, minmax(0,1fr))`;
+  if (gameStarted && remainingPairs.length > 0) {
+    renderField(true);
+    document.getElementById('chestLid').classList.add('open');
+    document.getElementById('chestKey').classList.add('turned');
+  } else if (!gameStarted) {
+    f.innerHTML = '<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
+  }
+  renderBookFromState();
+  checkRotateNotice();
+}
+
+const mqlPortrait = window.matchMedia('(orientation: portrait)');
+function scheduleOrientationCheck(){
+  clearTimeout(orientationTimer);
+  orientationTimer = setTimeout(onOrientationChanged, 250);
+}
+if (mqlPortrait.addEventListener) mqlPortrait.addEventListener('change', scheduleOrientationCheck);
+else if (mqlPortrait.addListener) mqlPortrait.addListener(scheduleOrientationCheck);
+
+initGame();
+</script>
+</body>
+</html>
