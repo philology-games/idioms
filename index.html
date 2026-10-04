@@ -173,6 +173,12 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .top-part .book-open{height:88%}
 .main .left-part{flex:1;width:100%}
 .header{padding:4px 0 2px}
+  .final-book{width:min(260px,68vw);height:calc(min(260px,68vw)*1.5)}
+.final-book::before{left:calc(-1*min(260px,68vw)*0.13);width:calc(min(260px,68vw)*0.14);top:-5px;bottom:-5px}
+.final-book::after{left:calc(-1*min(260px,68vw)*0.095);top:22px;bottom:22px}
+.final-book-title{font-size:clamp(.9rem,2.6vh,1.4rem);padding:clamp(12px,2.4vh,24px) clamp(10px,3vw,24px)}
+.final-btn{font-size:clamp(.85rem,2vh,1rem);padding:clamp(8px,1.4vh,12px) clamp(18px,4vw,30px)}
+.dict-container{width:88%;height:auto;max-height:calc(100vh - 140px)}
 .header h1{font-size:1.05rem;letter-spacing:1px;margin-bottom:2px}
 .instruction{font-size:.68rem;gap:4px}
 .label-phrase,.label-meaning{font-size:.62rem;padding:1px 5px}
