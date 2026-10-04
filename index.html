@@ -164,6 +164,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .top-part{flex:0 0 25%;display:flex;flex-direction:row;gap:6px;min-height:0;min-width:0}
 .top-part .chest{flex:1;min-width:0;height:100%;margin-top:0;padding:12px 2px 4px 2px}
 .top-part .chest-inner{width:88%}
+.top-part .chest-body{overflow:visible}
 .top-part .book-shelf{flex:1;min-width:0;padding:0 2px}
 .top-part .book-open{height:88%}
 .main .left-part{flex:1;width:100%}
@@ -733,12 +734,19 @@ function playChestOpen(){if(!soundOn)return;try{const c=getAudioCtx(),n=c.curren
 function playChestClose(){if(!soundOn)return;try{const c=getAudioCtx(),n=c.currentTime,d=1.2;const o=c.createOscillator();o.type='sawtooth';o.frequency.setValueAtTime(150,n);o.frequency.linearRampToValueAtTime(170,n+d*.5);o.frequency.linearRampToValueAtTime(140,n+d);const v=c.createOscillator();v.frequency.value=9;const vg=c.createGain();vg.gain.value=22;v.connect(vg);vg.connect(o.frequency);const g=c.createGain();g.gain.setValueAtTime(.001,n);g.gain.linearRampToValueAtTime(.08,n+.15);g.gain.setValueAtTime(.08,n+d*.7);g.gain.linearRampToValueAtTime(.001,n+d);const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=700;f.Q.value=1.5;o.connect(f);f.connect(g);g.connect(c.destination);o.start(n);o.stop(n+d);v.start(n);v.stop(n+d);const tt=n+d+.05;const to=c.createOscillator(),tg=c.createGain();to.type='sine';to.frequency.setValueAtTime(90,tt);to.frequency.exponentialRampToValueAtTime(45,tt+.15);tg.gain.setValueAtTime(.001,tt);tg.gain.exponentialRampToValueAtTime(.35,tt+.005);tg.gain.exponentialRampToValueAtTime(.001,tt+.18);to.connect(tg);tg.connect(c.destination);to.start(tt);to.stop(tt+.2);}catch(e){}}
 
 const SHORT_WORDS=['в','на','с','к','по','за','из','от','до','у','о','об','во','со','ко','под','над','при','про','без','для','через','между','перед','и','а','но','да','или','либо','что','как','то','же','бы','ли'];
+const ONE_LETTER_WORDS=['в','к','с','у','о','и','а'];
 
 function addNbsp(t){
   t=t.replace(/\(([^)]*)\)/g,'<i>($1)</i>');
   t=t.replace(/(\S)-(\S)/g,'$1\u2011$2');
   t=t.replace(/один\u2011одинёшенек/g,'один-одинёшенек');
-  if(DEVICE_TYPE === 'phone') return t;
+  if(DEVICE_TYPE === 'phone'){
+    ONE_LETTER_WORDS.forEach(w=>{
+      const re=new RegExp('(^|\\s)('+w+')\\s+','gi');
+      t=t.replace(re,'$1$2&nbsp;');
+    });
+    return t;
+  }
   t=t.replace(/во что бы то ни стало/gi,'во&nbsp;что&nbsp;бы&nbsp;то<br>ни&nbsp;стало');
   t=t.replace(/несмотря ни на что/gi,'несмотря<br>ни&nbsp;на&nbsp;что');
   t=t.replace(/ни с того ни с сего/gi,'ни&nbsp;с&nbsp;того<br>ни&nbsp;с&nbsp;сего');
@@ -890,10 +898,6 @@ function switchVariant(i){
     f.innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
     document.getElementById('chestLid').classList.remove('open','closing');
     document.getElementById('chestKey').classList.remove('turned');
-  }else if(remainingPairs.length===0){
-    renderField(true);
-    document.getElementById('chestLid').classList.add('open');
-    document.getElementById('chestKey').classList.add('turned');
   }else{
     renderField(true);
     document.getElementById('chestLid').classList.add('open');
