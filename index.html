@@ -179,6 +179,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .tab{font-size:.7rem;padding:2px 9px}
 .book-pair{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:4px;padding:2px 0}
 .book-pair .pair-phrase{flex:0 0 auto;width:100%;padding:1px;text-align:center}
+.book-pair .pair-content{text-align:left}
 .book-pair .pair-dash{display:none}
 .book-pair .pair-meaning{flex:0 0 auto;width:100%;padding:1px;text-align:center}
 .book-pair .pair-phrase,.book-pair .pair-meaning{font-size:.57rem}
@@ -762,8 +763,6 @@ function addNbsp(t){
       t=t.replace(re,'$1$2&nbsp;');
     });
     return t;
-  }
-  ...
   }
   t=t.replace(/во что бы то ни стало/gi,'во&nbsp;что&nbsp;бы&nbsp;то<br>ни&nbsp;стало');
   t=t.replace(/несмотря ни на что/gi,'несмотря<br>ни&nbsp;на&nbsp;что');
