@@ -745,6 +745,7 @@ const ONE_LETTER_WORDS=['в','к','с','у','о','и','а'];
 
 function addNbsp(t){
   t=t.replace(/\(([^)]*)\)/g,'<i>($1)</i>');
+  t=t.replace(/\s+\//g,'&nbsp;/');
   t=t.replace(/(\S)-(\S)/g,'$1\u2011$2');
   t=t.replace(/один\u2011одинёшенек/g,'один-одинёшенек');
   if(DEVICE_TYPE === 'phone'){
@@ -767,24 +768,62 @@ function renderMeaningHTMLStacked(m){const p=splitMeaning(m);const cl=['','secon
 function fitTiles(){document.querySelectorAll('.tile').forEach(tile=>{tile.style.fontSize='';const cs=parseFloat(getComputedStyle(tile).fontSize);const mn=8;let s=cs,it=0;while((tile.scrollHeight>tile.clientHeight+1||tile.scrollWidth>tile.clientWidth+1)&&s>mn&&it<40){s-=.5;tile.style.fontSize=s+'px';it++;}});}
 function fitBook(){document.querySelectorAll('.pair-phrase, .pair-meaning').forEach(item=>{item.style.fontSize='';const cs=parseFloat(getComputedStyle(item).fontSize);const mn=6;let s=cs,it=0;while((item.scrollHeight>item.clientHeight+1||item.scrollWidth>item.clientWidth+1)&&s>mn&&it<40){s-=.3;item.style.fontSize=s+'px';it++;}});}
 
+const _measureCanvas=document.createElement('canvas');
+const _measureCtx=_measureCanvas.getContext('2d');
+function measureWordWidth(word,fontSizePx,fontFamily,fontWeight){
+  _measureCtx.font=fontWeight+' '+fontSizePx+'px '+fontFamily;
+  return _measureCtx.measureText(word).width;
+}
+function longestWordWidth(text,fontSizePx,fontFamily,fontWeight){
+  const words=text.split(/\s+/).filter(w=>w.length>0);
+  let max=0;
+  words.forEach(w=>{
+    const clean=w.replace(/&nbsp;/g,' ').replace(/[;,.\-()]/g,'');
+    const ww=measureWordWidth(clean||w,fontSizePx,fontFamily,fontWeight);
+    if(ww>max)max=ww;
+  });
+  return max;
+}
+function applySmartBookLayout(){
+  if(DEVICE_TYPE !== 'phone') return;
+  document.querySelectorAll('.page .book-pair').forEach(pairEl=>{
+    const phraseEl=pairEl.querySelector('.pair-phrase');
+    const meaningEl=pairEl.querySelector('.pair-meaning');
+    const dashEl=pairEl.querySelector('.pair-dash');
+    if(!phraseEl||!meaningEl) return;
+    const phraseText=phraseEl.textContent.replace('💡','').trim();
+    const meaningText=meaningEl.textContent.trim();
+    const phraseStyle=getComputedStyle(phraseEl);
+    const meaningStyle=getComputedStyle(meaningEl);
+    const phraseFont=parseFloat(phraseStyle.fontSize);
+    const meaningFont=parseFloat(meaningStyle.fontSize);
+    const phraseMax=longestWordWidth(phraseText,phraseFont,phraseStyle.fontFamily,phraseStyle.fontWeight);
+    const meaningMax=longestWordWidth(meaningText,meaningFont,meaningStyle.fontFamily,meaningStyle.fontWeight);
+    const dashW=dashEl?dashEl.offsetWidth:14;
+    const pairW=pairEl.clientWidth;
+    const phraseW=Math.ceil(phraseMax)+4;
+    let available=pairW-phraseW-dashW;
+    let scale=1;
+    if(meaningMax>available && meaningMax>0){
+      scale=Math.max(0.6,available/meaningMax);
+    }
+    if(scale<1){
+      pairEl.style.fontSize=(scale*100)+'%';
+      const phraseStyle2=getComputedStyle(phraseEl);
+      const phraseFont2=parseFloat(phraseStyle2.fontSize);
+      const phraseMax2=longestWordWidth(phraseText,phraseFont2,phraseStyle2.fontFamily,phraseStyle2.fontWeight);
+      phraseEl.style.flex='0 0 '+Math.ceil(phraseMax2+4)+'px';
+    } else {
+      phraseEl.style.flex='0 0 '+phraseW+'px';
+    }
+  });
+}
+
 const LAMP_PHRASE='будь здоров';
 const TOOLTIP_TEXT='Например, <span class="example">Дела идут будь здоров!</span><span class="warning">Не путать с пожеланием здоровья</span>';
 let tooltipEl=null;
 function showTooltip(a){if(tooltipEl){tooltipEl.remove();tooltipEl=null;}const r=a.getBoundingClientRect();tooltipEl=document.createElement('div');tooltipEl.className='tooltip';tooltipEl.innerHTML=TOOLTIP_TEXT;tooltipEl.style.left=Math.min(r.left,window.innerWidth-260)+'px';tooltipEl.style.top=(r.bottom+6)+'px';document.body.appendChild(tooltipEl);setTimeout(()=>{document.addEventListener('click',hideTooltipOnce,{once:true});},100);}
 function hideTooltipOnce(){if(tooltipEl){tooltipEl.remove();tooltipEl=null;}}
-
-function applyAdaptiveFontSize(pairEl, phrase, meaning){
-  const words = phrase.split(/\s+/).concat(meaning.split(/\s+/));
-  let maxLen = 0;
-  words.forEach(w=>{ const clean = w.replace(/[;,.\-()]/g,''); if(clean.length > maxLen) maxLen = clean.length; });
-  let scale = 1;
-  if(maxLen >= 16) scale = 0.65;
-  else if(maxLen >= 13) scale = 0.75;
-  else if(maxLen >= 10) scale = 0.85;
-  if(scale < 1){
-    pairEl.style.fontSize = (scale * 100) + '%';
-  }
-}
 
 function applyPortraitTabletLayout(){
   const main=document.getElementById('mainArea'),lp=document.getElementById('leftPart'),rc=document.getElementById('rightColumn'),ch=document.getElementById('chest'),bs=document.getElementById('bookShelf');
@@ -825,7 +864,6 @@ function renderBookPage(pageEl, pairs){
     mhI.innerHTML=renderMeaningHTMLStacked(item.meaning);
     mh.appendChild(mhI);
     pd.appendChild(ph);pd.appendChild(dh);pd.appendChild(mh);
-    applyAdaptiveFontSize(pd, item.phrase, item.meaning);
     pageEl.appendChild(pd);
   });
 }
@@ -836,7 +874,11 @@ function renderBookFromState(){
   renderBookPage(document.getElementById('pageRight'), s.rightPairs);
   bookLeftPairsRef=s.leftPairs.length;
   bookRightPairsRef=s.rightPairs.length;
-  setTimeout(fitBook,30);
+  if(DEVICE_TYPE === 'phone'){
+    requestAnimationFrame(()=>{ applySmartBookLayout(); });
+  } else {
+    setTimeout(fitBook,30);
+  }
 }
 
 function syncGlobalToVariant(){
