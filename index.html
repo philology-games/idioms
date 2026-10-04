@@ -179,7 +179,6 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .tab{font-size:.7rem;padding:2px 9px}
 .book-pair{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:4px;padding:2px 0}
 .book-pair .pair-phrase{flex:0 0 auto;width:100%;padding:1px;text-align:center}
-.book-pair .pair-phrase::after{content:'\00A0—'}
 .book-pair .pair-dash{display:none}
 .book-pair .pair-meaning{flex:0 0 auto;width:100%;padding:1px;text-align:center}
 .book-pair .pair-phrase,.book-pair .pair-meaning{font-size:.55rem}
@@ -848,7 +847,7 @@ function renderBookPage(pageEl, pairs){
     ph.className='pair-phrase';
     const phI=document.createElement('div');
     phI.className='pair-content';
-    phI.innerHTML=addNbsp(item.phrase);
+    phI.innerHTML=addNbsp(item.phrase)+(DEVICE_TYPE==='phone'?'\u00A0—':'');
     ph.appendChild(phI);
     if(item.phrase===LAMP_PHRASE){
       const l=document.createElement('span');
