@@ -647,8 +647,8 @@ function getGroupKey(phrase){
 }
 
 const DEVICE_TYPE = (function(){
-  const longSide = Math.max(window.innerWidth, window.innerHeight);
-  if (longSide >= 900) return 'tablet';
+  const shortSide = Math.min(window.innerWidth, window.innerHeight);
+  if (shortSide >= 600) return 'tablet';
   return 'phone';
 })();
 
