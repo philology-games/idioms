@@ -177,10 +177,14 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .label-phrase,.label-meaning{font-size:.62rem;padding:1px 5px}
 .tabs-row{padding:2px 10px 3px 10px;gap:4px}
 .tab{font-size:.7rem;padding:2px 9px}
-.page{padding:10px 6px;gap:4px;grid-template-rows:repeat(2,minmax(0,1fr))}
-.book-pair .pair-phrase,.book-pair .pair-meaning{font-size:.5rem}
-.book-pair .pair-dash{font-size:.5rem}
-.flip-clone-front{padding:10px 6px;gap:4px;grid-template-rows:repeat(2,minmax(0,1fr))}
+.book-pair{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:4px;padding:2px 0}
+.book-pair .pair-phrase{flex:0 0 auto;width:100%;padding:1px;text-align:center}
+.book-pair .pair-phrase::after{content:'\00A0—'}
+.book-pair .pair-dash{display:none}
+.book-pair .pair-meaning{flex:0 0 auto;width:100%;padding:1px;text-align:center}
+.book-pair .pair-phrase,.book-pair .pair-meaning{font-size:.55rem}
+.page{padding:10px 6px;gap:4px;grid-template-rows:1fr}
+.flip-clone-front{padding:10px 6px;gap:4px;grid-template-rows:1fr}
 .footer{padding:3px 10px}
 .btn{font-size:.62rem;padding:3px 8px}
 .watermark{font-size:.55rem}
@@ -654,7 +658,7 @@ function isLandscape(){ return window.innerWidth >= window.innerHeight; }
 function getParams(){
   const land = isLandscape();
   if(DEVICE_TYPE === 'phone'){
-    return { pairsPerRound:9, tabs:3, cols:3, rows:6, gap:2, bookPairsPerPage:2, totalTiles:190 };
+    return { pairsPerRound:9, tabs:3, cols:3, rows:6, gap:2, bookPairsPerPage:1, totalTiles:190 };
   }
   return { pairsPerRound:15, tabs:3, cols:land?6:5, rows:land?5:6, gap:5, bookPairsPerPage:land?3:4, totalTiles:190 };
 }
@@ -796,11 +800,11 @@ function applySmartBookLayout(){
   document.querySelectorAll('.page .book-pair').forEach(pairEl=>{
     const phraseEl=pairEl.querySelector('.pair-phrase');
     const meaningEl=pairEl.querySelector('.pair-meaning');
-    const dashEl=pairEl.querySelector('.pair-dash');
     if(!phraseEl||!meaningEl) return;
     pairEl.style.fontSize='';
-    phraseEl.style.flex='';
-    const phraseText=phraseEl.textContent.replace('💡','').trim();
+    const pageW=pairEl.clientWidth;
+    if(pageW<=0) return;
+    const phraseText=phraseEl.textContent.replace('💡','').replace(/\u00A0—/g,'').replace('—','').trim();
     const meaningText=meaningEl.textContent.trim();
     const phraseStyle=getComputedStyle(phraseEl);
     const meaningStyle=getComputedStyle(meaningEl);
@@ -808,23 +812,10 @@ function applySmartBookLayout(){
     const meaningFont=parseFloat(meaningStyle.fontSize);
     const phraseMax=longestWordWidth(phraseText,phraseFont,phraseStyle.fontFamily,phraseStyle.fontWeight);
     const meaningMax=longestWordWidth(meaningText,meaningFont,meaningStyle.fontFamily,meaningStyle.fontWeight);
-    const dashW=dashEl?dashEl.offsetWidth:14;
-    const pairW=pairEl.clientWidth;
-    if(pairW<=0) return;
-    const phraseW=Math.ceil(phraseMax)+4;
-    let available=pairW-phraseW-dashW;
-    let scale=1;
-    if(meaningMax>available && meaningMax>0){
-      scale=Math.max(0.6,available/meaningMax);
-    }
-    if(scale<1){
+    const maxWordWidth=Math.max(phraseMax,meaningMax);
+    if(maxWordWidth>pageW){
+      const scale=Math.max(0.6,pageW/maxWordWidth);
       pairEl.style.fontSize=(scale*100)+'%';
-      const phraseStyle2=getComputedStyle(phraseEl);
-      const phraseFont2=parseFloat(phraseStyle2.fontSize);
-      const phraseMax2=longestWordWidth(phraseText,phraseFont2,phraseStyle2.fontFamily,phraseStyle2.fontWeight);
-      phraseEl.style.flex='0 0 '+Math.ceil(phraseMax2+4)+'px';
-    } else {
-      phraseEl.style.flex='0 0 '+phraseW+'px';
     }
   });
 }
