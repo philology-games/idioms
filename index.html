@@ -753,11 +753,17 @@ function addNbsp(t){
   t=t.replace(/(\S)-(\S)/g,'$1\u2011$2');
   t=t.replace(/один\u0001одинёшенек/g,'один-одинёшенек');
   if(DEVICE_TYPE === 'phone'){
+    t=t.replace(/во что бы то ни стало/gi,'во&nbsp;что&nbsp;бы&nbsp;то<br>ни&nbsp;стало');
+    t=t.replace(/несмотря ни на что/gi,'несмотря<br>ни&nbsp;на&nbsp;что');
+    t=t.replace(/как бы то ни было/gi,'как&nbsp;бы&nbsp;то<br>ни&nbsp;было');
+    t=t.replace(/ни с того ни с сего/gi,'ни&nbsp;с&nbsp;того<br>ни&nbsp;с&nbsp;сего');
     ONE_LETTER_WORDS.forEach(w=>{
       const re=new RegExp('(^|\\s)('+w+')\\s+','gi');
       t=t.replace(re,'$1$2&nbsp;');
     });
     return t;
+  }
+  ...
   }
   t=t.replace(/во что бы то ни стало/gi,'во&nbsp;что&nbsp;бы&nbsp;то<br>ни&nbsp;стало');
   t=t.replace(/несмотря ни на что/gi,'несмотря<br>ни&nbsp;на&nbsp;что');
