@@ -148,6 +148,9 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-page-content.distribute{justify-content:space-between}
 .dict-page-content.distribute .dict-entry{flex:0 0 auto}
 .dict-measure-host{position:absolute;left:-9999px;top:0;visibility:hidden;pointer-events:none;z-index:-1}
+.dict-page::before,.dict-page::after,
+.dict-page-content::before,.dict-page-content::after,
+.dict-arrows::before,.dict-arrows::after{display:none!important;background:none!important;content:none!important;border:none!important}
 
 @media (orientation:portrait) and (min-width:600px) and (max-width:1100px){
 .main{flex-direction:column;padding:0 12px 5px 12px;gap:6px}
@@ -158,8 +161,8 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .main .left-part{flex:1;width:100%}
 .book-pair{margin-bottom:7px}
 .dict-container{width:96%;height:92%}
-.dict-entry .entry-phrase{font-size:1rem}
-.dict-entry .entry-meaning{font-size:1rem}
+.dict-entry .entry-phrase{font-size:.85rem}
+.dict-entry .entry-meaning{font-size:.85rem}
 }
 @media (orientation:portrait) and (max-width:600px){
 .main{flex-direction:column;padding:0 8px 4px 8px;gap:5px}
@@ -244,6 +247,12 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-entry .entry-phrase{font-size:.85rem}
 .dict-entry .entry-meaning{font-size:.85rem}
 .dict-entry .lock{font-size:.75rem;width:16px}
+}
+@media (min-width:1401px){
+.book-pair .pair-phrase,.book-pair .pair-dash,.book-pair .pair-meaning{font-size:.85rem}
+.page{gap:16px}
+.chest{transform:translateY(-1cm)}
+.book-open{height:calc(82% + 1cm)}
 }
 </style>
 </head>
@@ -561,7 +570,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
   { p: "по белу свету", m: "повсюду" },
   { p: "поднять на ноги", m: "разбудить; взбудоражить" },
   { p: "подступить к горлу", m: "неожиданно взволновать" },
-  { p: "(говорить, лезть) под руку", m: "мешать" },
+  { p: "говорить/лезть под руку", m: "мешать" },
   { p: "по душе", m: "о том, что нравится" },
   { p: "подумать только", m: "выражение удивления, недоумения" },
   { p: "пойти в ход", m: "использоваться" },
@@ -743,6 +752,8 @@ let letterHeight = 0;
 let dictMeasured = false;
 let dictMeasurePending = false;
 
+const NARROW_MEANING_PHRASES = ['с пылу с жару','как миленький'];
+
 let variantState=[
   {round:0,stackRemaining:0,gameStarted:false,
    leftPairs:[],rightPairs:[],pairsInBook:[],remainingPairs:[],
@@ -778,6 +789,7 @@ const ONE_LETTER_WORDS=['в','к','с','у','о','и','а'];
 function addNbsp(t){
   t=t.replace(/\(([^)]*)\)/g,'<i>($1)</i>');
   t=t.replace(/\s+\//g,'&nbsp;/');
+  t=t.replace(/без свидетелей/gi,'без<br>свидетелей');
   t=t.replace(/один-одинёшенек/g,'один\u0001одинёшенек');
   t=t.replace(/(\S)-(\S)/g,'$1\u2011$2');
   t=t.replace(/один\u0001одинёшенек/g,'один-одинёшенек');
@@ -795,6 +807,7 @@ function addNbsp(t){
   }
   t=t.replace(/во что бы то ни стало/gi,'во&nbsp;что&nbsp;бы&nbsp;то<br>ни&nbsp;стало');
   t=t.replace(/несмотря ни на что/gi,'несмотря<br>ни&nbsp;на&nbsp;что');
+  t=t.replace(/как бы то ни было/gi,'как&nbsp;бы&nbsp;то<br>ни&nbsp;было');
   t=t.replace(/ни с того ни с сего/gi,'ни&nbsp;с&nbsp;того<br>ни&nbsp;с&nbsp;сего');
   SHORT_WORDS.forEach(w=>{const re=new RegExp('(^|\\s)('+w+')\\s+','gi');t=t.replace(re,'$1$2&nbsp;');});
   t=t.replace(/(^|\s)(ни|не)\s+/gi,'$1$2&nbsp;');
@@ -1221,7 +1234,6 @@ function makeDictEntryNode(pair, collected){
       let phraseHtml = capitalizeFirst(addNbsp(capitalizeFirst(pair.p))).replace(/<br>/g,' ');
       phraseHtml = phraseHtml.replace(/с&nbsp;первого&nbsp;взгляда\s*\/\s*на&nbsp;первый&nbsp;взгляд/gi,'с&nbsp;первого&nbsp;взгляда&nbsp;/<br>на&nbsp;первый&nbsp;взгляд');
       phraseHtml = phraseHtml.replace(/белый&nbsp;свет\s*\/\s*на&nbsp;белом&nbsp;свете/gi,'белый&nbsp;свет&nbsp;/<br>на&nbsp;белом&nbsp;свете');
-      phraseHtml = phraseHtml.replace(/\(говорить, лезть\)\s*под&nbsp;руку/gi,'<i>(говорить, лезть)</i><br>под&nbsp;руку');
       ph.innerHTML=phraseHtml+'\u00A0—';
       if(pair.p===LAMP_PHRASE){
         const l=document.createElement('span');
@@ -1234,6 +1246,9 @@ function makeDictEntryNode(pair, collected){
       bottom.className='dict-entry-bottom';
       const mn=document.createElement('span');
       mn.className='entry-meaning';
+      if(NARROW_MEANING_PHRASES.indexOf(pair.p)>=0){
+        mn.style.fontSize='0.85em';
+      }
       mn.innerHTML=splitMeaning(pair.m).map((part,i)=>{
         const cls=['','second','third'][i]||'third';
         const sep=i<splitMeaning(pair.m).length-1?';':'';
@@ -1249,7 +1264,7 @@ function makeDictEntryNode(pair, collected){
   lk.textContent=collected?'':'🔒';
   const ph=document.createElement('span');
   ph.className='entry-phrase';
-  ph.innerHTML=addNbsp(capitalizeFirst(pair.p));
+  ph.innerHTML=capitalizeFirst(addNbsp(capitalizeFirst(pair.p)));
   if(collected&&pair.p===LAMP_PHRASE){
     const l=document.createElement('span');
     l.className='lamp-inline';l.textContent='💡';
@@ -1260,6 +1275,9 @@ function makeDictEntryNode(pair, collected){
   dh.className='entry-dash';dh.textContent=collected?'—':'';
   const mn=document.createElement('span');
   mn.className='entry-meaning';
+  if(NARROW_MEANING_PHRASES.indexOf(pair.p)>=0){
+    mn.style.fontSize='0.85em';
+  }
   mn.innerHTML=collected?splitMeaning(pair.m).map((part,i)=>{
     const cls=['','second','third'][i]||'third';
     const sep=i<splitMeaning(pair.m).length-1?';':'';
@@ -1391,7 +1409,8 @@ function renderDictPage(){
   const isLastPage = (dictCurrentPage === dictPages.length - 1);
   [le,re].forEach((entries,side)=>{
     const ct=side===0?lc:rc;
-    ct.classList.toggle('distribute', !isLastPage);
+    const shouldDistribute = (side===0) ? true : !isLastPage;
+    ct.classList.toggle('distribute', shouldDistribute);
     entries.forEach(entry=>{
       if(entry.type==='letter'){
         const d=document.createElement('div');
