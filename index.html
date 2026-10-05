@@ -194,7 +194,6 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-overlay{align-items:flex-start;padding-top:120px;padding-bottom:50px}
 .dict-container{width:88%;height:100%;max-height:none;flex:1;min-height:0}
 .dict-page{padding:10px 14px 40px 12px;overflow-y:hidden}
-.dict-page .arrow{display:none}
 .dict-section-title{font-size:1.4rem;margin:4px 0 6px}
 .dict-entry{display:flex;flex-direction:column;align-items:flex-start;gap:0;padding:4px 0;min-height:auto}
 .dict-entry.empty{padding:4px 0}
@@ -1219,9 +1218,11 @@ function makeDictEntryNode(pair, collected){
       top.className='dict-entry-top';
       const ph=document.createElement('span');
       ph.className='entry-phrase';
-      let phraseHtml = addNbsp(capitalizeFirst(pair.p)).replace(/<br>/g,' ');
-phraseHtml = phraseHtml.replace(/\(говорить, лезть\)\s*под&nbsp;руку/gi,'<i>(говорить, лезть)</i><br>под&nbsp;руку');
-ph.innerHTML = phraseHtml+'\u00A0—';
+      let phraseHtml = capitalizeFirst(addNbsp(capitalizeFirst(pair.p))).replace(/<br>/g,' ');
+      phraseHtml = phraseHtml.replace(/с&nbsp;первого&nbsp;взгляда\s*\/\s*на&nbsp;первый&nbsp;взгляд/gi,'с&nbsp;первого&nbsp;взгляда&nbsp;/<br>на&nbsp;первый&nbsp;взгляд');
+      phraseHtml = phraseHtml.replace(/белый&nbsp;свет\s*\/\s*на&nbsp;белом&nbsp;свете/gi,'белый&nbsp;свет&nbsp;/<br>на&nbsp;белом&nbsp;свете');
+      phraseHtml = phraseHtml.replace(/\(говорить, лезть\)\s*под&nbsp;руку/gi,'<i>(говорить, лезть)</i><br>под&nbsp;руку');
+      ph.innerHTML=phraseHtml+'\u00A0—';
       if(pair.p===LAMP_PHRASE){
         const l=document.createElement('span');
         l.className='lamp-inline';l.textContent='💡';
@@ -1234,10 +1235,10 @@ ph.innerHTML = phraseHtml+'\u00A0—';
       const mn=document.createElement('span');
       mn.className='entry-meaning';
       mn.innerHTML=splitMeaning(pair.m).map((part,i)=>{
-  const cls=['','second','third'][i]||'third';
-  const sep=i<splitMeaning(pair.m).length-1?';':'';
-  return `<span class="${cls}">${addNbsp(part).replace(/<br>/g,' ')}${sep}</span>`;
-}).join('<br>');
+        const cls=['','second','third'][i]||'third';
+        const sep=i<splitMeaning(pair.m).length-1?';':'';
+        return `<span class="${cls}">${addNbsp(part).replace(/<br>/g,' ')}${sep}</span>`;
+      }).join('<br>');
       bottom.appendChild(mn);
       d.appendChild(top);d.appendChild(bottom);
     }
@@ -1355,14 +1356,29 @@ function buildDictPages(){
     else if(collectedPhrases.has(e.pair.p)) h = pairHeightsCache.get(e.pair.p) || 60;
     else h = lockHeight || 30;
     if(used + h > pageLimit && cp.length>0){
-      pages.push(cp);
-      cp=[];
-      used=0;
+      if(cp[cp.length-1].type==='letter'){
+        const letterEntry=cp.pop();
+        pages.push(cp);
+        cp=[letterEntry];
+        used=letterHeight || 40;
+      }else{
+        pages.push(cp);
+        cp=[];
+        used=0;
+      }
     }
     cp.push(e);
     used += h;
   });
-  if(cp.length>0)pages.push(cp);
+  if(cp.length>0){
+    if(cp[cp.length-1].type==='letter' && pages.length>0){
+      const letterEntry=cp.pop();
+      if(cp.length>0)pages.push(cp);
+      pages.push([letterEntry]);
+    }else{
+      pages.push(cp);
+    }
+  }
   dictPages=pages;
 }
 function capitalizeFirst(s){if(!s)return s;return s.charAt(0).toUpperCase()+s.slice(1);}
@@ -1372,10 +1388,10 @@ function renderDictPage(){
   const page=dictPages[dictCurrentPage];if(!page)return;
   const half=Math.ceil(page.length/2);
   const le=page.slice(0,half),re=page.slice(half);
+  const isLastPage = (dictCurrentPage === dictPages.length - 1);
   [le,re].forEach((entries,side)=>{
     const ct=side===0?lc:rc;
-    const isLastPage = (dictCurrentPage === dictPages.length - 1);
-ct.classList.toggle('distribute', !isLastPage);
+    ct.classList.toggle('distribute', !isLastPage);
     entries.forEach(entry=>{
       if(entry.type==='letter'){
         const d=document.createElement('div');
