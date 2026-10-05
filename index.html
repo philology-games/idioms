@@ -1219,7 +1219,9 @@ function makeDictEntryNode(pair, collected){
       top.className='dict-entry-top';
       const ph=document.createElement('span');
       ph.className='entry-phrase';
-      ph.innerHTML=addNbsp(capitalizeFirst(pair.p))+'\u00A0—';
+      let phraseHtml = addNbsp(capitalizeFirst(pair.p)).replace(/<br>/g,' ');
+phraseHtml = phraseHtml.replace(/\(говорить, лезть\)\s*под&nbsp;руку/gi,'<i>(говорить, лезть)</i><br>под&nbsp;руку');
+ph.innerHTML = phraseHtml+'\u00A0—';
       if(pair.p===LAMP_PHRASE){
         const l=document.createElement('span');
         l.className='lamp-inline';l.textContent='💡';
@@ -1232,10 +1234,10 @@ function makeDictEntryNode(pair, collected){
       const mn=document.createElement('span');
       mn.className='entry-meaning';
       mn.innerHTML=splitMeaning(pair.m).map((part,i)=>{
-        const cls=['','second','third'][i]||'third';
-        const sep=i<splitMeaning(pair.m).length-1?';':'';
-        return `<span class="${cls}">${addNbsp(part)}${sep}</span>`;
-      }).join('<br>');
+  const cls=['','second','third'][i]||'third';
+  const sep=i<splitMeaning(pair.m).length-1?';':'';
+  return `<span class="${cls}">${addNbsp(part).replace(/<br>/g,' ')}${sep}</span>`;
+}).join('<br>');
       bottom.appendChild(mn);
       d.appendChild(top);d.appendChild(bottom);
     }
@@ -1372,7 +1374,8 @@ function renderDictPage(){
   const le=page.slice(0,half),re=page.slice(half);
   [le,re].forEach((entries,side)=>{
     const ct=side===0?lc:rc;
-    ct.classList.add('distribute');
+    const isLastPage = (dictCurrentPage === dictPages.length - 1);
+ct.classList.toggle('distribute', !isLastPage);
     entries.forEach(entry=>{
       if(entry.type==='letter'){
         const d=document.createElement('div');
