@@ -1229,11 +1229,11 @@ function addPairToBook(phrase,meaning){
   const pp=deviceParams.bookPairsPerPage;
   const item={phrase,meaning};
   if(s.leftPairs.length>=pp && s.rightPairs.length>=pp){
-  s.leftPairs=[];
-  s.rightPairs=[];
-  bookLeftPairsRef=0;
-  bookRightPairsRef=0;
-}
+    s.leftPairs=[];
+    s.rightPairs=[];
+    bookLeftPairsRef=0;
+    bookRightPairsRef=0;
+  }
   if(s.leftPairs.length<pp){
     s.leftPairs.push(item);
   }else if(s.rightPairs.length<pp){
@@ -1482,7 +1482,6 @@ function buildDictPages(){
     let cp=[],cnt=0;
     entries.forEach(e=>{cp.push(e);cnt++;if(cnt>=18){pages.push(cp);cp=[];cnt=0;}});
     if(cp.length>0)pages.push(cp);
-    // Не оставляем букву в конце страницы — переносим вместе со следующей записью
     for(let i=0;i<pages.length-1;i++){
       const page=pages[i];
       if(page.length>0 && page[page.length-1].type==='letter'){
@@ -1533,7 +1532,7 @@ function renderDictPage(){
   lc.innerHTML='';rc.innerHTML='';
   const page=dictPages[dictCurrentPage];if(!page)return;
   let half=Math.ceil(page.length/2);
-if(half>0 && half<page.length && page[half-1] && page[half-1].type==='letter'){ half++; }
+  if(half>0 && half<page.length && page[half-1] && page[half-1].type==='letter'){ half++; }
   const le=page.slice(0,half),re=page.slice(half);
   const isLastPage = (dictCurrentPage === dictPages.length - 1);
   [le,re].forEach((entries,side)=>{
@@ -1599,15 +1598,15 @@ function onOrientationChanged(){
   syncGlobalToVariant();
   deviceParams = getParams();
   {
-  const newPP = deviceParams.bookPairsPerPage;
-  const s = variantState[currentVariant];
-  if(s.leftPairs.length >= newPP && s.rightPairs.length >= newPP){
-    s.leftPairs = [];
-    s.rightPairs = [];
-    bookLeftPairsRef = 0;
-    bookRightPairsRef = 0;
+    const newPP = deviceParams.bookPairsPerPage;
+    const s = variantState[currentVariant];
+    if(s.leftPairs.length >= newPP && s.rightPairs.length >= newPP){
+      s.leftPairs = [];
+      s.rightPairs = [];
+      bookLeftPairsRef = 0;
+      bookRightPairsRef = 0;
+    }
   }
-}
   applyPortraitTabletLayout();
   const f = document.getElementById('gameField');
   f.style.gridTemplateColumns = `repeat(${deviceParams.cols}, minmax(0,1fr))`;
