@@ -1532,7 +1532,8 @@ function renderDictPage(){
   const lc=document.getElementById('dictPageLeftContent'),rc=document.getElementById('dictPageRightContent');
   lc.innerHTML='';rc.innerHTML='';
   const page=dictPages[dictCurrentPage];if(!page)return;
-  const half=Math.ceil(page.length/2);
+  let half=Math.ceil(page.length/2);
+if(half>0 && half<page.length && page[half-1] && page[half-1].type==='letter'){ half++; }
   const le=page.slice(0,half),re=page.slice(half);
   const isLastPage = (dictCurrentPage === dictPages.length - 1);
   [le,re].forEach((entries,side)=>{
