@@ -152,7 +152,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-page-content::before,.dict-page-content::after,
 .dict-arrows::before,.dict-arrows::after{display:none!important;background:none!important;content:none!important;border:none!important}
 
-.congrats-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(26,42,74,.7);display:none;align-items:center;justify-content:center;z-index:1700;pointer-events:auto}
+.congrats-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(26,42,74,.95);display:none;align-items:center;justify-content:center;z-index:1700;pointer-events:auto}
 .congrats-overlay.active{display:flex}
 .congrats-content{text-align:center;padding:30px 40px;max-width:520px;pointer-events:auto}
 .congrats-title{font-family:'Playfair Display',Georgia,serif;font-weight:900;font-size:clamp(1.4rem,3.5vh,2.4rem);color:#e6b800;text-shadow:0 2px 8px rgba(0,0,0,.5);line-height:1.3;letter-spacing:1px;margin-bottom:28px}
@@ -260,11 +260,14 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-entry .lock{font-size:.75rem;width:16px}
 }
 @media (min-width:1401px){
+.page{display:flex;flex-direction:column;justify-content:space-between;gap:20px;padding:24px 12px;grid-template-rows:none}
+.flip-clone-front{display:flex;flex-direction:column;justify-content:space-between;gap:20px;padding:24px 12px;grid-template-rows:none}
+.chest{flex:0 0 45%}
+.book-shelf{flex:0 0 55%}
+.book-open{height:calc(82% + 2cm)}
 .book-pair .pair-phrase,.book-pair .pair-dash,.book-pair .pair-meaning{font-size:1rem}
-.page{gap:24px}
-.chest{transform:translateY(-1cm)}
-.book-open{height:calc(82% + 1cm)}
-.book-pair .pair-dash{flex:0 0 10px}
+.book-pair .pair-phrase{flex:0 0 42%}
+.book-pair .pair-dash{flex:0 0 8px}
 .final-book{width:min(360px,52vh);height:min(480px,68vh)}
 .final-book::before{left:calc(-1*min(360px,52vh)*0.13);width:calc(min(360px,52vh)*0.14)}
 .final-book::after{left:calc(-1*min(360px,52vh)*0.095)}
@@ -820,6 +823,9 @@ function addNbsp(t){
   t=t.replace(/как миленький/gi,'как<br>миленький');
   t=t.replace(/что поделаешь/gi,'что<br>поделаешь');
   t=t.replace(/между прочим/gi,'между<br>прочим');
+  t=t.replace(/о только что приготовленном/gi,'о&nbsp;только&nbsp;что<br>приготовленном');
+  t=t.replace(/о недавно появившемся/gi,'о&nbsp;недавно<br>появившемся');
+  t=t.replace(/\(на ком-то\/чём-то\)/gi,'<span style="white-space:nowrap">(на&nbsp;ком-то/чём-то)</span>');
   t=t.replace(/один-одинёшенек/g,'один\u0001одинёшенек');
   t=t.replace(/(\S)-(\S)/g,'$1\u2011$2');
   t=t.replace(/один\u0001одинёшенек/g,'один-одинёшенек');
@@ -1057,21 +1063,17 @@ function switchVariant(i){
   const f=document.getElementById('gameField');
   f.style.gridTemplateColumns = `repeat(${deviceParams.cols}, minmax(0,1fr))`;
   f.innerHTML='';
-  // Защита Б: различаем состояния
   const hasRounds = (currentRoundRef > 0);
   const hasPairs = (remainingPairs.length > 0);
   if(!gameStarted && !hasRounds){
-    // Игра не начиналась
     f.innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
     document.getElementById('chestLid').classList.remove('open','closing');
     document.getElementById('chestKey').classList.remove('turned');
   }else if(gameStarted && !hasPairs && hasRounds){
-    // Раунд завершён — загружаем следующий
     document.getElementById('chestLid').classList.add('open');
     document.getElementById('chestKey').classList.add('turned');
     nextRound();
   }else{
-    // Раунд в процессе
     renderField(true);
     document.getElementById('chestLid').classList.add('open');
     document.getElementById('chestKey').classList.add('turned');
@@ -1356,7 +1358,7 @@ function makeDictEntryNode(pair, collected){
       let phraseHtml = capitalizeFirst(addNbsp(capitalizeFirst(pair.p))).replace(/<br>/g,' ');
       phraseHtml = phraseHtml.replace(/с&nbsp;первого&nbsp;взгляда\s*\/\s*на&nbsp;первый&nbsp;взгляд/gi,'с&nbsp;первого&nbsp;взгляда&nbsp;/<br>на&nbsp;первый&nbsp;взгляд');
       phraseHtml = phraseHtml.replace(/белый&nbsp;свет\s*\/\s*на&nbsp;белом&nbsp;свете/gi,'белый&nbsp;свет&nbsp;/<br>на&nbsp;белом&nbsp;свете');
-      phraseHtml = phraseHtml.replace(/поставить&nbsp;крест\s*\(на&nbsp;ком-то\/чём-то\)/gi,'поставить&nbsp;крест<br><i>(на&nbsp;ком-то/чём-то)</i>');
+      phraseHtml = phraseHtml.replace(/поставить&nbsp;крест\s*\(на&nbsp;ком-то\/чём-то\)/gi,'поставить&nbsp;крест<br><span style="white-space:nowrap"><i>(на&nbsp;ком-то/чём-то)</i></span>');
       ph.innerHTML=phraseHtml+'\u00A0—';
       if(pair.p===LAMP_PHRASE){
         const l=document.createElement('span');
@@ -1388,7 +1390,7 @@ function makeDictEntryNode(pair, collected){
   const ph=document.createElement('span');
   ph.className='entry-phrase';
   let phraseHtml = capitalizeFirst(addNbsp(capitalizeFirst(pair.p)));
-  phraseHtml = phraseHtml.replace(/поставить&nbsp;крест\s*\(на&nbsp;ком-то\/чём-то\)/gi,'поставить&nbsp;крест<br><i>(на&nbsp;ком-то/чём-то)</i>');
+  phraseHtml = phraseHtml.replace(/поставить&nbsp;крест\s*\(на&nbsp;ком-то\/чём-то\)/gi,'поставить&nbsp;крест<br><span style="white-space:nowrap"><i>(на&nbsp;ком-то/чём-то)</i></span>');
   ph.innerHTML=phraseHtml;
   if(collected&&pair.p===LAMP_PHRASE){
     const l=document.createElement('span');
@@ -1469,28 +1471,23 @@ function buildDictPages(){
     if(l!==lastLetter){entries.push({type:'letter',letter:l});lastLetter=l;}
     entries.push({type:'pair',pair:p});
   });
+  const pages=[];
   if(DEVICE_TYPE !== 'phone'){
-    const pages=[];let cp=[],cnt=0;
+    let cp=[],cnt=0;
     entries.forEach(e=>{cp.push(e);cnt++;if(cnt>=18){pages.push(cp);cp=[];cnt=0;}});
     if(cp.length>0)pages.push(cp);
+    // Не оставляем букву в конце страницы — переносим вместе со следующей записью
     for(let i=0;i<pages.length-1;i++){
       const page=pages[i];
-      for(let j=page.length-1;j>=0;j--){
-        if(page[j].type==='letter'){
-          const hasPairAfter=page.slice(j+1).some(e=>e.type==='pair');
-          if(!hasPairAfter){
-            const letterEntry=page.splice(j,1)[0];
-            pages[i+1].unshift(letterEntry);
-          }
-          break;
-        }
+      if(page.length>0 && page[page.length-1].type==='letter'){
+        const letterEntry=page.pop();
+        pages[i+1].unshift(letterEntry);
       }
     }
     dictPages=pages;
     return;
   }
   const pageLimit = 400;
-  const pages=[];
   let cp=[];
   let used=0;
   entries.forEach(e=>{
