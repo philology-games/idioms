@@ -1228,6 +1228,12 @@ function addPairToBook(phrase,meaning){
   const s=variantState[currentVariant];
   const pp=deviceParams.bookPairsPerPage;
   const item={phrase,meaning};
+  if(s.leftPairs.length>=pp && s.rightPairs.length>=pp){
+  s.leftPairs=[];
+  s.rightPairs=[];
+  bookLeftPairsRef=0;
+  bookRightPairsRef=0;
+}
   if(s.leftPairs.length<pp){
     s.leftPairs.push(item);
   }else if(s.rightPairs.length<pp){
@@ -1591,6 +1597,16 @@ function onOrientationChanged(){
   document.querySelectorAll('.flip-clone').forEach(el=>el.remove());
   syncGlobalToVariant();
   deviceParams = getParams();
+  {
+  const newPP = deviceParams.bookPairsPerPage;
+  const s = variantState[currentVariant];
+  if(s.leftPairs.length >= newPP && s.rightPairs.length >= newPP){
+    s.leftPairs = [];
+    s.rightPairs = [];
+    bookLeftPairsRef = 0;
+    bookRightPairsRef = 0;
+  }
+}
   applyPortraitTabletLayout();
   const f = document.getElementById('gameField');
   f.style.gridTemplateColumns = `repeat(${deviceParams.cols}, minmax(0,1fr))`;
