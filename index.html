@@ -28,7 +28,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .game-field{flex:1;border:3px solid #b8860b;border-radius:8px;padding:5px;padding-bottom:11px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;min-height:0;min-width:0;position:relative;background:rgba(0,0,0,.05);overflow:visible;grid-auto-rows:minmax(0,1fr)}
 .game-field .start-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Playfair Display',Georgia,serif;font-size:1rem;padding:8px 24px;background:#2a4a6a;color:#e0d4b8;border:2px solid #b8860b;border-radius:6px;cursor:pointer;z-index:10}
 .game-field .start-btn:hover{background:#3a5a7a}
-.tile{--edge1:#7a90ac;--edge2:#6a80a0;width:100%;height:100%;min-width:0;min-height:0;border-radius:5px 8px 8px 5px;cursor:pointer;text-align:center;font-family:'EB Garamond',Georgia,serif;font-size:1.05rem;font-weight:700;line-height:1.1;user-select:none;display:flex;align-items:center;justify-content:center;padding:2px 7px 4px 4px;overflow:hidden;position:relative;transition:box-shadow .15s,transform .15s;box-shadow:inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(0,0,0,.12),0 2px 0 var(--edge1),0 4px 0 var(--edge2),0 6px 6px rgba(0,0,0,.3);border:1px solid rgba(0,0,0,.15);border-bottom:none}
+.tile{--edge1:#7a90ac;--edge2:#6a80a0;width:100%;height:100%;min-width:0;min-height:0;border-radius:5px 8px 8px 5px;cursor:pointer;text-align:center;font-family:'EB Garamond',Georgia,serif;font-size:1.02rem;font-weight:700;line-height:1.1;user-select:none;display:flex;align-items:center;justify-content:center;padding:2px 7px 4px 4px;overflow:hidden;position:relative;transition:box-shadow .15s,transform .15s;box-shadow:inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(0,0,0,.12),0 2px 0 var(--edge1),0 4px 0 var(--edge2),0 6px 6px rgba(0,0,0,.3);border:1px solid rgba(0,0,0,.15);border-bottom:none}
 .tile-content{display:block;width:100%;text-align:center;line-height:1.1;overflow-wrap:normal;word-break:keep-all;hyphens:none;-webkit-hyphens:none}
 .tile-content .second{color:#2a4a7a}
 .tile-content .third{color:#3a6a9a}
@@ -39,9 +39,9 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .tile.correct{background:linear-gradient(180deg,#c8e6c9,#a8d5a8) !important;border:2px solid #4caf50 !important;color:#1a2a4a !important;--edge1:#6a9a6a;--edge2:#4a7a4a}
 .tile.wrong{background:linear-gradient(180deg,#ffcdd2,#ef9a9a) !important;border:2px solid #c62828 !important;color:#1a2a4a !important;--edge1:#a04040;--edge2:#802020}
 .tile.hidden{visibility:hidden;pointer-events:none}
-@media (min-width:1100px){.tile{font-size:1.5rem}}
-@media (min-width:750px) and (max-width:1099px){.tile{font-size:1.2rem}}
-@media (max-width:749px){.tile{font-size:1.05rem}}
+@media (min-width:1100px){.tile{font-size:1.47rem}}
+@media (min-width:750px) and (max-width:1099px){.tile{font-size:1.17rem}}
+@media (max-width:749px){.tile{font-size:1.02rem}}
 .right-column{flex:0 0 37%;display:flex;flex-direction:column;gap:8px;min-height:0;min-width:0}
 .chest{flex:0 0 55%;display:flex;justify-content:center;align-items:stretch;padding:30px 4px 10px 4px;min-height:0}
 .chest-inner{position:relative;width:92%;height:100%;perspective:600px;perspective-origin:50% 100%;overflow:visible}
@@ -136,7 +136,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-arrows .arrow:hover{color:#e74c3c}
 .dict-arrows .arrow.disabled{color:#b8a89a;cursor:default;text-shadow:none}
 .dict-entry{display:flex;align-items:center;gap:6px;padding:4px 0;min-height:2rem;flex:0 0 auto}
-.dict-entry .lock{font-size:.85rem;flex-shrink:0;width:20px;text-align:center}
+.dict-entry .lock{font-size:.85rem;flex-shrink:0;width:20px;text-align:center;display:flex;align-items:center;justify-content:center}
 .dict-entry .entry-phrase{font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:1.05rem;color:#5a2a2a;flex:0 0 40%;line-height:1.15}
 .dict-entry .entry-phrase i{font-style:italic;font-weight:400;opacity:.85}
 .dict-entry .entry-phrase .lamp-inline{font-size:.95rem;margin-left:3px;cursor:pointer}
@@ -154,8 +154,9 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 
 .congrats-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(26,42,74,.95);display:none;align-items:center;justify-content:center;z-index:1700;pointer-events:auto}
 .congrats-overlay.active{display:flex}
-.congrats-content{text-align:center;padding:30px 40px;max-width:520px;pointer-events:auto}
-.congrats-title{font-family:'Playfair Display',Georgia,serif;font-weight:900;font-size:clamp(1.4rem,3.5vh,2.4rem);color:#e6b800;text-shadow:0 2px 8px rgba(0,0,0,.5);line-height:1.3;letter-spacing:1px;margin-bottom:28px}
+.congrats-content{text-align:center;padding:30px 40px;max-width:620px;pointer-events:auto}
+.congrats-title{font-family:'Playfair Display',Georgia,serif;font-weight:900;font-size:clamp(2.5rem,7vh,4.5rem);color:#e6b800;text-shadow:0 2px 8px rgba(0,0,0,.5);line-height:1.1;letter-spacing:1px;margin-bottom:28px}
+.congrats-sub{display:block;font-size:0.42em;font-weight:400;color:#f5deb3;margin-top:0.6em;letter-spacing:0.5px;line-height:1.3}
 .congrats-btn{font-family:'Playfair Display',Georgia,serif;font-size:clamp(.95rem,2vh,1.15rem);padding:clamp(12px,1.8vh,16px) clamp(28px,5vw,44px);background:#4caf50;color:#fff;border:2px solid #2e7d32;border-radius:8px;cursor:pointer;box-shadow:0 4px 0 #2e7d32,0 8px 16px rgba(0,0,0,.4);transition:background .15s}
 .congrats-btn:hover{background:#66bb6a}
 .congrats-btn:active{transform:translateY(2px)}
@@ -197,7 +198,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .book-pair .pair-content{text-align:left}
 .book-pair .pair-dash{display:none}
 .book-pair .pair-meaning{flex:0 0 auto;width:100%;padding:1px;text-align:center}
-.book-pair .pair-phrase,.book-pair .pair-meaning{font-size:.57rem}
+.book-pair .pair-phrase,.book-pair .pair-meaning{font-size:.65rem}
 .page{padding:10px 6px;gap:4px;grid-template-rows:1fr}
 .flip-clone-front{padding:10px 6px;gap:4px;grid-template-rows:1fr}
 .final-book{width:min(260px,68vw);height:calc(min(260px,68vw)*1.5)}
@@ -208,15 +209,16 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-overlay{align-items:flex-start;padding-top:120px;padding-bottom:50px}
 .dict-container{width:88%;height:100%;max-height:none;flex:1;min-height:0}
 .dict-page{padding:18px 14px 40px 12px;overflow-y:hidden}
+.dict-page-content.distribute{justify-content:flex-start}
 .dict-section-title{font-size:1.4rem;margin:4px 0 6px}
 .dict-entry{display:flex;flex-direction:column;align-items:flex-start;gap:0;padding:4px 0;min-height:auto}
 .dict-entry.empty{padding:4px 0}
 .dict-entry .lock{font-size:.85rem;width:auto;flex:0 0 auto;text-align:left}
 .dict-entry-top{display:block;width:100%}
-.dict-entry .entry-phrase{display:inline;font-size:.85rem;line-height:1.15}
+.dict-entry .entry-phrase{display:inline;font-size:.88rem;line-height:1.15}
 .dict-entry .entry-dash{display:none}
 .dict-entry-bottom{display:block;width:100%;padding-left:0;margin-top:0}
-.dict-entry .entry-meaning{flex:0 0 auto;width:100%;font-size:.8rem;padding-right:0;line-height:1.15}
+.dict-entry .entry-meaning{flex:0 0 auto;width:100%;font-size:.87rem;padding-right:0;line-height:1.15}
 .dict-arrows{padding:4px 16px 8px 16px}
 .dict-arrows .arrow{font-size:1.6rem}
 .footer{padding:3px 10px}
@@ -230,6 +232,8 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .page{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
 .book-pair{padding:3px 0}
 .flip-clone-front{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
+.final-book-title{font-size:clamp(1.4rem,4vh,2.6rem)}
+.congrats-title{font-size:clamp(3rem,8vh,5rem)}
 }
 @media (max-width:900px) and (max-height:600px){
 .page{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:8px;align-content:space-between;padding:18px 10px}
@@ -260,14 +264,15 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-entry .lock{font-size:.75rem;width:16px}
 }
 @media (min-width:1401px){
-.page{display:flex;flex-direction:column;justify-content:space-between;gap:20px;padding:24px 12px;grid-template-rows:none}
-.flip-clone-front{display:flex;flex-direction:column;justify-content:space-between;gap:20px;padding:24px 12px;grid-template-rows:none}
-.chest{flex:0 0 45%}
+.page{display:flex;flex-direction:column;justify-content:flex-start;gap:20px;padding:24px 12px;grid-template-rows:none}
+.flip-clone-front{display:flex;flex-direction:column;justify-content:flex-start;gap:20px;padding:24px 12px;grid-template-rows:none}
+.chest{flex:0 0 45%;transform:translateY(-1.5cm)}
 .book-shelf{flex:0 0 55%}
 .book-open{height:calc(82% + 2cm)}
 .book-pair .pair-phrase,.book-pair .pair-dash,.book-pair .pair-meaning{font-size:1rem}
 .book-pair .pair-phrase{flex:0 0 42%}
-.book-pair .pair-dash{flex:0 0 8px}
+.book-pair .pair-dash{flex:0 0 6px}
+.book-pair .pair-meaning{padding-left:4px}
 .final-book{width:min(360px,52vh);height:min(480px,68vh)}
 .final-book::before{left:calc(-1*min(360px,52vh)*0.13);width:calc(min(360px,52vh)*0.14)}
 .final-book::after{left:calc(-1*min(360px,52vh)*0.095)}
@@ -365,7 +370,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 
 <div class="congrats-overlay" id="congratsOverlay">
   <div class="congrats-content">
-    <div class="congrats-title">Поздравляю!<br>Вы собрали все фразеологизмы!</div>
+    <div class="congrats-title">Поздравляю!<span class="congrats-sub">Вы собрали все фразеологизмы!</span></div>
     <button class="congrats-btn" onclick="congratsOpenDict()">Открыть словарь</button>
   </div>
 </div>
@@ -412,7 +417,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
   { p: "болеть душой", m: "переживать" },
   { p: "большей частью / по большей части", m: "главным образом" },
   { p: "брать верх", m: "преобладать, побеждать" },
-  { p: "взять в свои руки", m: "возглавить" },
+  { p: "брать в свои руки", m: "возглавить" },
   { p: "брать за горло", m: "заставлять, принуждать" },
   { p: "взять себя в руки", m: "успокоиться, собраться" },
   { p: "бросаться в глаза", m: "быть заметным, выделяться" },
@@ -455,9 +460,9 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
   { p: "в самый раз", m: "впору" },
   { p: "в своё время", m: "в прошлом; своевременно" },
   { p: "в свою очередь", m: "также, тоже" },
-  { p: "в сердцах", m: "в гневе; сгоряча" },
+  { p: "в сердцах", m: "гневно, раздражённо" },
   { p: "все до одного", m: "абсолютно все" },
-  { p: "всё в порядке / в ажуре", m: "всё хорошо" },
+  { p: "всё в порядке", m: "всё хорошо" },
   { p: "всё на свете", m: "абсолютно всё" },
   { p: "всё равно", m: "без разницы" },
   { p: "выжимать соки", m: "доводить до изнеможения" },
@@ -486,7 +491,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
   { p: "до нитки вымокнуть", m: "полностью промокнуть" },
   { p: "до сих пор", m: "до сегодняшнего дня" },
   { p: "достать из-под земли", m: "получить любой ценой" },
-  { p: "друг друга", m: "взаимно; один другого" },
+  { p: "друг друга", m: "взаимно, один другого" },
   { p: "душа болит", m: "переживать из-за чего-то/кого-то" },
   { p: "душа в душу", m: "дружно" },
   { p: "душа не лежит", m: "что-то не нравится" },
@@ -587,15 +592,15 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
   { p: "отдавать должное", m: "признавать достоинства" },
   { p: "открыть глаза", m: "избавить от заблуждения" },
   { p: "от нечего делать", m: "от скуки, от безделья" },
-  { p: "спустя рукава", m: "делать кое-как" },
-  { p: "пальцем не тронуть", m: "не применять физического воздействия" },
   { p: "пасть духом", m: "отчаяться" },
+  { p: "спустя рукава", m: "делать; кое-как" },
+  { p: "пальцем не тронуть", m: "не применять физического воздействия" },
   { p: "первым делом", m: "в первую очередь" },
   { p: "перебежать дорогу", m: "помешать" },
   { p: "перевести дух", m: "отдохнуть" },
   { p: "по белу свету", m: "повсюду" },
   { p: "поднять на ноги", m: "разбудить; взбудоражить" },
-  { p: "подступить к горлу", m: "о сильных чувствах, переживаниях" },
+  { p: "подступить к горлу", m: "неожиданно взволновать" },
   { p: "говорить/лезть под руку", m: "мешать" },
   { p: "по душе", m: "о том, что нравится" },
   { p: "подумать только", m: "выражение удивления, недоумения" },
@@ -639,7 +644,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
   { p: "скорее всего", m: "наиболее вероятно" },
   { p: "скрепя сердце", m: "неохотно" },
   { p: "слово за слово", m: "постепенно в ходе разговора; пререкаясь" },
-  { p: "сложить оружие", m: "сдаться; отказаться от борьбы" },
+  { p: "сложить оружие", m: "сдаться; отказаться от продолжения борьбы" },
   { p: "смотреть в оба", m: "внимательно следить; быть начеку" },
   { p: "сойти с рук", m: "о том, что осталось безнаказанным" },
   { p: "сойти с ума / сходить с ума", m: "поступать безрассудно; сильно увлечься кем-то/чем-то" },
@@ -681,6 +686,10 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
   { p: "язык не поворачивается", m: "не решаться что-либо сказать" }
 ];
 
+const LOCK_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#5a2a2a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+function useSvgLock(){ return window.innerWidth > 1400; }
+function isLaptop(){ return window.innerWidth > 1400; }
+
 const SIMILAR_GROUPS = [
   ["без оглядки","в два счёта","в мгновение ока","во весь дух","в один миг","как ветром сдуло"],
   ["бок о бок","в двух шагах","глаза в глаза","лицом к лицу","рукой подать"],
@@ -691,75 +700,34 @@ const SIMILAR_GROUPS = [
   ["кот наплакал"]
 ];
 
-const PHRASE_GROUP = (function(){
-  const map = {};
-  SIMILAR_GROUPS.forEach((group, idx)=>{
-    group.forEach(p=>{ map[p] = idx; });
-  });
-  return map;
-})();
+const PHRASE_GROUP = (function(){const map={};SIMILAR_GROUPS.forEach((g,i)=>{g.forEach(p=>{map[p]=i;});});return map;})();
+function getGroupKey(phrase){const g=PHRASE_GROUP[phrase];return (g===undefined)?null:g;}
 
-function getGroupKey(phrase){
-  const g = PHRASE_GROUP[phrase];
-  return (g === undefined) ? null : g;
-}
-
-const DEVICE_TYPE = (function(){
-  const shortSide = Math.min(window.innerWidth, window.innerHeight);
-  if (shortSide >= 600) return 'tablet';
-  return 'phone';
-})();
-
-function isLandscape(){ return window.innerWidth >= window.innerHeight; }
-
+const DEVICE_TYPE = (function(){const s=Math.min(window.innerWidth,window.innerHeight);return s>=600?'tablet':'phone';})();
+function isLandscape(){return window.innerWidth>=window.innerHeight;}
 function getParams(){
-  const land = isLandscape();
-  if(DEVICE_TYPE === 'phone'){
-    return { pairsPerRound:9, tabs:3, cols:3, rows:6, gap:2, bookPairsPerPage:1, totalTiles:190 };
-  }
-  return { pairsPerRound:15, tabs:3, cols:land?6:5, rows:land?5:6, gap:5, bookPairsPerPage:land?3:4, totalTiles:190 };
+  const land=isLandscape();
+  if(DEVICE_TYPE==='phone'){return {pairsPerRound:9,tabs:3,cols:3,rows:6,gap:2,bookPairsPerPage:1,totalTiles:190};}
+  const laptop = window.innerWidth > 1400;
+  return {pairsPerRound:15,tabs:3,cols:land?6:5,rows:land?5:6,gap:5,bookPairsPerPage:laptop?4:(land?3:4),totalTiles:190};
 }
+
 function normalizeMeaning(m){return m.toLowerCase().replace(/[;,.!?()]/g,' ').split(/\s+/).filter(w=>w.length>2).sort().join(' ');}
 function meaningsAreSimilar(a,b){const n1=normalizeMeaning(a),n2=normalizeMeaning(b);if(n1===n2)return true;const w1=new Set(n1.split(' ')),w2=new Set(n2.split(' '));const i=[...w1].filter(w=>w2.has(w));const ms=Math.min(w1.size,w2.size);return ms>0&&i.length/ms>=.6;}
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
 
-function conflictsWithRound(candidate, round){
-  const candGroup = getGroupKey(candidate.p);
-  for(const existing of round){
-    if(candGroup !== null && candGroup === getGroupKey(existing.p)) return true;
-    if(meaningsAreSimilar(candidate.m, existing.m)) return true;
-  }
-  return false;
-}
+function conflictsWithRound(candidate,round){const cg=getGroupKey(candidate.p);for(const e of round){if(cg!==null&&cg===getGroupKey(e.p))return true;if(meaningsAreSimilar(candidate.m,e.m))return true;}return false;}
 
 function buildVariants(){
-  const p=getParams();
-  const s=shuffle(ALL_PAIRS);
-  const t=s.length;
-  const tabs=p.tabs;
-  const pr=p.pairsPerRound;
-  const vs=Math.floor(t/tabs);
-  const va=[];
-  let st=0;
-  for(let i=0;i<tabs;i++){
-    const sz=(i===tabs-1)?(t-st):vs;
-    va.push(s.slice(st,st+sz));
-    st+=sz;
-  }
+  const p=getParams(),s=shuffle(ALL_PAIRS),t=s.length,tabs=p.tabs,pr=p.pairsPerRound,vs=Math.floor(t/tabs),va=[];let st=0;
+  for(let i=0;i<tabs;i++){const sz=(i===tabs-1)?(t-st):vs;va.push(s.slice(st,st+sz));st+=sz;}
   return va.map(v=>{
-    const rounds=[];
-    let remaining=[...v];
-    while(remaining.length>0){
-      const round=[];
-      const leftover=[];
-      for(let i=0;i<remaining.length;i++){
-        const cand=remaining[i];
-        if(round.length>=pr){ leftover.push(cand); continue; }
-        if(conflictsWithRound(cand, round)){ leftover.push(cand); } else { round.push(cand); }
-      }
-      if(round.length===0 && leftover.length>0){ round.push(leftover.shift()); }
-      rounds.push(round);
-      remaining=leftover;
+    const rounds=[];let rem=[...v];
+    while(rem.length>0){
+      const round=[],left=[];
+      for(let i=0;i<rem.length;i++){const c=rem[i];if(round.length>=pr){left.push(c);continue;}if(conflictsWithRound(c,round)){left.push(c);}else{round.push(c);}}
+      if(round.length===0&&left.length>0){round.push(left.shift());}
+      rounds.push(round);rem=left;
     }
     return rounds;
   });
@@ -772,32 +740,19 @@ let deviceParams=getParams();
 let collectedPhrases=new Set();
 let isFlipping=false;
 let congratsShown=false;
-let errorCount=0;
-let startTime=0;
+let errorCount=0,startTime=0;
 
-const pairHeightsCache = new Map();
-let lockHeight = 0;
-let letterHeight = 0;
-let dictMeasured = false;
-let dictMeasurePending = false;
+const pairHeightsCache=new Map();
+let lockHeight=0,letterHeight=0,dictMeasured=false,dictMeasurePending=false;
 
-const NARROW_MEANING_PHRASES = ['с пылу с жару','как миленький'];
+const NARROW_MEANING_PHRASES=['с пылу с жару','как миленький'];
 
 let variantState=[
-  {round:0,stackRemaining:0,gameStarted:false,completed:false,
-   leftPairs:[],rightPairs:[],pairsInBook:[],remainingPairs:[],
-   bookLeftPairs:0,bookRightPairs:0},
-  {round:0,stackRemaining:0,gameStarted:false,completed:false,
-   leftPairs:[],rightPairs:[],pairsInBook:[],remainingPairs:[],
-   bookLeftPairs:0,bookRightPairs:0},
-  {round:0,stackRemaining:0,gameStarted:false,completed:false,
-   leftPairs:[],rightPairs:[],pairsInBook:[],remainingPairs:[],
-   bookLeftPairs:0,bookRightPairs:0}
+  {round:0,stackRemaining:0,gameStarted:false,completed:false,leftPairs:[],rightPairs:[],pairsInBook:[],remainingPairs:[],bookLeftPairs:0,bookRightPairs:0},
+  {round:0,stackRemaining:0,gameStarted:false,completed:false,leftPairs:[],rightPairs:[],pairsInBook:[],remainingPairs:[],bookLeftPairs:0,bookRightPairs:0},
+  {round:0,stackRemaining:0,gameStarted:false,completed:false,leftPairs:[],rightPairs:[],pairsInBook:[],remainingPairs:[],bookLeftPairs:0,bookRightPairs:0}
 ];
-let currentRoundRef=0;
-let stackRemainingRef=0;
-let bookLeftPairsRef=0;
-let bookRightPairsRef=0;
+let currentRoundRef=0,stackRemainingRef=0,bookLeftPairsRef=0,bookRightPairsRef=0;
 Object.defineProperty(window,'currentRound',{get(){return currentRoundRef;},set(v){currentRoundRef=v;}});
 Object.defineProperty(window,'stackRemaining',{get(){return stackRemainingRef;},set(v){stackRemainingRef=v;}});
 Object.defineProperty(window,'bookLeftPairs',{get(){return bookLeftPairsRef;},set(v){bookLeftPairsRef=v;}});
@@ -812,7 +767,7 @@ function playKeyTurn(){if(!soundOn)return;try{const c=getAudioCtx();[880,1108,13
 function playChestOpen(){if(!soundOn)return;try{const c=getAudioCtx(),n=c.currentTime,d=3.2;const o=c.createOscillator();o.type='sawtooth';o.frequency.setValueAtTime(180,n);o.frequency.linearRampToValueAtTime(200,n+d*.5);o.frequency.linearRampToValueAtTime(170,n+d);const v=c.createOscillator();v.frequency.value=8;const vg=c.createGain();vg.gain.value=25;v.connect(vg);vg.connect(o.frequency);const g=c.createGain();g.gain.setValueAtTime(.001,n);g.gain.linearRampToValueAtTime(.08,n+.15);g.gain.setValueAtTime(.08,n+d*.7);g.gain.linearRampToValueAtTime(.001,n+d);const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=800;f.Q.value=1.5;o.connect(f);f.connect(g);g.connect(c.destination);o.start(n);o.stop(n+d);v.start(n);v.stop(n+d);}catch(e){}}
 function playChestClose(){if(!soundOn)return;try{const c=getAudioCtx(),n=c.currentTime,d=1.2;const o=c.createOscillator();o.type='sawtooth';o.frequency.setValueAtTime(150,n);o.frequency.linearRampToValueAtTime(170,n+d*.5);o.frequency.linearRampToValueAtTime(140,n+d);const v=c.createOscillator();v.frequency.value=9;const vg=c.createGain();vg.gain.value=22;v.connect(vg);vg.connect(o.frequency);const g=c.createGain();g.gain.setValueAtTime(.001,n);g.gain.linearRampToValueAtTime(.08,n+.15);g.gain.setValueAtTime(.08,n+d*.7);g.gain.linearRampToValueAtTime(.001,n+d);const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=700;f.Q.value=1.5;o.connect(f);f.connect(g);g.connect(c.destination);o.start(n);o.stop(n+d);v.start(n);v.stop(n+d);const tt=n+d+.05;const to=c.createOscillator(),tg=c.createGain();to.type='sine';to.frequency.setValueAtTime(90,tt);to.frequency.exponentialRampToValueAtTime(45,tt+.15);tg.gain.setValueAtTime(.001,tt);tg.gain.exponentialRampToValueAtTime(.35,tt+.005);tg.gain.exponentialRampToValueAtTime(.001,tt+.18);to.connect(tg);tg.connect(c.destination);to.start(tt);to.stop(tt+.2);}catch(e){}}
 
-const SHORT_WORDS=['в','на','с','к','по','за','из','от','до','у','о','об','во','со','ко','под','над','при','про','без','для','через','между','перед','и','а','но','да','или','либо','что','как','то','же','бы','ли'];
+const SHORT_WORDS=['в','на','с','к','по','за','из','от','до','у','о','об','во','со','ко','под','над','при','про','без','для','через','между','перед','и','а','но','да','или','либо','что','как','то','же','бы','ли','не','ни'];
 const ONE_LETTER_WORDS=['в','к','с','у','о','и','а'];
 
 function addNbsp(t){
@@ -835,10 +790,7 @@ function addNbsp(t){
     t=t.replace(/как бы то ни было/gi,'как&nbsp;бы&nbsp;то<br>ни&nbsp;было');
     t=t.replace(/ни с того ни с сего/gi,'ни&nbsp;с&nbsp;того<br>ни&nbsp;с&nbsp;сего');
     t=t.replace(/(^|\s)(не|ни)\s+([а-яёА-ЯЁ]{4,})/gi,'$1$2&nbsp;$3');
-    ONE_LETTER_WORDS.forEach(w=>{
-      const re=new RegExp('(^|\\s)('+w+')\\s+','gi');
-      t=t.replace(re,'$1$2&nbsp;');
-    });
+    ONE_LETTER_WORDS.forEach(w=>{const re=new RegExp('(^|\\s)('+w+')\\s+','gi');t=t.replace(re,'$1$2&nbsp;');});
     return t;
   }
   t=t.replace(/во что бы то ни стало/gi,'во&nbsp;что&nbsp;бы&nbsp;то<br>ни&nbsp;стало');
@@ -849,56 +801,59 @@ function addNbsp(t){
   t=t.replace(/(^|\s)(ни|не)\s+/gi,'$1$2&nbsp;');
   return t;
 }
+
+// addNbspDict: вариант для книги и словаря. Отличается тем, что:
+// 1) слэш между вариантами фразеологизма (со пробелами вокруг) → <br>;
+// 2) все короткие слова/предлоги/союзы/частицы (включая «без») склеиваются с последующим словом на ВСЕХ устройствах.
+function addNbspDict(t){
+  t=t.replace(/\s+\/\s+/g,' /<br>');
+  t=t.replace(/\(([^)]*)\)/g,'<i>($1)</i>');
+  t=t.replace(/без свидетелей/gi,'без&nbsp;свидетелей');
+  t=t.replace(/без переживаний/gi,'без&nbsp;переживаний');
+  t=t.replace(/как миленький/gi,'как&nbsp;миленький');
+  t=t.replace(/что поделаешь/gi,'что&nbsp;поделаешь');
+  t=t.replace(/между прочим/gi,'между&nbsp;прочим');
+  t=t.replace(/\(на ком-то\/чём-то\)/gi,'<span style="white-space:nowrap">(на&nbsp;ком-то/чём-то)</span>');
+  t=t.replace(/один-одинёшенек/g,'один\u0001одинёшенек');
+  t=t.replace(/(\S)-(\S)/g,'$1\u2011$2');
+  t=t.replace(/один\u0001одинёшенек/g,'один-одинёшенек');
+  t=t.replace(/во что бы то ни стало/gi,'во&nbsp;что&nbsp;бы&nbsp;то&nbsp;ни&nbsp;стало');
+  t=t.replace(/несмотря ни на что/gi,'несмотря&nbsp;ни&nbsp;на&nbsp;что');
+  t=t.replace(/как бы то ни было/gi,'как&nbsp;бы&nbsp;то&nbsp;ни&nbsp;было');
+  t=t.replace(/ни с того ни с сего/gi,'ни&nbsp;с&nbsp;того&nbsp;ни&nbsp;с&nbsp;сего');
+  SHORT_WORDS.forEach(w=>{const re=new RegExp('(^|[\\s>])('+w+')\\s+','gi');t=t.replace(re,'$1$2&nbsp;');});
+  t=t.replace(/(^|[\s>])(ни|не)\s+/gi,'$1$2&nbsp;');
+  return t;
+}
+
 function splitMeaning(m){return m.split(';').map(s=>s.trim());}
-function renderMeaningHTMLStacked(m){const p=splitMeaning(m);const cl=['','second','third'];return p.map((part,i)=>{const cls=cl[i]||'third';const sep=i<p.length-1?';':'';return cls?`<span class="${cls}">${addNbsp(part)}${sep}</span>`:`<span>${addNbsp(part)}${sep}</span>`;}).join('<br>');}
+function renderMeaningHTMLStacked(m,useDict){
+  const p=splitMeaning(m),cl=['','second','third'],nb=useDict?addNbspDict:addNbsp;
+  return p.map((part,i)=>{const cls=cl[i]||'third';const sep=i<p.length-1?';':'';return `<span class="${cls}">${nb(part)}${sep}</span>`;}).join('<br>');
+}
 
 function fitTiles(){document.querySelectorAll('.tile').forEach(tile=>{tile.style.fontSize='';const cs=parseFloat(getComputedStyle(tile).fontSize);const mn=8;let s=cs,it=0;while((tile.scrollHeight>tile.clientHeight+1||tile.scrollWidth>tile.clientWidth+1)&&s>mn&&it<40){s-=.5;tile.style.fontSize=s+'px';it++;}});}
 function fitBook(){document.querySelectorAll('.pair-phrase, .pair-meaning').forEach(item=>{item.style.fontSize='';const cs=parseFloat(getComputedStyle(item).fontSize);const mn=6;let s=cs,it=0;while((item.scrollHeight>item.clientHeight+1||item.scrollWidth>item.clientWidth+1)&&s>mn&&it<40){s-=.3;item.style.fontSize=s+'px';it++;}});}
 
 const _measureCanvas=document.createElement('canvas');
 const _measureCtx=_measureCanvas.getContext('2d');
-function measureWordWidth(word,fontSizePx,fontFamily,fontWeight){
-  _measureCtx.font=fontWeight+' '+fontSizePx+'px '+fontFamily;
-  return _measureCtx.measureText(word).width;
-}
-function longestWordWidth(text,fontSizePx,fontFamily,fontWeight){
-  const words=text.split(/\s+/).filter(w=>w.length>0);
-  let max=0;
-  words.forEach(w=>{
-    const clean=w.replace(/&nbsp;/g,' ').replace(/[;,()]/g,'');
-    let parts=[clean];
-    if(clean==='один-одинёшенек'){
-      parts=clean.split('-');
-    }
-    parts.forEach(part=>{
-      const ww=measureWordWidth(part,fontSizePx,fontFamily,fontWeight);
-      if(ww>max)max=ww;
-    });
-  });
-  return max;
-}
+function measureWordWidth(word,fontSizePx,fontFamily,fontWeight){_measureCtx.font=fontWeight+' '+fontSizePx+'px '+fontFamily;return _measureCtx.measureText(word).width;}
+function longestWordWidth(text,fontSizePx,fontFamily,fontWeight){const words=text.split(/\s+/).filter(w=>w.length>0);let max=0;words.forEach(w=>{const clean=w.replace(/&nbsp;/g,' ').replace(/[;,()]/g,'');let parts=[clean];if(clean==='один-одинёшенек'){parts=clean.split('-');}parts.forEach(p=>{const ww=measureWordWidth(p,fontSizePx,fontFamily,fontWeight);if(ww>max)max=ww;});});return max;}
 function applySmartBookLayout(){
   if(DEVICE_TYPE !== 'phone') return;
   document.querySelectorAll('.page .book-pair').forEach(pairEl=>{
-    const phraseEl=pairEl.querySelector('.pair-phrase');
-    const meaningEl=pairEl.querySelector('.pair-meaning');
+    const phraseEl=pairEl.querySelector('.pair-phrase'),meaningEl=pairEl.querySelector('.pair-meaning');
     if(!phraseEl||!meaningEl) return;
     pairEl.style.fontSize='';
-    const pageW=pairEl.clientWidth;
-    if(pageW<=0) return;
+    const pageW=pairEl.clientWidth;if(pageW<=0) return;
     const phraseText=phraseEl.textContent.replace('💡','').replace(/\u00A0—/g,'').replace('—','').trim();
     const meaningText=meaningEl.textContent.trim();
-    const phraseStyle=getComputedStyle(phraseEl);
-    const meaningStyle=getComputedStyle(meaningEl);
-    const phraseFont=parseFloat(phraseStyle.fontSize);
-    const meaningFont=parseFloat(meaningStyle.fontSize);
-    const phraseMax=longestWordWidth(phraseText,phraseFont,phraseStyle.fontFamily,phraseStyle.fontWeight);
-    const meaningMax=longestWordWidth(meaningText,meaningFont,meaningStyle.fontFamily,meaningStyle.fontWeight);
-    const maxWordWidth=Math.max(phraseMax,meaningMax);
-    if(maxWordWidth>pageW){
-      const scale=Math.max(0.6,pageW/maxWordWidth);
-      pairEl.style.fontSize=(scale*100)+'%';
-    }
+    const ps=getComputedStyle(phraseEl),ms=getComputedStyle(meaningEl);
+    const pf=parseFloat(ps.fontSize),mf=parseFloat(ms.fontSize);
+    const pMax=longestWordWidth(phraseText,pf,ps.fontFamily,ps.fontWeight);
+    const mMax=longestWordWidth(meaningText,mf,ms.fontFamily,ms.fontWeight);
+    const maxWordWidth=Math.max(pMax,mMax);
+    if(maxWordWidth>pageW){const scale=Math.max(0.6,pageW/maxWordWidth);pairEl.style.fontSize=(scale*100)+'%';}
   });
 }
 
@@ -911,40 +866,23 @@ function hideTooltipOnce(){if(tooltipEl){tooltipEl.remove();tooltipEl=null;}}
 function applyPortraitTabletLayout(){
   const main=document.getElementById('mainArea'),lp=document.getElementById('leftPart'),rc=document.getElementById('rightColumn'),ch=document.getElementById('chest'),bs=document.getElementById('bookShelf');
   const tp=!isLandscape();
-  if(tp){
-    let t=document.getElementById('topPart');
-    if(!t){t=document.createElement('div');t.id='topPart';t.className='top-part';main.insertBefore(t,lp);}
-    t.appendChild(ch);t.appendChild(bs);rc.style.display='none';
-  }else{
-    const t=document.getElementById('topPart');
-    if(t){rc.style.display='flex';rc.appendChild(ch);rc.appendChild(bs);t.remove();}
-  }
+  if(tp){let t=document.getElementById('topPart');if(!t){t=document.createElement('div');t.id='topPart';t.className='top-part';main.insertBefore(t,lp);}t.appendChild(ch);t.appendChild(bs);rc.style.display='none';}
+  else{const t=document.getElementById('topPart');if(t){rc.style.display='flex';rc.appendChild(ch);rc.appendChild(bs);t.remove();}}
 }
 
-function renderBookPage(pageEl, pairs){
+function renderBookPage(pageEl,pairs){
   pageEl.innerHTML='';
   pairs.forEach(item=>{
-    const pd=document.createElement('div');
-    pd.className='book-pair';
-    const ph=document.createElement('div');
-    ph.className='pair-phrase';
-    const phI=document.createElement('div');
-    phI.className='pair-content';
-    phI.innerHTML=addNbsp(item.phrase)+(DEVICE_TYPE==='phone'?'\u00A0—':'');
+    const pd=document.createElement('div');pd.className='book-pair';
+    const ph=document.createElement('div');ph.className='pair-phrase';
+    const phI=document.createElement('div');phI.className='pair-content';
+    phI.innerHTML=addNbspDict(item.phrase)+(DEVICE_TYPE==='phone'?'\u00A0—':'');
     ph.appendChild(phI);
-    if(item.phrase===LAMP_PHRASE){
-      const l=document.createElement('span');
-      l.className='lamp-inline';l.textContent='💡';
-      l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};
-      ph.appendChild(l);
-    }
-    const dh=document.createElement('div');
-    dh.className='pair-dash';dh.textContent='—';
-    const mh=document.createElement('div');
-    mh.className='pair-meaning';
-    const mhI=document.createElement('div');
-    mhI.className='pair-content';
-    mhI.innerHTML=renderMeaningHTMLStacked(item.meaning);
+    if(item.phrase===LAMP_PHRASE){const l=document.createElement('span');l.className='lamp-inline';l.textContent='💡';l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};ph.appendChild(l);}
+    const dh=document.createElement('div');dh.className='pair-dash';dh.textContent='—';
+    const mh=document.createElement('div');mh.className='pair-meaning';
+    const mhI=document.createElement('div');mhI.className='pair-content';
+    mhI.innerHTML=renderMeaningHTMLStacked(item.meaning,true);
     mh.appendChild(mhI);
     pd.appendChild(ph);pd.appendChild(dh);pd.appendChild(mh);
     pageEl.appendChild(pd);
@@ -953,84 +891,37 @@ function renderBookPage(pageEl, pairs){
 
 function renderBookFromState(){
   const s=variantState[currentVariant];
-  renderBookPage(document.getElementById('pageLeft'), s.leftPairs);
-  renderBookPage(document.getElementById('pageRight'), s.rightPairs);
-  bookLeftPairsRef=s.leftPairs.length;
-  bookRightPairsRef=s.rightPairs.length;
+  renderBookPage(document.getElementById('pageLeft'),s.leftPairs);
+  renderBookPage(document.getElementById('pageRight'),s.rightPairs);
+  bookLeftPairsRef=s.leftPairs.length;bookRightPairsRef=s.rightPairs.length;
   if(DEVICE_TYPE === 'phone'){
-    requestAnimationFrame(()=>{
-      applySmartBookLayout();
-      setTimeout(applySmartBookLayout, 150);
-      setTimeout(applySmartBookLayout, 500);
-    });
-    if(document.fonts && document.fonts.ready){
-      document.fonts.ready.then(()=>applySmartBookLayout());
-    }
-  } else {
-    setTimeout(fitBook,30);
-  }
+    requestAnimationFrame(()=>{applySmartBookLayout();setTimeout(applySmartBookLayout,150);setTimeout(applySmartBookLayout,500);});
+    if(document.fonts && document.fonts.ready){document.fonts.ready.then(()=>applySmartBookLayout());}
+  } else { setTimeout(fitBook,30); }
 }
+  function syncGlobalToVariant(){const s=variantState[currentVariant];s.round=currentRoundRef;s.stackRemaining=stackRemainingRef;s.gameStarted=gameStarted;s.remainingPairs=[...remainingPairs];s.bookLeftPairs=bookLeftPairsRef;s.bookRightPairs=bookRightPairsRef;}
+function loadVariantToGlobal(i){const s=variantState[i];currentRoundRef=s.round;stackRemainingRef=s.stackRemaining;gameStarted=s.gameStarted;remainingPairs=[...s.remainingPairs];bookLeftPairsRef=s.bookLeftPairs;bookRightPairsRef=s.bookRightPairs;renderBookFromState();}
 
-function syncGlobalToVariant(){
-  const s=variantState[currentVariant];
-  s.round=currentRoundRef;
-  s.stackRemaining=stackRemainingRef;
-  s.gameStarted=gameStarted;
-  s.remainingPairs=[...remainingPairs];
-  s.bookLeftPairs=bookLeftPairsRef;
-  s.bookRightPairs=bookRightPairsRef;
-}
-
-function loadVariantToGlobal(i){
-  const s=variantState[i];
-  currentRoundRef=s.round;
-  stackRemainingRef=s.stackRemaining;
-  gameStarted=s.gameStarted;
-  remainingPairs=[...s.remainingPairs];
-  bookLeftPairsRef=s.bookLeftPairs;
-  bookRightPairsRef=s.bookRightPairs;
-  renderBookFromState();
-}
-
-function checkRotateNotice(){
-  const el=document.getElementById('rotateNotice');
-  if(!el) return;
-  const isPhoneLandscape = (DEVICE_TYPE==='phone' && isLandscape());
-  el.classList.toggle('active', isPhoneLandscape);
-}
+function checkRotateNotice(){const el=document.getElementById('rotateNotice');if(!el)return;const isPL=(DEVICE_TYPE==='phone'&&isLandscape());el.classList.toggle('active',isPL);}
 
 function initGame(){
   deviceParams=getParams();
   variants=buildVariants();
-  currentVariant=0;
-  currentRoundRef=0;
-  stackRemainingRef=deviceParams.totalTiles;
-  remainingPairs=[];
-  bookLeftPairsRef=0;bookRightPairsRef=0;
-  pairsInBook=[];
-  collectedPhrases=new Set();
-  gameStarted=false;
-  paused=false;
-  selectedPhrase=null;selectedMeaning=null;
-  isAnimating=false;isFlipping=false;
-  congratsShown=false;
-  errorCount=0;
-  startTime=0;
-  variantState.forEach(s=>{
-    s.round=0;s.stackRemaining=deviceParams.totalTiles;s.gameStarted=false;s.completed=false;
-    s.leftPairs=[];s.rightPairs=[];s.pairsInBook=[];s.remainingPairs=[];
-    s.bookLeftPairs=0;s.bookRightPairs=0;
-  });
+  currentVariant=0;currentRoundRef=0;stackRemainingRef=deviceParams.totalTiles;
+  remainingPairs=[];bookLeftPairsRef=0;bookRightPairsRef=0;pairsInBook=[];
+  collectedPhrases=new Set();gameStarted=false;paused=false;selectedPhrase=null;selectedMeaning=null;
+  isAnimating=false;isFlipping=false;congratsShown=false;errorCount=0;startTime=0;
+  variantState.forEach(s=>{s.round=0;s.stackRemaining=deviceParams.totalTiles;s.gameStarted=false;s.completed=false;s.leftPairs=[];s.rightPairs=[];s.pairsInBook=[];s.remainingPairs=[];s.bookLeftPairs=0;s.bookRightPairs=0;});
   document.getElementById('chestLid').classList.remove('open','closing');
   document.getElementById('chestKey').classList.remove('turned');
   const tr=document.getElementById('tabsRow');
   if(deviceParams.tabs>1)tr.classList.remove('empty');else tr.classList.add('empty');
   document.querySelectorAll('.tab').forEach((tab,i)=>{tab.style.display=i<deviceParams.tabs?'inline-block':'none';tab.classList.toggle('active',i===0);tab.onclick=()=>switchVariant(i);});
   const f=document.getElementById('gameField');
-  f.style.gridTemplateColumns = `repeat(${deviceParams.cols}, minmax(0,1fr))`;
+  f.style.gridTemplateColumns=`repeat(${deviceParams.cols}, minmax(0,1fr))`;
   f.innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
-  renderBookPage(document.getElementById('pageLeft'), []);
-  renderBookPage(document.getElementById('pageRight'), []);
+  renderBookPage(document.getElementById('pageLeft'),[]);
+  renderBookPage(document.getElementById('pageRight'),[]);
   applyPortraitTabletLayout();
   document.getElementById('pauseOverlay').classList.remove('active');
   document.getElementById('dictOverlay').classList.remove('active');
@@ -1044,12 +935,8 @@ function initGame(){
 
 function switchVariant(i){
   if(i===currentVariant && gameStarted && remainingPairs.length>0) return;
-  if(isFlipping){
-    document.querySelectorAll('.flip-clone').forEach(el=>el.remove());
-    isFlipping=false;
-  }
-  isAnimating=false;
-  paused=false;
+  if(isFlipping){document.querySelectorAll('.flip-clone').forEach(el=>el.remove());isFlipping=false;}
+  isAnimating=false;paused=false;
   document.getElementById('pauseOverlay').classList.remove('active');
   document.getElementById('dictOverlay').classList.remove('active');
   document.getElementById('finalOverlay').classList.remove('active');
@@ -1061,19 +948,18 @@ function switchVariant(i){
   loadVariantToGlobal(i);
   document.getElementById('mainArea').style.visibility='';
   const f=document.getElementById('gameField');
-  f.style.gridTemplateColumns = `repeat(${deviceParams.cols}, minmax(0,1fr))`;
+  f.style.gridTemplateColumns=`repeat(${deviceParams.cols}, minmax(0,1fr))`;
   f.innerHTML='';
-  const hasRounds = (currentRoundRef > 0);
-  const hasPairs = (remainingPairs.length > 0);
+  const hasRounds=(currentRoundRef>0),hasPairs=(remainingPairs.length>0);
   if(!gameStarted && !hasRounds){
     f.innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
     document.getElementById('chestLid').classList.remove('open','closing');
     document.getElementById('chestKey').classList.remove('turned');
-  }else if(gameStarted && !hasPairs && hasRounds){
+  } else if(gameStarted && !hasPairs && hasRounds){
     document.getElementById('chestLid').classList.add('open');
     document.getElementById('chestKey').classList.add('turned');
     nextRound();
-  }else{
+  } else {
     renderField(true);
     document.getElementById('chestLid').classList.add('open');
     document.getElementById('chestKey').classList.add('turned');
@@ -1084,8 +970,7 @@ function startGame(){
   gameStarted=true;
   if(!startTime) startTime=Date.now();
   syncGlobalToVariant();
-  const b=document.getElementById('startBtn');
-  if(b)b.remove();
+  const b=document.getElementById('startBtn');if(b)b.remove();
   playKeyTurn();
   document.getElementById('chestKey').classList.add('turned');
   setTimeout(()=>{playChestOpen();document.getElementById('chestLid').classList.add('open');},700);
@@ -1111,37 +996,17 @@ function renderField(skipAnimation){
   remainingPairs.forEach(p=>{tiles.push({type:'phrase',text:p.p,pair:p});tiles.push({type:'meaning',text:p.m,pair:p});});
   let arr=shuffle(tiles);
   const cols=deviceParams.cols;
-  function areNeighbors(i,j){
-    const ri=Math.floor(i/cols),ci=i%cols;
-    const rj=Math.floor(j/cols),cj=j%cols;
-    const dr=Math.abs(ri-rj),dc=Math.abs(ci-cj);
-    return (dr===1&&dc===0)||(dr===0&&dc===1);
-  }
+  function areNeighbors(i,j){const ri=Math.floor(i/cols),ci=i%cols;const rj=Math.floor(j/cols),cj=j%cols;const dr=Math.abs(ri-rj),dc=Math.abs(ci-cj);return (dr===1&&dc===0)||(dr===0&&dc===1);}
   function samePair(a,b){return a.pair===b.pair&&a.type!==b.type;}
   let guard=0;
-  while(guard<8000){
-    let bad=-1;
-    for(let i=0;i<arr.length&&bad<0;i++){
-      for(let j=i+1;j<arr.length;j++){
-        if(areNeighbors(i,j)&&samePair(arr[i],arr[j])){bad=i;break;}
-      }
-    }
-    if(bad<0)break;
-    let other=Math.floor(Math.random()*arr.length);
-    [arr[bad],arr[other]]=[arr[other],arr[bad]];
-    guard++;
-  }
+  while(guard<8000){let bad=-1;for(let i=0;i<arr.length&&bad<0;i++){for(let j=i+1;j<arr.length;j++){if(areNeighbors(i,j)&&samePair(arr[i],arr[j])){bad=i;break;}}}if(bad<0)break;let other=Math.floor(Math.random()*arr.length);[arr[bad],arr[other]]=[arr[other],arr[bad]];guard++;}
   arr.forEach(d=>{
-    const tile=document.createElement('div');
-    tile.className='tile '+d.type;
-    const inner=document.createElement('div');
-    inner.className='tile-content';
+    const tile=document.createElement('div');tile.className='tile '+d.type;
+    const inner=document.createElement('div');inner.className='tile-content';
     if(d.type==='phrase')inner.innerHTML=addNbsp(d.text);
-    else inner.innerHTML=renderMeaningHTMLStacked(d.text);
+    else inner.innerHTML=renderMeaningHTMLStacked(d.text,false);
     tile.appendChild(inner);
-    tile.dataset.type=d.type;
-    tile.dataset.phrase=d.pair.p;
-    tile.dataset.meaning=d.pair.m;
+    tile.dataset.type=d.type;tile.dataset.phrase=d.pair.p;tile.dataset.meaning=d.pair.m;
     tile.onclick=()=>selectTile(tile);
     f.appendChild(tile);
   });
@@ -1152,53 +1017,41 @@ function renderField(skipAnimation){
   const fieldH=f.clientHeight-2*gap-(gap+6);
   const rowHActual=(fieldH-gap*(actualRows-1))/actualRows;
   const rowHFull=(fieldH-gap*(maxRows-1))/maxRows;
-  const rowH=Math.max(30, Math.min(rowHActual, rowHFull));
+  const rowH=Math.max(30,Math.min(rowHActual,rowHFull));
   f.style.gridTemplateColumns=`repeat(${cols}, minmax(0,1fr))`;
   f.style.gap=gap+'px';
   f.style.gridTemplateRows=`repeat(${actualRows}, ${rowH}px)`;
   f.style.alignContent='start';
   fitTiles();
-
   if(skipAnimation)return;
-
   const chestEl=document.getElementById('chest');
   const br=chestEl.getBoundingClientRect();
   const openX=br.left+br.width/2;
   const openY=br.top+br.height*0.3;
   const spreadW=br.width*0.25;
-
   const all=f.querySelectorAll('.tile');
   all.forEach(tile=>{
     const r=tile.getBoundingClientRect();
-    const jitterX=(Math.random()-0.5)*spreadW;
-    const jitterY=(Math.random()-0.5)*spreadW*0.4;
-    const dx=(openX+jitterX)-(r.left+r.width/2);
-    const dy=(openY+jitterY)-(r.top+r.height/2);
+    const jx=(Math.random()-0.5)*spreadW,jy=(Math.random()-0.5)*spreadW*0.4;
+    const dx=(openX+jx)-(r.left+r.width/2);
+    const dy=(openY+jy)-(r.top+r.height/2);
     tile.style.transform=`translate(${dx}px, ${dy}px) scale(0.15)`;
-    tile.style.opacity='0';
-    tile.style.transition='none';
-    tile.style.zIndex='500';
-    tile.style.position='relative';
+    tile.style.opacity='0';tile.style.transition='none';tile.style.zIndex='500';tile.style.position='relative';
   });
   playDiceDrop(all.length);
-
   const total=all.length;
-  const stagger=Math.max(90, Math.min(220, 2400/Math.max(1,total)));
+  const stagger=Math.max(90,Math.min(220,2400/Math.max(1,total)));
   const dur=1.35;
   setTimeout(()=>{
     all.forEach((tile,i)=>{
       setTimeout(()=>{
         tile.style.transition=`transform ${dur}s cubic-bezier(0.18,0.72,0.35,1), opacity 0.3s ease-out`;
-        tile.style.transform='translate(0,0) scale(1)';
-        tile.style.opacity='1';
-      }, i*stagger);
+        tile.style.transform='translate(0,0) scale(1)';tile.style.opacity='1';
+      },i*stagger);
     });
     const totalTime=total*stagger+dur*1000+250;
-    setTimeout(()=>{
-      all.forEach(tile=>{tile.style.transition='';tile.style.transform='';tile.style.opacity='';tile.style.zIndex='';tile.style.position='';});
-      fitTiles();
-    }, totalTime);
-  }, 150);
+    setTimeout(()=>{all.forEach(tile=>{tile.style.transition='';tile.style.transform='';tile.style.opacity='';tile.style.zIndex='';tile.style.position='';});fitTiles();},totalTime);
+  },150);
 }
 
 function selectTile(tile){if(paused||!gameStarted||isAnimating||isFlipping)return;if(tile.classList.contains('hidden'))return;playWoodClick();document.querySelectorAll('.tile').forEach(t=>t.classList.remove('selected'));tile.classList.add('selected');if(tile.dataset.type==='phrase')selectedPhrase=tile;else selectedMeaning=tile;if(selectedPhrase&&selectedMeaning)checkPair();}
@@ -1212,41 +1065,110 @@ function checkPair(){
     p.classList.remove('selected');m.classList.remove('selected');
     selectedPhrase=null;selectedMeaning=null;
     animateToBook(p,m);
-  }else{
+  } else {
     errorCount++;
     p.classList.add('wrong');m.classList.add('wrong');
-    setTimeout(()=>{
-      p.classList.remove('wrong','selected');m.classList.remove('wrong','selected');
-      selectedPhrase=null;selectedMeaning=null;isAnimating=false;
-    },500);
+    setTimeout(()=>{p.classList.remove('wrong','selected');m.classList.remove('wrong','selected');selectedPhrase=null;selectedMeaning=null;isAnimating=false;},500);
   }
 }
 
-function animateToBook(p,m){const br=document.querySelector('.book').getBoundingClientRect();const pr=p.getBoundingClientRect();const mr=m.getBoundingClientRect();const pc=p.cloneNode(true);const mc=m.cloneNode(true);[pc,mc].forEach((cl,i)=>{const r=i===0?pr:mr;cl.style.position='fixed';cl.style.left=r.left+'px';cl.style.top=r.top+'px';cl.style.width=r.width+'px';cl.style.height=r.height+'px';cl.style.zIndex='9999';cl.style.transition='all .5s ease-in';cl.style.pointerEvents='none';document.body.appendChild(cl);});p.style.visibility='hidden';m.style.visibility='hidden';const matchedPhrase=p.dataset.phrase;requestAnimationFrame(()=>{const tx=br.left+br.width/2,ty=br.top+br.height/2;pc.style.left=(tx-40)+'px';pc.style.top=(ty-15)+'px';pc.style.width='60px';pc.style.height='30px';pc.style.opacity='0';mc.style.left=(tx+5)+'px';mc.style.top=(ty-15)+'px';mc.style.width='60px';mc.style.height='30px';mc.style.opacity='0';});setTimeout(()=>{pc.remove();mc.remove();p.classList.add('hidden');m.classList.add('hidden');addPairToBook(p.dataset.phrase,p.dataset.meaning);collectedPhrases.add(p.dataset.phrase);remainingPairs=remainingPairs.filter(x=>x.p!==matchedPhrase);isAnimating=false;syncGlobalToVariant();const rem=document.querySelectorAll('.tile:not(.hidden)').length;if(rem===0){setTimeout(()=>nextRound(),800);}},500);}
+function animateToBook(p,m){
+  const br=document.querySelector('.book').getBoundingClientRect();
+  const pr=p.getBoundingClientRect(),mr=m.getBoundingClientRect();
+  const pc=p.cloneNode(true),mc=m.cloneNode(true);
+  [pc,mc].forEach((cl,i)=>{const r=i===0?pr:mr;cl.style.position='fixed';cl.style.left=r.left+'px';cl.style.top=r.top+'px';cl.style.width=r.width+'px';cl.style.height=r.height+'px';cl.style.zIndex='9999';cl.style.transition='all .5s ease-in';cl.style.pointerEvents='none';document.body.appendChild(cl);});
+  p.style.visibility='hidden';m.style.visibility='hidden';
+  const matchedPhrase=p.dataset.phrase;
+  requestAnimationFrame(()=>{
+    const tx=br.left+br.width/2,ty=br.top+br.height/2;
+    pc.style.left=(tx-40)+'px';pc.style.top=(ty-15)+'px';pc.style.width='60px';pc.style.height='30px';pc.style.opacity='0';
+    mc.style.left=(tx+5)+'px';mc.style.top=(ty-15)+'px';mc.style.width='60px';mc.style.height='30px';mc.style.opacity='0';
+  });
+  setTimeout(()=>{
+    pc.remove();mc.remove();
+    p.classList.add('hidden');m.classList.add('hidden');
+    addPairToBook(p.dataset.phrase,p.dataset.meaning);
+    collectedPhrases.add(p.dataset.phrase);
+    remainingPairs=remainingPairs.filter(x=>x.p!==matchedPhrase);
+    isAnimating=false;syncGlobalToVariant();
+    const rem=document.querySelectorAll('.tile:not(.hidden)').length;
+    if(rem===0){setTimeout(()=>nextRound(),800);}
+  },500);
+}
+
+// Вариант В: 3 пары гарантированно, 4-я — если fitBook укладывает без обрезки.
+// Только для ноутбука/ПК (window.innerWidth > 1400).
+function pairPageOverflows(pageEl){
+  const contents=pageEl.querySelectorAll('.pair-content');
+  for(const el of contents){
+    if(el.scrollHeight>el.clientHeight+2||el.scrollWidth>el.clientWidth+2) return true;
+  }
+  return false;
+}
 
 function addPairToBook(phrase,meaning){
   const s=variantState[currentVariant];
   const pp=deviceParams.bookPairsPerPage;
   const item={phrase,meaning};
   if(s.leftPairs.length>=pp && s.rightPairs.length>=pp){
-    s.leftPairs=[];
-    s.rightPairs=[];
-    bookLeftPairsRef=0;
-    bookRightPairsRef=0;
+    s.leftPairs=[];s.rightPairs=[];
+    bookLeftPairsRef=0;bookRightPairsRef=0;
   }
-  if(s.leftPairs.length<pp){
-    s.leftPairs.push(item);
-  }else if(s.rightPairs.length<pp){
-    s.rightPairs.push(item);
-  }
+  let target = s.leftPairs.length<pp ? 'left' : (s.rightPairs.length<pp ? 'right' : null);
+  if(!target){ s.leftPairs=[];s.rightPairs=[];target='left'; }
+  if(target==='left') s.leftPairs.push(item); else s.rightPairs.push(item);
   pairsInBook.push(item);
-  bookLeftPairsRef=s.leftPairs.length;
-  bookRightPairsRef=s.rightPairs.length;
+  bookLeftPairsRef=s.leftPairs.length;bookRightPairsRef=s.rightPairs.length;
   renderBookFromState();
+  // Вариант В — только ноутбук/ПК и только при 4-й паре
+  if(isLaptop()){
+    const pageEl = document.getElementById(target==='left'?'pageLeft':'pageRight');
+    if(pairPageOverflows(pageEl)){
+      // не влезла — откат и принудительный переворот
+      if(target==='left') s.leftPairs.pop(); else s.rightPairs.pop();
+      pairsInBook.pop();
+      bookLeftPairsRef=s.leftPairs.length;bookRightPairsRef=s.rightPairs.length;
+      renderBookFromState();
+      // переворачиваем страницу сразу — 4-я уедет на следующую
+      isFlipping=true;
+      setTimeout(()=>{ flipBookPageAndReadd(phrase,meaning); },400);
+      return;
+    }
+  }
   if(s.leftPairs.length>=pp && s.rightPairs.length>=pp){
     isFlipping=true;
     setTimeout(()=>{ flipBookPage(); },700);
   }
+}
+
+function flipBookPageAndReadd(phrase,meaning){
+  const s=variantState[currentVariant];
+  const sp=document.getElementById('bookSpread');
+  const rp=document.getElementById('pageRight');
+  sp.querySelectorAll('.flip-clone').forEach(el=>el.remove());
+  const rr=rp.getBoundingClientRect(),sr=sp.getBoundingClientRect();
+  const cl=document.createElement('div');cl.className='flip-clone';
+  cl.style.position='absolute';cl.style.left=(rr.left-sr.left)+'px';cl.style.top='0';cl.style.width=rr.width+'px';cl.style.height='100%';
+  const fr=document.createElement('div');fr.className='flip-clone-front';fr.innerHTML=rp.innerHTML;
+  cl.appendChild(fr);
+  const bk=document.createElement('div');bk.className='flip-clone-back';cl.appendChild(bk);
+  rp.innerHTML='';
+  sp.appendChild(cl);
+  setTimeout(()=>{
+    s.leftPairs=[];s.rightPairs=[];bookLeftPairsRef=0;bookRightPairsRef=0;
+    renderBookFromState();
+    isFlipping=false;syncGlobalToVariant();
+    setTimeout(()=>{sp.querySelectorAll('.flip-clone').forEach(el=>el.remove());},150);
+    // доложить отложенную пару
+    setTimeout(()=>{
+      const s2=variantState[currentVariant];
+      const item={phrase,meaning};
+      s2.leftPairs.push(item);pairsInBook.push(item);
+      bookLeftPairsRef=s2.leftPairs.length;bookRightPairsRef=s2.rightPairs.length;
+      renderBookFromState();
+      syncGlobalToVariant();
+    },200);
+  },1250);
 }
 
 function flipBookPage(){
@@ -1255,166 +1177,106 @@ function flipBookPage(){
   const rp=document.getElementById('pageRight');
   sp.querySelectorAll('.flip-clone').forEach(el=>el.remove());
   const rr=rp.getBoundingClientRect(),sr=sp.getBoundingClientRect();
-  const cl=document.createElement('div');
-  cl.className='flip-clone';
-  cl.style.position='absolute';
-  cl.style.left=(rr.left-sr.left)+'px';
-  cl.style.top='0';
-  cl.style.width=rr.width+'px';
-  cl.style.height='100%';
-  const fr=document.createElement('div');
-  fr.className='flip-clone-front';
-  fr.innerHTML=rp.innerHTML;
+  const cl=document.createElement('div');cl.className='flip-clone';
+  cl.style.position='absolute';cl.style.left=(rr.left-sr.left)+'px';cl.style.top='0';cl.style.width=rr.width+'px';cl.style.height='100%';
+  const fr=document.createElement('div');fr.className='flip-clone-front';fr.innerHTML=rp.innerHTML;
   cl.appendChild(fr);
-  const bk=document.createElement('div');
-  bk.className='flip-clone-back';
-  cl.appendChild(bk);
+  const bk=document.createElement('div');bk.className='flip-clone-back';cl.appendChild(bk);
   rp.innerHTML='';
   sp.appendChild(cl);
   setTimeout(()=>{
-    s.leftPairs=[];
-    s.rightPairs=[];
-    bookLeftPairsRef=0;
-    bookRightPairsRef=0;
+    s.leftPairs=[];s.rightPairs=[];bookLeftPairsRef=0;bookRightPairsRef=0;
     renderBookFromState();
-    isFlipping=false;
-    syncGlobalToVariant();
-    setTimeout(()=>{
-      sp.querySelectorAll('.flip-clone').forEach(el=>el.remove());
-    },150);
+    isFlipping=false;syncGlobalToVariant();
+    setTimeout(()=>{sp.querySelectorAll('.flip-clone').forEach(el=>el.remove());},150);
   },1250);
 }
 
 function showFinal(){
   playChestClose();
-  const lid=document.getElementById('chestLid');
-  const key=document.getElementById('chestKey');
-  lid.classList.remove('open');
-  lid.classList.add('closing');
+  const lid=document.getElementById('chestLid'),key=document.getElementById('chestKey');
+  lid.classList.remove('open');lid.classList.add('closing');
   key.classList.remove('turned');
   document.getElementById('mainArea').style.visibility='hidden';
   document.getElementById('finalOverlay').classList.add('active');
   playFanfare();
   setTimeout(()=>{lid.classList.remove('closing');},1400);
-  variantState[currentVariant].gameStarted=false;
-  variantState[currentVariant].round=0;
-  variantState[currentVariant].leftPairs=[];
-  variantState[currentVariant].rightPairs=[];
-  variantState[currentVariant].pairsInBook=[];
-  variantState[currentVariant].remainingPairs=[];
-  variantState[currentVariant].bookLeftPairs=0;
-  variantState[currentVariant].bookRightPairs=0;
-  variantState[currentVariant].completed=true;
-  bookLeftPairsRef=0;
-  bookRightPairsRef=0;
+  const s=variantState[currentVariant];
+  s.gameStarted=false;s.round=0;s.leftPairs=[];s.rightPairs=[];s.pairsInBook=[];s.remainingPairs=[];s.bookLeftPairs=0;s.bookRightPairs=0;s.completed=true;
+  bookLeftPairsRef=0;bookRightPairsRef=0;
   renderBookFromState();
-  const allCompleted = variantState.every(s=>s.completed);
+  const allCompleted=variantState.every(st=>st.completed);
   if(allCompleted && !congratsShown){
     congratsShown=true;
-    setTimeout(()=>{
-      document.getElementById('congratsOverlay').classList.add('active');
-      launchConfetti();
-    }, 1500);
+    setTimeout(()=>{document.getElementById('congratsOverlay').classList.add('active');launchConfetti();},1500);
   }
 }
 
 function launchConfetti(){
-  const layer=document.getElementById('confettiLayer');
-  layer.innerHTML='';
+  const layer=document.getElementById('confettiLayer');layer.innerHTML='';
   const colors=['#e6b800','#f5deb3','#4caf50','#ffd700','#ffffff','#b8860b'];
-  const count=120;
-  for(let i=0;i<count;i++){
-    const p=document.createElement('div');
-    p.className='confetti-piece';
+  for(let i=0;i<120;i++){
+    const p=document.createElement('div');p.className='confetti-piece';
     const size=6+Math.random()*8;
-    p.style.left=(Math.random()*100)+'vw';
-    p.style.width=size+'px';
-    p.style.height=(size*1.4)+'px';
+    p.style.left=(Math.random()*100)+'vw';p.style.width=size+'px';p.style.height=(size*1.4)+'px';
     p.style.background=colors[Math.floor(Math.random()*colors.length)];
     p.style.borderRadius=Math.random()<0.5?'50%':'2px';
-    const dur=2.5+Math.random()*2.5;
-    const delay=Math.random()*1.2;
-    p.style.animationDuration=dur+'s';
-    p.style.animationDelay=delay+'s';
+    p.style.animationDuration=(2.5+Math.random()*2.5)+'s';
+    p.style.animationDelay=(Math.random()*1.2)+'s';
     layer.appendChild(p);
   }
   setTimeout(()=>{layer.innerHTML='';},7000);
 }
 
-function congratsOpenDict(){
-  document.getElementById('congratsOverlay').classList.remove('active');
-  document.getElementById('confettiLayer').innerHTML='';
-  openDict();
-}
+function congratsOpenDict(){document.getElementById('congratsOverlay').classList.remove('active');document.getElementById('confettiLayer').innerHTML='';openDict();}
 
-function makeDictEntryNode(pair, collected){
+function makeDictEntryNode(pair,collected){
   const d=document.createElement('div');
   d.className='dict-entry'+(collected?'':' empty');
+  const svg=useSvgLock();
   if(DEVICE_TYPE==='phone'){
     if(!collected){
-      const lk=document.createElement('span');
-      lk.className='lock';
-      lk.textContent='🔒';
+      const lk=document.createElement('span');lk.className='lock';
+      if(svg) lk.innerHTML=LOCK_SVG; else lk.textContent='🔒';
       d.appendChild(lk);
-    }else{
-      const top=document.createElement('div');
-      top.className='dict-entry-top';
-      const ph=document.createElement('span');
-      ph.className='entry-phrase';
-      let phraseHtml = capitalizeFirst(addNbsp(capitalizeFirst(pair.p))).replace(/<br>/g,' ');
-      phraseHtml = phraseHtml.replace(/с&nbsp;первого&nbsp;взгляда\s*\/\s*на&nbsp;первый&nbsp;взгляд/gi,'с&nbsp;первого&nbsp;взгляда&nbsp;/<br>на&nbsp;первый&nbsp;взгляд');
-      phraseHtml = phraseHtml.replace(/белый&nbsp;свет\s*\/\s*на&nbsp;белом&nbsp;свете/gi,'белый&nbsp;свет&nbsp;/<br>на&nbsp;белом&nbsp;свете');
-      phraseHtml = phraseHtml.replace(/поставить&nbsp;крест\s*\(на&nbsp;ком-то\/чём-то\)/gi,'поставить&nbsp;крест<br><span style="white-space:nowrap"><i>(на&nbsp;ком-то/чём-то)</i></span>');
+    } else {
+      const top=document.createElement('div');top.className='dict-entry-top';
+      const ph=document.createElement('span');ph.className='entry-phrase';
+      let phraseHtml=addNbspDict(capitalizeFirst(pair.p)).replace(/<br>/g,' ');
+      phraseHtml=phraseHtml.replace(/с&nbsp;первого&nbsp;взгляда\s*\/\s*на&nbsp;первый&nbsp;взгляд/gi,'с&nbsp;первого&nbsp;взгляда&nbsp;/<br>на&nbsp;первый&nbsp;взгляд');
+      phraseHtml=phraseHtml.replace(/белый&nbsp;свет\s*\/\s*на&nbsp;белом&nbsp;свете/gi,'белый&nbsp;свет&nbsp;/<br>на&nbsp;белом&nbsp;свете');
+      phraseHtml=phraseHtml.replace(/поставить&nbsp;крест\s*\(на&nbsp;ком-то\/чём-то\)/gi,'поставить&nbsp;крест<br><span style="white-space:nowrap"><i>(на&nbsp;ком-то/чём-то)</i></span>');
       ph.innerHTML=phraseHtml+'\u00A0—';
-      if(pair.p===LAMP_PHRASE){
-        const l=document.createElement('span');
-        l.className='lamp-inline';l.textContent='💡';
-        l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};
-        ph.appendChild(l);
-      }
+      if(pair.p===LAMP_PHRASE){const l=document.createElement('span');l.className='lamp-inline';l.textContent='💡';l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};ph.appendChild(l);}
       top.appendChild(ph);
-      const bottom=document.createElement('div');
-      bottom.className='dict-entry-bottom';
-      const mn=document.createElement('span');
-      mn.className='entry-meaning';
-      if(NARROW_MEANING_PHRASES.indexOf(pair.p)>=0){
-        mn.style.fontSize='0.85em';
-      }
+      const bottom=document.createElement('div');bottom.className='dict-entry-bottom';
+      const mn=document.createElement('span');mn.className='entry-meaning';
+      if(NARROW_MEANING_PHRASES.indexOf(pair.p)>=0){mn.style.fontSize='0.85em';}
       mn.innerHTML=splitMeaning(pair.m).map((part,i)=>{
         const cls=['','second','third'][i]||'third';
         const sep=i<splitMeaning(pair.m).length-1?';':'';
-        return `<span class="${cls}">${addNbsp(part).replace(/<br>/g,' ')}${sep}</span>`;
+        return `<span class="${cls}">${addNbspDict(part).replace(/<br>/g,' ')}${sep}</span>`;
       }).join('<br>');
       bottom.appendChild(mn);
       d.appendChild(top);d.appendChild(bottom);
     }
     return d;
   }
-  const lk=document.createElement('span');
-  lk.className='lock';
-  lk.textContent=collected?'':'🔒';
-  const ph=document.createElement('span');
-  ph.className='entry-phrase';
-  let phraseHtml = capitalizeFirst(addNbsp(capitalizeFirst(pair.p)));
-  phraseHtml = phraseHtml.replace(/поставить&nbsp;крест\s*\(на&nbsp;ком-то\/чём-то\)/gi,'поставить&nbsp;крест<br><span style="white-space:nowrap"><i>(на&nbsp;ком-то/чём-то)</i></span>');
+  const lk=document.createElement('span');lk.className='lock';
+  if(svg){ if(collected) lk.innerHTML=''; else lk.innerHTML=LOCK_SVG; }
+  else { lk.textContent=collected?'':'🔒'; }
+  const ph=document.createElement('span');ph.className='entry-phrase';
+  let phraseHtml=addNbspDict(capitalizeFirst(pair.p));
+  phraseHtml=phraseHtml.replace(/поставить&nbsp;крест\s*\(на&nbsp;ком-то\/чём-то\)/gi,'поставить&nbsp;крест<br><span style="white-space:nowrap"><i>(на&nbsp;ком-то/чём-то)</i></span>');
   ph.innerHTML=phraseHtml;
-  if(collected&&pair.p===LAMP_PHRASE){
-    const l=document.createElement('span');
-    l.className='lamp-inline';l.textContent='💡';
-    l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};
-    ph.appendChild(l);
-  }
-  const dh=document.createElement('span');
-  dh.className='entry-dash';dh.textContent=collected?'—':'';
-  const mn=document.createElement('span');
-  mn.className='entry-meaning';
-  if(window.innerWidth <= 1400 && NARROW_MEANING_PHRASES.indexOf(pair.p)>=0){
-    mn.style.fontSize='0.85em';
-  }
+  if(collected&&pair.p===LAMP_PHRASE){const l=document.createElement('span');l.className='lamp-inline';l.textContent='💡';l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};ph.appendChild(l);}
+  const dh=document.createElement('span');dh.className='entry-dash';dh.textContent=collected?'—':'';
+  const mn=document.createElement('span');mn.className='entry-meaning';
+  if(window.innerWidth<=1400 && NARROW_MEANING_PHRASES.indexOf(pair.p)>=0){mn.style.fontSize='0.85em';}
   mn.innerHTML=collected?splitMeaning(pair.m).map((part,i)=>{
     const cls=['','second','third'][i]||'third';
     const sep=i<splitMeaning(pair.m).length-1?';':'';
-    return `<span class="${cls}">${addNbsp(part)}${sep}</span>`;
+    return `<span class="${cls}">${addNbspDict(part)}${sep}</span>`;
   }).join('<br>'):'';
   d.appendChild(lk);d.appendChild(ph);d.appendChild(dh);d.appendChild(mn);
   return d;
@@ -1422,58 +1284,41 @@ function makeDictEntryNode(pair, collected){
 
 function measureDictHeights(){
   if(DEVICE_TYPE !== 'phone') return;
-  const host=document.createElement('div');
-  host.className='dict-measure-host';
-  document.body.appendChild(host);
-  const w=Math.max(80, Math.floor((window.innerWidth * 0.88 - 8 - 6 - 26) / 2));
+  const host=document.createElement('div');host.className='dict-measure-host';document.body.appendChild(host);
+  const w=Math.max(80,Math.floor((window.innerWidth*0.88-8-6-26)/2));
   host.style.width=w+'px';
-  const probe=document.createElement('div');
-  probe.style.width=w+'px';
-  host.appendChild(probe);
+  const probe=document.createElement('div');probe.style.width=w+'px';host.appendChild(probe);
   pairHeightsCache.clear();
   ALL_PAIRS.forEach(pair=>{
-    const node=makeDictEntryNode(pair, true);
-    probe.innerHTML='';
-    probe.appendChild(node);
-    const h=node.offsetHeight;
-    pairHeightsCache.set(pair.p, h);
+    const node=makeDictEntryNode(pair,true);
+    probe.innerHTML='';probe.appendChild(node);
+    pairHeightsCache.set(pair.p,node.offsetHeight);
   });
-  const lockNode=makeDictEntryNode({p:'',m:''}, false);
-  probe.innerHTML='';
-  probe.appendChild(lockNode);
+  const lockNode=makeDictEntryNode({p:'',m:''},false);
+  probe.innerHTML='';probe.appendChild(lockNode);
   lockHeight=lockNode.offsetHeight;
-  const letterNode=document.createElement('div');
-  letterNode.className='dict-section-title';
-  letterNode.textContent='А';
-  probe.innerHTML='';
-  probe.appendChild(letterNode);
-  letterHeight=letterNode.offsetHeight + 10;
-  probe.innerHTML='';
-  host.remove();
-  dictMeasured=true;
+  const letterNode=document.createElement('div');letterNode.className='dict-section-title';letterNode.textContent='А';
+  probe.innerHTML='';probe.appendChild(letterNode);
+  letterHeight=letterNode.offsetHeight+10;
+  probe.innerHTML='';host.remove();dictMeasured=true;
 }
 
 function scheduleDictMeasure(){
   if(DEVICE_TYPE !== 'phone') return;
   if(dictMeasured || dictMeasurePending) return;
   dictMeasurePending=true;
-  const run=()=>{ if(dictMeasured){dictMeasurePending=false;return;} measureDictHeights(); dictMeasurePending=false; };
-  if(document.fonts && document.fonts.ready){
-    document.fonts.ready.then(()=>{ setTimeout(run, 100); });
-  } else {
-    setTimeout(run, 500);
-  }
+  const run=()=>{if(dictMeasured){dictMeasurePending=false;return;}measureDictHeights();dictMeasurePending=false;};
+  if(document.fonts && document.fonts.ready){document.fonts.ready.then(()=>{setTimeout(run,100);});}
+  else { setTimeout(run,500); }
 }
 
 let dictPages=[],dictCurrentPage=0;
 function sortKey(phrase){return phrase.replace(/^\s*\([^)]*\)\s*/,'').trim();}
 function buildDictPages(){
   const sorted=[...ALL_PAIRS].sort((a,b)=>sortKey(a.p).localeCompare(sortKey(b.p),'ru'));
-  const entries=[];
-  let lastLetter='';
+  const entries=[];let lastLetter='';
   sorted.forEach(p=>{
-    const k=sortKey(p.p);
-    const l=k[0].toUpperCase();
+    const k=sortKey(p.p);const l=k[0].toUpperCase();
     if(l!==lastLetter){entries.push({type:'letter',letter:l});lastLetter=l;}
     entries.push({type:'pair',pair:p});
   });
@@ -1482,93 +1327,58 @@ function buildDictPages(){
     let cp=[],cnt=0;
     entries.forEach(e=>{cp.push(e);cnt++;if(cnt>=18){pages.push(cp);cp=[];cnt=0;}});
     if(cp.length>0)pages.push(cp);
-    for(let i=0;i<pages.length-1;i++){
-      const page=pages[i];
-      if(page.length>0 && page[page.length-1].type==='letter'){
-        const letterEntry=page.pop();
-        pages[i+1].unshift(letterEntry);
-      }
-    }
-    dictPages=pages;
-    return;
+    for(let i=0;i<pages.length-1;i++){const page=pages[i];if(page.length>0&&page[page.length-1].type==='letter'){const le=page.pop();pages[i+1].unshift(le);}}
+    dictPages=pages;return;
   }
-  const pageLimit = 400;
-  let cp=[];
-  let used=0;
+  const pageLimit=400;let cp=[],used=0;
   entries.forEach(e=>{
     let h=0;
-    if(e.type==='letter') h = letterHeight || 40;
-    else if(collectedPhrases.has(e.pair.p)) h = pairHeightsCache.get(e.pair.p) || 60;
-    else h = lockHeight || 30;
-    if(used + h > pageLimit && cp.length>0){
-      if(cp[cp.length-1].type==='letter'){
-        const letterEntry=cp.pop();
-        pages.push(cp);
-        cp=[letterEntry];
-        used=letterHeight || 40;
-      }else{
-        pages.push(cp);
-        cp=[];
-        used=0;
-      }
+    if(e.type==='letter') h=letterHeight||40;
+    else if(collectedPhrases.has(e.pair.p)) h=pairHeightsCache.get(e.pair.p)||60;
+    else h=lockHeight||30;
+    if(used+h>pageLimit && cp.length>0){
+      if(cp[cp.length-1].type==='letter'){const le=cp.pop();pages.push(cp);cp=[le];used=letterHeight||40;}
+      else{pages.push(cp);cp=[];used=0;}
     }
-    cp.push(e);
-    used += h;
+    cp.push(e);used+=h;
   });
   if(cp.length>0){
-    if(cp[cp.length-1].type==='letter' && pages.length>0){
-      const letterEntry=cp.pop();
-      if(cp.length>0)pages.push(cp);
-      pages.push([letterEntry]);
-    }else{
-      pages.push(cp);
-    }
+    if(cp[cp.length-1].type==='letter' && pages.length>0){const le=cp.pop();if(cp.length>0)pages.push(cp);pages.push([le]);}
+    else{pages.push(cp);}
   }
   dictPages=pages;
 }
 function capitalizeFirst(s){if(!s)return s;return s.charAt(0).toUpperCase()+s.slice(1);}
+
 function renderDictPage(){
   const lc=document.getElementById('dictPageLeftContent'),rc=document.getElementById('dictPageRightContent');
   lc.innerHTML='';rc.innerHTML='';
   const page=dictPages[dictCurrentPage];if(!page)return;
   let half=Math.ceil(page.length/2);
-  if(half>0 && half<page.length && page[half-1] && page[half-1].type==='letter'){ half++; }
+  if(half>0 && half<page.length && page[half-1] && page[half-1].type==='letter'){half++;}
   const le=page.slice(0,half),re=page.slice(half);
-  const isLastPage = (dictCurrentPage === dictPages.length - 1);
   [le,re].forEach((entries,side)=>{
     const ct=side===0?lc:rc;
-    const shouldDistribute = true;
-    ct.classList.toggle('distribute', shouldDistribute);
+    ct.classList.add('distribute');
     entries.forEach(entry=>{
-      if(entry.type==='letter'){
-        const d=document.createElement('div');
-        d.className='dict-section-title';
-        d.textContent=entry.letter;
-        ct.appendChild(d);
-      }else{
-        const pair=entry.pair;
-        const collected=collectedPhrases.has(pair.p);
-        ct.appendChild(makeDictEntryNode(pair, collected));
-      }
+      if(entry.type==='letter'){const d=document.createElement('div');d.className='dict-section-title';d.textContent=entry.letter;ct.appendChild(d);}
+      else{const pair=entry.pair;const collected=collectedPhrases.has(pair.p);ct.appendChild(makeDictEntryNode(pair,collected));}
     });
   });
   document.getElementById('dictArrowBack').classList.toggle('disabled',dictCurrentPage===0);
   document.getElementById('dictArrowForward').classList.toggle('disabled',dictCurrentPage>=dictPages.length-1);
 }
+
 function openDict(){
-  if(DEVICE_TYPE === 'phone' && !dictMeasured && !dictMeasurePending){
-    scheduleDictMeasure();
-  }
-  buildDictPages();
-  dictCurrentPage=0;
-  renderDictPage();
+  if(DEVICE_TYPE === 'phone' && !dictMeasured && !dictMeasurePending){scheduleDictMeasure();}
+  buildDictPages();dictCurrentPage=0;renderDictPage();
   document.getElementById('dictOverlay').classList.add('active');
 }
 function closeDict(){document.getElementById('dictOverlay').classList.remove('active');}
 function dictPrevPage(){if(dictCurrentPage>0){dictCurrentPage--;renderDictPage();}}
 function dictNextPage(){if(dictCurrentPage<dictPages.length-1){dictCurrentPage++;renderDictPage();}}
 
-function toggleSound(){soundOn=!soundOn;const b1=document.getElementById('soundBtn');const t=soundOn?'Звук 🔊':'Звук 🔇';if(b1){b1.textContent=t;b1.classList.toggle('muted',!soundOn);}}
+function toggleSound(){soundOn=!soundOn;const b=document.getElementById('soundBtn');const t=soundOn?'Звук 🔊':'Звук 🔇';if(b){b.textContent=t;b.classList.toggle('muted',!soundOn);}}
 function togglePause(){paused=!paused;const o=document.getElementById('pauseOverlay');if(paused)o.classList.add('active');else o.classList.remove('active');}
 function restartGame(){
   document.getElementById('finalOverlay').classList.remove('active');
@@ -1576,65 +1386,38 @@ function restartGame(){
   document.getElementById('confettiLayer').innerHTML='';
   document.getElementById('mainArea').style.visibility='';
   document.getElementById('rotateWrap').style.display='flex';
-  pairHeightsCache.clear();
-  lockHeight=0;
-  letterHeight=0;
-  dictMeasured=false;
-  dictMeasurePending=false;
-  congratsShown=false;
-  errorCount=0;
-  startTime=0;
+  pairHeightsCache.clear();lockHeight=0;letterHeight=0;dictMeasured=false;dictMeasurePending=false;
+  congratsShown=false;errorCount=0;startTime=0;
   initGame();
 }
 
-let orientationTimer = null;
+let orientationTimer=null;
 function onOrientationChanged(){
-  if (isFlipping) {
-    clearTimeout(orientationTimer);
-    orientationTimer = setTimeout(onOrientationChanged, 300);
-    return;
-  }
+  if(isFlipping){clearTimeout(orientationTimer);orientationTimer=setTimeout(onOrientationChanged,300);return;}
   document.querySelectorAll('.flip-clone').forEach(el=>el.remove());
   syncGlobalToVariant();
-  deviceParams = getParams();
-  {
-    const newPP = deviceParams.bookPairsPerPage;
-    const s = variantState[currentVariant];
-    if(s.leftPairs.length >= newPP && s.rightPairs.length >= newPP){
-      s.leftPairs = [];
-      s.rightPairs = [];
-      bookLeftPairsRef = 0;
-      bookRightPairsRef = 0;
-    }
-  }
+  deviceParams=getParams();
+  {const newPP=deviceParams.bookPairsPerPage;const s=variantState[currentVariant];
+    if(s.leftPairs.length>=newPP && s.rightPairs.length>=newPP){s.leftPairs=[];s.rightPairs=[];bookLeftPairsRef=0;bookRightPairsRef=0;}}
   applyPortraitTabletLayout();
-  const f = document.getElementById('gameField');
-  f.style.gridTemplateColumns = `repeat(${deviceParams.cols}, minmax(0,1fr))`;
-  if (gameStarted && remainingPairs.length > 0) {
+  const f=document.getElementById('gameField');
+  f.style.gridTemplateColumns=`repeat(${deviceParams.cols}, minmax(0,1fr))`;
+  if(gameStarted && remainingPairs.length>0){
     renderField(true);
     document.getElementById('chestLid').classList.add('open');
     document.getElementById('chestKey').classList.add('turned');
-  } else if (!gameStarted) {
-    f.innerHTML = '<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
+  } else if(!gameStarted){
+    f.innerHTML='<button class="start-btn" id="startBtn" onclick="startGame()">Начать игру</button>';
   }
   renderBookFromState();
   checkRotateNotice();
-  if(DEVICE_TYPE==='phone'){
-    pairHeightsCache.clear();
-    lockHeight=0;
-    letterHeight=0;
-    dictMeasured=false;
-    scheduleDictMeasure();
-  }
+  if(DEVICE_TYPE==='phone'){pairHeightsCache.clear();lockHeight=0;letterHeight=0;dictMeasured=false;scheduleDictMeasure();}
 }
 
-const mqlPortrait = window.matchMedia('(orientation: portrait)');
-function scheduleOrientationCheck(){
-  clearTimeout(orientationTimer);
-  orientationTimer = setTimeout(onOrientationChanged, 250);
-}
-if (mqlPortrait.addEventListener) mqlPortrait.addEventListener('change', scheduleOrientationCheck);
-else if (mqlPortrait.addListener) mqlPortrait.addListener(scheduleOrientationCheck);
+const mqlPortrait=window.matchMedia('(orientation: portrait)');
+function scheduleOrientationCheck(){clearTimeout(orientationTimer);orientationTimer=setTimeout(onOrientationChanged,250);}
+if(mqlPortrait.addEventListener) mqlPortrait.addEventListener('change',scheduleOrientationCheck);
+else if(mqlPortrait.addListener) mqlPortrait.addListener(scheduleOrientationCheck);
 
 initGame();
 </script>
