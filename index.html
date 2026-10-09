@@ -175,7 +175,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-container{width:96%;height:92%}
 .dict-entry .entry-phrase{font-size:.85rem}
 .dict-entry .entry-meaning{font-size:.85rem}
-  .page{display:flex;flex-direction:column;justify-content:flex-start;gap:10px;grid-template-rows:none}
+.page{display:flex;flex-direction:column;justify-content:flex-start;gap:10px;grid-template-rows:none}
 .flip-clone-front{display:flex;flex-direction:column;justify-content:flex-start;gap:10px;grid-template-rows:none}
 }
 @media (orientation:portrait) and (max-width:600px){
@@ -695,7 +695,6 @@ const ALL_PAIRS = [
 const LOCK_SVG = '<svg viewBox="0 0 24 24" width="16" height="16" xmlns="http://www.w3.org/2000/svg"><path d="M8 10 V7 a4 4 0 0 1 8 0 V10" fill="none" stroke="#b8860b" stroke-width="2.2" stroke-linecap="round"/><rect x="5" y="10" width="14" height="11" rx="1.5" fill="#e8bc53" stroke="#7a5a1a" stroke-width="1.3"/><circle cx="12" cy="15" r="1.5" fill="#3a2008"/><path d="M12 16 L12 18.5" stroke="#3a2008" stroke-width="1.5" stroke-linecap="round"/></svg>';
 function useSvgLock(){ return window.innerWidth > 1400; }
 function isLaptop(){ return window.innerWidth > 1400; }
-  function isLaptop(){ return window.innerWidth > 1400; }
 function useDynamicBookLayout(){
   return isLaptop() || (DEVICE_TYPE === 'tablet' && !isLandscape());
 }
@@ -725,7 +724,6 @@ function getParams(){
 function normalizeMeaning(m){return m.toLowerCase().replace(/[;,.!?()]/g,' ').split(/\s+/).filter(w=>w.length>2).sort().join(' ');}
 function meaningsAreSimilar(a,b){const n1=normalizeMeaning(a),n2=normalizeMeaning(b);if(n1===n2)return true;const w1=new Set(n1.split(' ')),w2=new Set(n2.split(' '));const i=[...w1].filter(w=>w2.has(w));const ms=Math.min(w1.size,w2.size);return ms>0&&i.length/ms>=.6;}
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
-
 function conflictsWithRound(candidate,round){const cg=getGroupKey(candidate.p);for(const e of round){if(cg!==null&&cg===getGroupKey(e.p))return true;if(meaningsAreSimilar(candidate.m,e.m))return true;}return false;}
 
 function buildVariants(){
@@ -749,6 +747,7 @@ let soundOn=true,paused=false,gameStarted=false,isAnimating=false;
 let deviceParams=getParams();
 let collectedPhrases=new Set();
 let isFlipping=false;
+let pendingBookAdds=[];
 let congratsShown=false;
 let errorCount=0,startTime=0;
 
@@ -920,7 +919,7 @@ function initGame(){
   currentVariant=0;currentRoundRef=0;stackRemainingRef=deviceParams.totalTiles;
   remainingPairs=[];bookLeftPairsRef=0;bookRightPairsRef=0;pairsInBook=[];
   collectedPhrases=new Set();gameStarted=false;paused=false;selectedPhrase=null;selectedMeaning=null;
-  isAnimating=false;isFlipping=false;congratsShown=false;errorCount=0;startTime=0;
+  isAnimating=false;isFlipping=false;pendingBookAdds=[];congratsShown=false;errorCount=0;startTime=0;
   variantState.forEach(s=>{s.round=0;s.stackRemaining=deviceParams.totalTiles;s.gameStarted=false;s.completed=false;s.leftPairs=[];s.rightPairs=[];s.pairsInBook=[];s.remainingPairs=[];s.bookLeftPairs=0;s.bookRightPairs=0;});
   document.getElementById('chestLid').classList.remove('open','closing');
   document.getElementById('chestKey').classList.remove('turned');
@@ -946,7 +945,7 @@ function initGame(){
 function switchVariant(i){
   if(i===currentVariant && gameStarted && remainingPairs.length>0) return;
   if(isFlipping){document.querySelectorAll('.flip-clone').forEach(el=>el.remove());isFlipping=false;}
-  isAnimating=false;paused=false;
+  isAnimating=false;paused=false;pendingBookAdds=[];
   document.getElementById('pauseOverlay').classList.remove('active');
   document.getElementById('dictOverlay').classList.remove('active');
   document.getElementById('finalOverlay').classList.remove('active');
@@ -1064,7 +1063,7 @@ function renderField(skipAnimation){
   },150);
 }
 
-function selectTile(tile){if(paused||!gameStarted||isAnimating||isFlipping)return;if(tile.classList.contains('hidden'))return;playWoodClick();document.querySelectorAll('.tile').forEach(t=>t.classList.remove('selected'));tile.classList.add('selected');if(tile.dataset.type==='phrase')selectedPhrase=tile;else selectedMeaning=tile;if(selectedPhrase&&selectedMeaning)checkPair();}
+function selectTile(tile){if(paused||!gameStarted||isAnimating)return;if(tile.classList.contains('hidden'))return;playWoodClick();document.querySelectorAll('.tile').forEach(t=>t.classList.remove('selected'));tile.classList.add('selected');if(tile.dataset.type==='phrase')selectedPhrase=tile;else selectedMeaning=tile;if(selectedPhrase&&selectedMeaning)checkPair();}
 
 function checkPair(){
   if(isAnimating)return;
@@ -1097,12 +1096,20 @@ function animateToBook(p,m){
   setTimeout(()=>{
     pc.remove();mc.remove();
     p.classList.add('hidden');m.classList.add('hidden');
-    addPairToBook(p.dataset.phrase,p.dataset.meaning);
-    collectedPhrases.add(p.dataset.phrase);
-    remainingPairs=remainingPairs.filter(x=>x.p!==matchedPhrase);
+    if(isFlipping){
+      pendingBookAdds.push({phrase: p.dataset.phrase, meaning: p.dataset.meaning});
+      collectedPhrases.add(p.dataset.phrase);
+      remainingPairs=remainingPairs.filter(x=>x.p!==matchedPhrase);
+    } else {
+      addPairToBook(p.dataset.phrase,p.dataset.meaning);
+      collectedPhrases.add(p.dataset.phrase);
+      remainingPairs=remainingPairs.filter(x=>x.p!==matchedPhrase);
+    }
     isAnimating=false;syncGlobalToVariant();
-    const rem=document.querySelectorAll('.tile:not(.hidden)').length;
-    if(rem===0){setTimeout(()=>nextRound(),800);}
+    if(!isFlipping){
+      const rem=document.querySelectorAll('.tile:not(.hidden)').length;
+      if(rem===0){setTimeout(()=>nextRound(),800);}
+    }
   },500);
 }
 
@@ -1120,6 +1127,45 @@ function pairPageOverflows(pageEl){
   return total > avail + 2;
 }
 
+function getPageRemainingSpace(pageEl){
+  if(!pageEl) return 0;
+  const cs = getComputedStyle(pageEl);
+  const avail = pageEl.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+  const gap = parseFloat(cs.gap) || 0;
+  let used = 0;
+  const pairs = pageEl.querySelectorAll('.book-pair');
+  pairs.forEach((p, i) => {
+    used += p.offsetHeight;
+    if(i < pairs.length - 1) used += gap;
+  });
+  return avail - used;
+}
+
+function getTwoLineThreshold(pageEl){
+  const content = pageEl ? pageEl.querySelector('.pair-content') : null;
+  if(!content) return 30;
+  const cs = getComputedStyle(content);
+  const fs = parseFloat(cs.fontSize) || 10;
+  const lh = parseFloat(cs.lineHeight) || fs * 1.2;
+  return lh * 2 + 10;
+}
+
+function maybeProactivelyFlip(){
+  if(isFlipping) return;
+  if(!useDynamicBookLayout()) return;
+  const s = variantState[currentVariant];
+  const pp = deviceParams.bookPairsPerPage;
+  const leftEl = document.getElementById('pageLeft');
+  const rightEl = document.getElementById('pageRight');
+  if(!leftEl || !rightEl) return;
+  const threshold = getTwoLineThreshold(leftEl);
+  const leftCanFit = s.leftPairs.length < pp && getPageRemainingSpace(leftEl) >= threshold;
+  const rightCanFit = s.rightPairs.length < pp && getPageRemainingSpace(rightEl) >= threshold;
+  if(!leftCanFit && !rightCanFit && (s.leftPairs.length > 0 || s.rightPairs.length > 0)){
+    flipBookPage();
+  }
+}
+
 function addPairToBook(phrase,meaning){
   const s=variantState[currentVariant];
   const pp=deviceParams.bookPairsPerPage;
@@ -1134,8 +1180,10 @@ function addPairToBook(phrase,meaning){
       renderBookPage(leftEl, s.leftPairs);
       if(!pairPageOverflows(leftEl)){
         pairsInBook.push(item);
-        bookLeftPairsRef=s.leftPairs.length;bookRightPairsRef=s.rightPairs.length;
+        bookLeftPairsRef=s.leftPairs.length;
+        bookRightPairsRef=s.rightPairs.length;
         renderBookFromState();
+        setTimeout(maybeProactivelyFlip, 60);
         return;
       }
       s.leftPairs.pop();
@@ -1146,8 +1194,10 @@ function addPairToBook(phrase,meaning){
       renderBookPage(rightEl, s.rightPairs);
       if(!pairPageOverflows(rightEl)){
         pairsInBook.push(item);
-        bookLeftPairsRef=s.leftPairs.length;bookRightPairsRef=s.rightPairs.length;
+        bookLeftPairsRef=s.leftPairs.length;
+        bookRightPairsRef=s.rightPairs.length;
         renderBookFromState();
+        setTimeout(maybeProactivelyFlip, 60);
         return;
       }
       s.rightPairs.pop();
@@ -1156,12 +1206,13 @@ function addPairToBook(phrase,meaning){
     if(s.leftPairs.length === 0){
       s.leftPairs.push(item);
       pairsInBook.push(item);
-      bookLeftPairsRef=s.leftPairs.length;bookRightPairsRef=s.rightPairs.length;
+      bookLeftPairsRef=s.leftPairs.length;
+      bookRightPairsRef=s.rightPairs.length;
       renderBookFromState();
       return;
     }
-    isFlipping=true;
-    setTimeout(()=>{ flipBookPageAndReadd(phrase,meaning); },400);
+    pendingBookAdds.unshift(item);
+    flipBookPage();
     return;
   }
 
@@ -1172,41 +1223,25 @@ function addPairToBook(phrase,meaning){
   bookLeftPairsRef=s.leftPairs.length;bookRightPairsRef=s.rightPairs.length;
   renderBookFromState();
   if(s.leftPairs.length>=pp && s.rightPairs.length>=pp){
-    isFlipping=true;
     setTimeout(()=>{ flipBookPage(); },700);
   }
 }
 
-function flipBookPageAndReadd(phrase,meaning){
-  const s=variantState[currentVariant];
-  const sp=document.getElementById('bookSpread');
-  const rp=document.getElementById('pageRight');
-  sp.querySelectorAll('.flip-clone').forEach(el=>el.remove());
-  const rr=rp.getBoundingClientRect(),sr=sp.getBoundingClientRect();
-  const cl=document.createElement('div');cl.className='flip-clone';
-  cl.style.position='absolute';cl.style.left=(rr.left-sr.left)+'px';cl.style.top='0';cl.style.width=rr.width+'px';cl.style.height='100%';
-  const fr=document.createElement('div');fr.className='flip-clone-front';fr.innerHTML=rp.innerHTML;
-  cl.appendChild(fr);
-  const bk=document.createElement('div');bk.className='flip-clone-back';cl.appendChild(bk);
-  rp.innerHTML='';
-  sp.appendChild(cl);
-  setTimeout(()=>{
-    s.leftPairs=[];s.rightPairs=[];bookLeftPairsRef=0;bookRightPairsRef=0;
-    renderBookFromState();
-    isFlipping=false;syncGlobalToVariant();
-    setTimeout(()=>{sp.querySelectorAll('.flip-clone').forEach(el=>el.remove());},150);
-    setTimeout(()=>{
-      const s2=variantState[currentVariant];
-      const item={phrase,meaning};
-      s2.leftPairs.push(item);pairsInBook.push(item);
-      bookLeftPairsRef=s2.leftPairs.length;bookRightPairsRef=s2.rightPairs.length;
-      renderBookFromState();
-      syncGlobalToVariant();
-    },200);
-  },1250);
+function processPendingBookAdds(){
+  if(pendingBookAdds.length === 0){
+    const rem=document.querySelectorAll('.tile:not(.hidden)').length;
+    if(rem===0){setTimeout(()=>nextRound(),800);}
+    return;
+  }
+  const add = pendingBookAdds.shift();
+  addPairToBook(add.phrase, add.meaning);
+  syncGlobalToVariant();
+  setTimeout(processPendingBookAdds, 60);
 }
 
 function flipBookPage(){
+  if(isFlipping) return;
+  isFlipping=true;
   const s=variantState[currentVariant];
   const sp=document.getElementById('bookSpread');
   const rp=document.getElementById('pageRight');
@@ -1222,8 +1257,10 @@ function flipBookPage(){
   setTimeout(()=>{
     s.leftPairs=[];s.rightPairs=[];bookLeftPairsRef=0;bookRightPairsRef=0;
     renderBookFromState();
-    isFlipping=false;syncGlobalToVariant();
+    isFlipping=false;
+    syncGlobalToVariant();
     setTimeout(()=>{sp.querySelectorAll('.flip-clone').forEach(el=>el.remove());},150);
+    processPendingBookAdds();
   },1250);
 }
 
@@ -1417,7 +1454,7 @@ function restartGame(){
   document.getElementById('mainArea').style.visibility='';
   document.getElementById('rotateWrap').style.display='flex';
   pairHeightsCache.clear();lockHeight=0;letterHeight=0;dictMeasured=false;dictMeasurePending=false;
-  congratsShown=false;errorCount=0;startTime=0;
+  congratsShown=false;errorCount=0;startTime=0;pendingBookAdds=[];
   initGame();
 }
 
