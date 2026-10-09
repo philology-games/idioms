@@ -28,7 +28,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .game-field{flex:1;border:3px solid #b8860b;border-radius:8px;padding:5px;padding-bottom:11px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;min-height:0;min-width:0;position:relative;background:rgba(0,0,0,.05);overflow:visible;grid-auto-rows:minmax(0,1fr)}
 .game-field .start-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Playfair Display',Georgia,serif;font-size:1rem;padding:8px 24px;background:#2a4a6a;color:#e0d4b8;border:2px solid #b8860b;border-radius:6px;cursor:pointer;z-index:10}
 .game-field .start-btn:hover{background:#3a5a7a}
-.tile{--edge1:#7a90ac;--edge2:#6a80a0;width:100%;height:100%;min-width:0;min-height:0;border-radius:5px 8px 8px 5px;cursor:pointer;text-align:center;font-family:'EB Garamond',Georgia,serif;font-size:1.02rem;font-weight:700;line-height:1.1;user-select:none;display:flex;align-items:center;justify-content:center;padding:2px 7px 4px 4px;overflow:hidden;position:relative;transition:box-shadow .15s,transform .15s;box-shadow:inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(0,0,0,.12),0 2px 0 var(--edge1),0 4px 0 var(--edge2),0 6px 6px rgba(0,0,0,.3);border:1px solid rgba(0,0,0,.15);border-bottom:none}
+.tile{--edge1:#7a90ac;--edge2:#6a80a0;width:100%;height:100%;min-width:0;min-height:0;border-radius:5px 8px 8px 5px;cursor:pointer;text-align:center;font-family:'EB Garamond',Georgia,serif;font-size:.99rem;font-weight:700;line-height:1.1;user-select:none;display:flex;align-items:center;justify-content:center;padding:2px 7px 4px 4px;overflow:hidden;position:relative;transition:box-shadow .15s,transform .15s;box-shadow:inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(0,0,0,.12),0 2px 0 var(--edge1),0 4px 0 var(--edge2),0 6px 6px rgba(0,0,0,.3);border:1px solid rgba(0,0,0,.15);border-bottom:none}
 .tile-content{display:block;width:100%;text-align:center;line-height:1.1;overflow-wrap:normal;word-break:keep-all;hyphens:none;-webkit-hyphens:none}
 .tile-content .second{color:#2a4a7a}
 .tile-content .third{color:#3a6a9a}
@@ -39,9 +39,9 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .tile.correct{background:linear-gradient(180deg,#c8e6c9,#a8d5a8) !important;border:2px solid #4caf50 !important;color:#1a2a4a !important;--edge1:#6a9a6a;--edge2:#4a7a4a}
 .tile.wrong{background:linear-gradient(180deg,#ffcdd2,#ef9a9a) !important;border:2px solid #c62828 !important;color:#1a2a4a !important;--edge1:#a04040;--edge2:#802020}
 .tile.hidden{visibility:hidden;pointer-events:none}
-@media (min-width:1100px){.tile{font-size:1.47rem}}
-@media (min-width:750px) and (max-width:1099px){.tile{font-size:1.17rem}}
-@media (max-width:749px){.tile{font-size:1.02rem}}
+@media (min-width:1100px){.tile{font-size:1.44rem}}
+@media (min-width:750px) and (max-width:1099px){.tile{font-size:1.14rem}}
+@media (max-width:749px){.tile{font-size:.99rem}}
 .right-column{flex:0 0 37%;display:flex;flex-direction:column;gap:8px;min-height:0;min-width:0}
 .chest{flex:0 0 55%;display:flex;justify-content:center;align-items:stretch;padding:30px 4px 10px 4px;min-height:0}
 .chest-inner{position:relative;width:92%;height:100%;perspective:600px;perspective-origin:50% 100%;overflow:visible}
@@ -234,6 +234,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .flip-clone-front{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:10px;align-content:space-between;padding:22px 12px}
 .final-book-title{font-size:clamp(1.4rem,4vh,2.6rem)}
 .congrats-title{font-size:clamp(3rem,8vh,5rem)}
+.dict-page{padding-top:34px}
 }
 @media (max-width:900px) and (max-height:600px){
 .page{grid-template-rows:repeat(3,minmax(0,1fr));gap:0;row-gap:8px;align-content:space-between;padding:18px 10px}
@@ -267,6 +268,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .page{display:flex;flex-direction:column;justify-content:flex-start;gap:20px;padding:24px 12px;grid-template-rows:none}
 .flip-clone-front{display:flex;flex-direction:column;justify-content:flex-start;gap:20px;padding:24px 12px;grid-template-rows:none}
 .chest{flex:0 0 45%;transform:translateY(-1.5cm)}
+.chest-inner{width:78%}
 .book-shelf{flex:0 0 55%}
 .book-open{height:calc(82% + 2cm)}
 .book-pair .pair-phrase,.book-pair .pair-dash,.book-pair .pair-meaning{font-size:1rem}
@@ -276,6 +278,8 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .final-book{width:min(360px,52vh);height:min(480px,68vh)}
 .final-book::before{left:calc(-1*min(360px,52vh)*0.13);width:calc(min(360px,52vh)*0.14)}
 .final-book::after{left:calc(-1*min(360px,52vh)*0.095)}
+.congrats-title{font-size:clamp(3rem,8vh,5.5rem)}
+.dict-page{padding-top:34px}
 }
 </style>
 </head>
@@ -399,7 +403,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 </div>
 
 <script>
-  const ALL_PAIRS = [
+const ALL_PAIRS = [
   { p: "альфа и омега", m: "суть, основа; начало и конец" },
   { p: "без оглядки", m: "быстро, не оглядываясь" },
   { p: "без устали", m: "не переставая" },
@@ -491,7 +495,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
   { p: "до нитки вымокнуть", m: "полностью промокнуть" },
   { p: "до сих пор", m: "до сегодняшнего дня" },
   { p: "достать из-под земли", m: "получить любой ценой" },
-  { p: "друг друга", m: "взаимно; один другого" },
+  { p: "друг друга", m: "взаимно, один другого" },
   { p: "душа болит", m: "переживать из-за чего-то/кого-то" },
   { p: "душа в душу", m: "дружно" },
   { p: "душа не лежит", m: "что-то не нравится" },
@@ -593,7 +597,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
   { p: "открыть глаза", m: "избавить от заблуждения" },
   { p: "от нечего делать", m: "от скуки, от безделья" },
   { p: "пасть духом", m: "отчаяться" },
-  { p: "спустя рукава", m: "делать; кое-как" },
+  { p: "спустя рукава", m: "делать кое-как" },
   { p: "пальцем не тронуть", m: "не применять физического воздействия" },
   { p: "первым делом", m: "в первую очередь" },
   { p: "перебежать дорогу", m: "помешать" },
@@ -686,7 +690,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
   { p: "язык не поворачивается", m: "не решаться что-либо сказать" }
 ];
 
-const LOCK_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#5a2a2a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+const LOCK_SVG = '<svg viewBox="0 0 24 24" width="16" height="16" xmlns="http://www.w3.org/2000/svg"><path d="M8 10 V7 a4 4 0 0 1 8 0 V10" fill="none" stroke="#b8860b" stroke-width="2.2" stroke-linecap="round"/><rect x="5" y="10" width="14" height="11" rx="1.5" fill="#e8bc53" stroke="#7a5a1a" stroke-width="1.3"/><circle cx="12" cy="15" r="1.5" fill="#3a2008"/><path d="M12 16 L12 18.5" stroke="#3a2008" stroke-width="1.5" stroke-linecap="round"/></svg>';
 function useSvgLock(){ return window.innerWidth > 1400; }
 function isLaptop(){ return window.innerWidth > 1400; }
 
@@ -700,16 +704,16 @@ const SIMILAR_GROUPS = [
   ["кот наплакал"]
 ];
 
-const PHRASE_GROUP = (function(){const map={};SIMILAR_GROUPS.forEach((g,i)=>{g.forEach(p=>{map[p]=i;});});return map;})();
+const PHRASE_GROUP=(function(){const map={};SIMILAR_GROUPS.forEach((g,i)=>{g.forEach(p=>{map[p]=i;});});return map;})();
 function getGroupKey(phrase){const g=PHRASE_GROUP[phrase];return (g===undefined)?null:g;}
 
-const DEVICE_TYPE = (function(){const s=Math.min(window.innerWidth,window.innerHeight);return s>=600?'tablet':'phone';})();
+const DEVICE_TYPE=(function(){const s=Math.min(window.innerWidth,window.innerHeight);return s>=600?'tablet':'phone';})();
 function isLandscape(){return window.innerWidth>=window.innerHeight;}
 function getParams(){
   const land=isLandscape();
   if(DEVICE_TYPE==='phone'){return {pairsPerRound:9,tabs:3,cols:3,rows:6,gap:2,bookPairsPerPage:1,totalTiles:190};}
   const laptop = window.innerWidth > 1400;
-  return {pairsPerRound:15,tabs:3,cols:land?6:5,rows:land?5:6,gap:5,bookPairsPerPage:laptop?4:(land?3:4),totalTiles:190};
+  return {pairsPerRound:15,tabs:3,cols:land?6:5,rows:land?5:6,gap:5,bookPairsPerPage:laptop?6:(land?3:4),totalTiles:190};
 }
 
 function normalizeMeaning(m){return m.toLowerCase().replace(/[;,.!?()]/g,' ').split(/\s+/).filter(w=>w.length>2).sort().join(' ');}
@@ -771,6 +775,7 @@ const SHORT_WORDS=['в','на','с','к','по','за','из','от','до','у'
 const ONE_LETTER_WORDS=['в','к','с','у','о','и','а'];
 
 function addNbsp(t){
+  t=t.replace(/делать кое-как/gi,'делать<br>кое-как');
   t=t.replace(/\(([^)]*)\)/g,'<i>($1)</i>');
   t=t.replace(/\s+\//g,'&nbsp;/');
   t=t.replace(/без свидетелей/gi,'без<br>свидетелей');
@@ -802,10 +807,8 @@ function addNbsp(t){
   return t;
 }
 
-// addNbspDict: вариант для книги и словаря. Отличается тем, что:
-// 1) слэш между вариантами фразеологизма (со пробелами вокруг) → <br>;
-// 2) все короткие слова/предлоги/союзы/частицы (включая «без») склеиваются с последующим словом на ВСЕХ устройствах.
 function addNbspDict(t){
+  t=t.replace(/делать кое-как/gi,'делать<br>кое-как');
   t=t.replace(/\s+\/\s+/g,' /<br>');
   t=t.replace(/\(([^)]*)\)/g,'<i>($1)</i>');
   t=t.replace(/без свидетелей/gi,'без&nbsp;свидетелей');
@@ -899,7 +902,8 @@ function renderBookFromState(){
     if(document.fonts && document.fonts.ready){document.fonts.ready.then(()=>applySmartBookLayout());}
   } else { setTimeout(fitBook,30); }
 }
-  function syncGlobalToVariant(){const s=variantState[currentVariant];s.round=currentRoundRef;s.stackRemaining=stackRemainingRef;s.gameStarted=gameStarted;s.remainingPairs=[...remainingPairs];s.bookLeftPairs=bookLeftPairsRef;s.bookRightPairs=bookRightPairsRef;}
+
+function syncGlobalToVariant(){const s=variantState[currentVariant];s.round=currentRoundRef;s.stackRemaining=stackRemainingRef;s.gameStarted=gameStarted;s.remainingPairs=[...remainingPairs];s.bookLeftPairs=bookLeftPairsRef;s.bookRightPairs=bookRightPairsRef;}
 function loadVariantToGlobal(i){const s=variantState[i];currentRoundRef=s.round;stackRemainingRef=s.stackRemaining;gameStarted=s.gameStarted;remainingPairs=[...s.remainingPairs];bookLeftPairsRef=s.bookLeftPairs;bookRightPairsRef=s.bookRightPairs;renderBookFromState();}
 
 function checkRotateNotice(){const el=document.getElementById('rotateNotice');if(!el)return;const isPL=(DEVICE_TYPE==='phone'&&isLandscape());el.classList.toggle('active',isPL);}
@@ -1096,45 +1100,71 @@ function animateToBook(p,m){
   },500);
 }
 
-// Вариант В: 3 пары гарантированно, 4-я — если fitBook укладывает без обрезки.
-// Только для ноутбука/ПК (window.innerWidth > 1400).
 function pairPageOverflows(pageEl){
-  const contents=pageEl.querySelectorAll('.pair-content');
-  for(const el of contents){
-    if(el.scrollHeight>el.clientHeight+2||el.scrollWidth>el.clientWidth+2) return true;
-  }
-  return false;
+  const pairs = pageEl.querySelectorAll('.book-pair');
+  if(pairs.length === 0) return false;
+  const cs = getComputedStyle(pageEl);
+  const avail = pageEl.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+  const gap = parseFloat(cs.gap) || 0;
+  let total = 0;
+  pairs.forEach((p, i) => {
+    total += p.offsetHeight;
+    if(i < pairs.length - 1) total += gap;
+  });
+  return total > avail + 2;
 }
 
 function addPairToBook(phrase,meaning){
   const s=variantState[currentVariant];
   const pp=deviceParams.bookPairsPerPage;
   const item={phrase,meaning};
-  if(s.leftPairs.length>=pp && s.rightPairs.length>=pp){
-    s.leftPairs=[];s.rightPairs=[];
-    bookLeftPairsRef=0;bookRightPairsRef=0;
+
+  if(isLaptop()){
+    const leftEl=document.getElementById('pageLeft');
+    const rightEl=document.getElementById('pageRight');
+
+    if(s.leftPairs.length < pp){
+      s.leftPairs.push(item);
+      renderBookPage(leftEl, s.leftPairs);
+      if(!pairPageOverflows(leftEl)){
+        pairsInBook.push(item);
+        bookLeftPairsRef=s.leftPairs.length;bookRightPairsRef=s.rightPairs.length;
+        renderBookFromState();
+        return;
+      }
+      s.leftPairs.pop();
+      renderBookPage(leftEl, s.leftPairs);
+    }
+    if(s.rightPairs.length < pp){
+      s.rightPairs.push(item);
+      renderBookPage(rightEl, s.rightPairs);
+      if(!pairPageOverflows(rightEl)){
+        pairsInBook.push(item);
+        bookLeftPairsRef=s.leftPairs.length;bookRightPairsRef=s.rightPairs.length;
+        renderBookFromState();
+        return;
+      }
+      s.rightPairs.pop();
+      renderBookPage(rightEl, s.rightPairs);
+    }
+    if(s.leftPairs.length === 0){
+      s.leftPairs.push(item);
+      pairsInBook.push(item);
+      bookLeftPairsRef=s.leftPairs.length;bookRightPairsRef=s.rightPairs.length;
+      renderBookFromState();
+      return;
+    }
+    isFlipping=true;
+    setTimeout(()=>{ flipBookPageAndReadd(phrase,meaning); },400);
+    return;
   }
+
   let target = s.leftPairs.length<pp ? 'left' : (s.rightPairs.length<pp ? 'right' : null);
   if(!target){ s.leftPairs=[];s.rightPairs=[];target='left'; }
   if(target==='left') s.leftPairs.push(item); else s.rightPairs.push(item);
   pairsInBook.push(item);
   bookLeftPairsRef=s.leftPairs.length;bookRightPairsRef=s.rightPairs.length;
   renderBookFromState();
-  // Вариант В — только ноутбук/ПК и только при 4-й паре
-  if(isLaptop()){
-    const pageEl = document.getElementById(target==='left'?'pageLeft':'pageRight');
-    if(pairPageOverflows(pageEl)){
-      // не влезла — откат и принудительный переворот
-      if(target==='left') s.leftPairs.pop(); else s.rightPairs.pop();
-      pairsInBook.pop();
-      bookLeftPairsRef=s.leftPairs.length;bookRightPairsRef=s.rightPairs.length;
-      renderBookFromState();
-      // переворачиваем страницу сразу — 4-я уедет на следующую
-      isFlipping=true;
-      setTimeout(()=>{ flipBookPageAndReadd(phrase,meaning); },400);
-      return;
-    }
-  }
   if(s.leftPairs.length>=pp && s.rightPairs.length>=pp){
     isFlipping=true;
     setTimeout(()=>{ flipBookPage(); },700);
@@ -1159,7 +1189,6 @@ function flipBookPageAndReadd(phrase,meaning){
     renderBookFromState();
     isFlipping=false;syncGlobalToVariant();
     setTimeout(()=>{sp.querySelectorAll('.flip-clone').forEach(el=>el.remove());},150);
-    // доложить отложенную пару
     setTimeout(()=>{
       const s2=variantState[currentVariant];
       const item={phrase,meaning};
@@ -1242,10 +1271,7 @@ function makeDictEntryNode(pair,collected){
     } else {
       const top=document.createElement('div');top.className='dict-entry-top';
       const ph=document.createElement('span');ph.className='entry-phrase';
-      let phraseHtml=addNbspDict(capitalizeFirst(pair.p)).replace(/<br>/g,' ');
-      phraseHtml=phraseHtml.replace(/с&nbsp;первого&nbsp;взгляда\s*\/\s*на&nbsp;первый&nbsp;взгляд/gi,'с&nbsp;первого&nbsp;взгляда&nbsp;/<br>на&nbsp;первый&nbsp;взгляд');
-      phraseHtml=phraseHtml.replace(/белый&nbsp;свет\s*\/\s*на&nbsp;белом&nbsp;свете/gi,'белый&nbsp;свет&nbsp;/<br>на&nbsp;белом&nbsp;свете');
-      phraseHtml=phraseHtml.replace(/поставить&nbsp;крест\s*\(на&nbsp;ком-то\/чём-то\)/gi,'поставить&nbsp;крест<br><span style="white-space:nowrap"><i>(на&nbsp;ком-то/чём-то)</i></span>');
+      let phraseHtml=addNbspDict(capitalizeFirst(pair.p));
       ph.innerHTML=phraseHtml+'\u00A0—';
       if(pair.p===LAMP_PHRASE){const l=document.createElement('span');l.className='lamp-inline';l.textContent='💡';l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};ph.appendChild(l);}
       top.appendChild(ph);
@@ -1255,7 +1281,7 @@ function makeDictEntryNode(pair,collected){
       mn.innerHTML=splitMeaning(pair.m).map((part,i)=>{
         const cls=['','second','third'][i]||'third';
         const sep=i<splitMeaning(pair.m).length-1?';':'';
-        return `<span class="${cls}">${addNbspDict(part).replace(/<br>/g,' ')}${sep}</span>`;
+        return `<span class="${cls}">${addNbspDict(part)}${sep}</span>`;
       }).join('<br>');
       bottom.appendChild(mn);
       d.appendChild(top);d.appendChild(bottom);
@@ -1266,9 +1292,7 @@ function makeDictEntryNode(pair,collected){
   if(svg){ if(collected) lk.innerHTML=''; else lk.innerHTML=LOCK_SVG; }
   else { lk.textContent=collected?'':'🔒'; }
   const ph=document.createElement('span');ph.className='entry-phrase';
-  let phraseHtml=addNbspDict(capitalizeFirst(pair.p));
-  phraseHtml=phraseHtml.replace(/поставить&nbsp;крест\s*\(на&nbsp;ком-то\/чём-то\)/gi,'поставить&nbsp;крест<br><span style="white-space:nowrap"><i>(на&nbsp;ком-то/чём-то)</i></span>');
-  ph.innerHTML=phraseHtml;
+  ph.innerHTML=addNbspDict(capitalizeFirst(pair.p));
   if(collected&&pair.p===LAMP_PHRASE){const l=document.createElement('span');l.className='lamp-inline';l.textContent='💡';l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};ph.appendChild(l);}
   const dh=document.createElement('span');dh.className='entry-dash';dh.textContent=collected?'—':'';
   const mn=document.createElement('span');mn.className='entry-meaning';
