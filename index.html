@@ -200,7 +200,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .book-pair .pair-content{text-align:left}
 .book-pair .pair-dash{display:none}
 .book-pair .pair-meaning{flex:0 0 auto;width:100%;padding:1px;text-align:center}
-.book-pair .pair-phrase,.book-pair .pair-meaning{font-size:.65rem}
+.book-pair .pair-phrase,.book-pair .pair-meaning{font-size:.62rem}
 .page{padding:10px 6px;gap:4px;grid-template-rows:1fr}
 .flip-clone-front{padding:10px 6px;gap:4px;grid-template-rows:1fr}
 .final-book{width:min(260px,68vw);height:calc(min(260px,68vw)*1.5)}
@@ -718,7 +718,7 @@ function getParams(){
   const land=isLandscape();
   if(DEVICE_TYPE==='phone'){return {pairsPerRound:9,tabs:3,cols:3,rows:6,gap:2,bookPairsPerPage:1,totalTiles:190};}
   const laptop = window.innerWidth > 1400;
-  return {pairsPerRound:15,tabs:3,cols:land?6:5,rows:land?5:6,gap:5,bookPairsPerPage:laptop?6:(land?3:4),totalTiles:190};
+  return {pairsPerRound:15,tabs:3,cols:land?6:5,rows:land?5:6,gap:5,bookPairsPerPage:laptop?5:(land?3:4),totalTiles:190};
 }
 
 function normalizeMeaning(m){return m.toLowerCase().replace(/[;,.!?()]/g,' ').split(/\s+/).filter(w=>w.length>2).sort().join(' ');}
@@ -781,6 +781,10 @@ const ONE_LETTER_WORDS=['в','к','с','у','о','и','а'];
 
 function addNbsp(t){
   t=t.replace(/делать кое-как/gi,'делать<br>кое-как');
+  t=t.replace(/язык не поворачивается/gi,'язык&nbsp;не<br>поворачивается');
+  t=t.replace(/избавить от заблуждения/gi,'избавить&nbsp;от<br>заблуждения');
+  t=t.replace(/ради кого-то\/чего-то/gi,'ради<br>кого-то/<br>чего-то');
+  t=t.replace(/быть на иждивении у кого-то/gi,'быть&nbsp;на&nbsp;<span style="font-size:.94em">иждивении</span>&nbsp;у&nbsp;кого-то');
   t=t.replace(/\(([^)]*)\)/g,'<i>($1)</i>');
   t=t.replace(/\s+\//g,'&nbsp;/');
   t=t.replace(/без свидетелей/gi,'без<br>свидетелей');
@@ -814,7 +818,15 @@ function addNbsp(t){
 
 function addNbspDict(t){
   t=t.replace(/делать кое-как/gi,'делать<br>кое-как');
-  t=t.replace(/\s+\/\s+/g,' /<br>');
+  t=t.replace(/язык не поворачивается/gi,'язык&nbsp;не<br>поворачивается');
+  t=t.replace(/избавить от заблуждения/gi,'избавить&nbsp;от<br>заблуждения');
+  t=t.replace(/представь себе/gi,'представь<br>себе');
+  t=t.replace(/обожать, очень любить/gi,'обожать<br>очень&nbsp;любить');
+  t=t.replace(/сейчас, с недавних пор/gi,'сейчас<br>с&nbsp;недавних&nbsp;пор');
+  t=t.replace(/передавая содержание, а не форму/gi,'передавая<br>содержание<br>а&nbsp;не&nbsp;форму');
+  t=t.replace(/достать из-под земли/gi,'достать<br>из\u2011под&nbsp;земли');
+  t=t.replace(/ради кого-то\/чего-то/gi,'ради<br>кого-то/<br>чего-то');
+  t=t.replace(/\s+\/\s+/g,'&nbsp;/<br>');
   t=t.replace(/\(([^)]*)\)/g,'<i>($1)</i>');
   t=t.replace(/без свидетелей/gi,'без&nbsp;свидетелей');
   t=t.replace(/без переживаний/gi,'без&nbsp;переживаний');
@@ -825,10 +837,10 @@ function addNbspDict(t){
   t=t.replace(/один-одинёшенек/g,'один\u0001одинёшенек');
   t=t.replace(/(\S)-(\S)/g,'$1\u2011$2');
   t=t.replace(/один\u0001одинёшенек/g,'один-одинёшенек');
-  t=t.replace(/во что бы то ни стало/gi,'во&nbsp;что&nbsp;бы&nbsp;то&nbsp;ни&nbsp;стало');
-  t=t.replace(/несмотря ни на что/gi,'несмотря&nbsp;ни&nbsp;на&nbsp;что');
-  t=t.replace(/как бы то ни было/gi,'как&nbsp;бы&nbsp;то&nbsp;ни&nbsp;было');
-  t=t.replace(/ни с того ни с сего/gi,'ни&nbsp;с&nbsp;того&nbsp;ни&nbsp;с&nbsp;сего');
+  t=t.replace(/во что бы то ни стало/gi,'во&nbsp;что&nbsp;бы&nbsp;то<br>ни&nbsp;стало');
+  t=t.replace(/несмотря ни на что/gi,'несмотря<br>ни&nbsp;на&nbsp;что');
+  t=t.replace(/как бы то ни было/gi,'как&nbsp;бы&nbsp;то<br>ни&nbsp;было');
+  t=t.replace(/ни с того ни с сего/gi,'ни&nbsp;с&nbsp;того<br>ни&nbsp;с&nbsp;сего');
   SHORT_WORDS.forEach(w=>{const re=new RegExp('(^|[\\s>])('+w+')\\s+','gi');t=t.replace(re,'$1$2&nbsp;');});
   t=t.replace(/(^|[\s>])(ни|не)\s+/gi,'$1$2&nbsp;');
   return t;
@@ -1175,7 +1187,7 @@ function addPairToBook(phrase,meaning){
     const leftEl=document.getElementById('pageLeft');
     const rightEl=document.getElementById('pageRight');
 
-    if(s.leftPairs.length < pp){
+    if(s.rightPairs.length === 0 && s.leftPairs.length < pp){
       s.leftPairs.push(item);
       renderBookPage(leftEl, s.leftPairs);
       if(!pairPageOverflows(leftEl)){
@@ -1314,7 +1326,7 @@ function makeDictEntryNode(pair,collected){
     } else {
       const top=document.createElement('div');top.className='dict-entry-top';
       const ph=document.createElement('span');ph.className='entry-phrase';
-      let phraseHtml=addNbspDict(capitalizeFirst(pair.p));
+      let phraseHtml=capitalizeFirst(addNbspDict(pair.p));
       ph.innerHTML=phraseHtml+'\u00A0—';
       if(pair.p===LAMP_PHRASE){const l=document.createElement('span');l.className='lamp-inline';l.textContent='💡';l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};ph.appendChild(l);}
       top.appendChild(ph);
@@ -1335,7 +1347,7 @@ function makeDictEntryNode(pair,collected){
   if(svg){ if(collected) lk.innerHTML=''; else lk.innerHTML=LOCK_SVG; }
   else { lk.textContent=collected?'':'🔒'; }
   const ph=document.createElement('span');ph.className='entry-phrase';
-  ph.innerHTML=addNbspDict(capitalizeFirst(pair.p));
+  ph.innerHTML=capitalizeFirst(addNbspDict(pair.p));
   if(collected&&pair.p===LAMP_PHRASE){const l=document.createElement('span');l.className='lamp-inline';l.textContent='💡';l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};ph.appendChild(l);}
   const dh=document.createElement('span');dh.className='entry-dash';dh.textContent=collected?'—':'';
   const mn=document.createElement('span');mn.className='entry-meaning';
@@ -1397,7 +1409,9 @@ function buildDictPages(){
     for(let i=0;i<pages.length-1;i++){const page=pages[i];if(page.length>0&&page[page.length-1].type==='letter'){const le=page.pop();pages[i+1].unshift(le);}}
     dictPages=pages;return;
   }
-  const pageLimit=400;let cp=[],used=0;
+  const dlEl=document.getElementById('dictPageLeft');
+  const pageLimit=(dlEl && dlEl.clientHeight>100) ? (dlEl.clientHeight-70) : 400;
+  let cp=[],used=0;
   entries.forEach(e=>{
     let h=0;
     if(e.type==='letter') h=letterHeight||40;
@@ -1438,8 +1452,8 @@ function renderDictPage(){
 
 function openDict(){
   if(DEVICE_TYPE === 'phone' && !dictMeasured && !dictMeasurePending){scheduleDictMeasure();}
-  buildDictPages();dictCurrentPage=0;renderDictPage();
   document.getElementById('dictOverlay').classList.add('active');
+  buildDictPages();dictCurrentPage=0;renderDictPage();
 }
 function closeDict(){document.getElementById('dictOverlay').classList.remove('active');}
 function dictPrevPage(){if(dictCurrentPage>0){dictCurrentPage--;renderDictPage();}}
