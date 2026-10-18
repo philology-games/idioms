@@ -126,7 +126,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .dict-header{display:flex;justify-content:space-between;align-items:center;padding:6px 14px;background:#1a2a4a;color:#e0d4b8;font-family:'Playfair Display',Georgia,serif;font-size:.95rem}
 .dict-close{font-size:1.2rem;cursor:pointer;color:#e0d4b8;background:none;border:none}
 .dict-pages{flex:1;display:flex;overflow:hidden;position:relative;min-height:0}
-.dict-page{flex:1;position:relative;padding:22px 24px 44px 18px;overflow:hidden;overflow-x:visible;display:flex;flex-direction:column;background:#e0d4b8;background-image:radial-gradient(circle at 20% 30%,rgba(184,92,56,.1) .5px,transparent 1px),radial-gradient(circle at 70% 60%,rgba(166,138,58,.1) .5px,transparent 1px)}
+.dict-page{flex:1;position:relative;padding:22px 24px 44px 18px;overflow:hidden;overflow-x:visible;display:flex;flex-direction:column;background:#e0d4b8}
 .dict-page-content{flex:1;display:flex;flex-direction:column}
 .dict-fold{width:6px;flex-shrink:0;background:linear-gradient(to right,#d4c8a8,#c8bc9c 30%,#b8ac8c 50%,#c8bc9c 70%,#d4c8a8);position:relative}
 .dict-fold::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:2px;height:100%;background:rgba(0,0,0,.15)}
@@ -816,7 +816,7 @@ function addNbsp(t){
   return t;
 }
 
-function addNbspDict(t){
+function addNbspDict(t, capitalize){
   t=t.replace(/делать кое-как/gi,'делать<br>кое-как');
   t=t.replace(/язык не поворачивается/gi,'язык&nbsp;не<br>поворачивается');
   t=t.replace(/избавить от заблуждения/gi,'избавить&nbsp;от<br>заблуждения');
@@ -825,6 +825,7 @@ function addNbspDict(t){
   t=t.replace(/сейчас, с недавних пор/gi,'сейчас<br>с&nbsp;недавних&nbsp;пор');
   t=t.replace(/передавая содержание, а не форму/gi,'передавая<br>содержание<br>а&nbsp;не&nbsp;форму');
   t=t.replace(/достать из-под земли/gi,'достать<br>из\u2011под&nbsp;земли');
+  t=t.replace(/о только что приготовленном/gi,'о&nbsp;только&nbsp;что<br><span style="font-size:.92em">приготовленном</span>');
   t=t.replace(/ради кого-то\/чего-то/gi,'ради<br>кого-то/<br>чего-то');
   t=t.replace(/\s+\/\s+/g,'&nbsp;/<br>');
   t=t.replace(/\(([^)]*)\)/g,'<i>($1)</i>');
@@ -837,12 +838,17 @@ function addNbspDict(t){
   t=t.replace(/один-одинёшенек/g,'один\u0001одинёшенек');
   t=t.replace(/(\S)-(\S)/g,'$1\u2011$2');
   t=t.replace(/один\u0001одинёшенек/g,'один-одинёшенек');
-  t=t.replace(/во что бы то ни стало/gi,'во&nbsp;что&nbsp;бы&nbsp;то<br>ни&nbsp;стало');
-  t=t.replace(/несмотря ни на что/gi,'несмотря<br>ни&nbsp;на&nbsp;что');
-  t=t.replace(/как бы то ни было/gi,'как&nbsp;бы&nbsp;то<br>ни&nbsp;было');
-  t=t.replace(/ни с того ни с сего/gi,'ни&nbsp;с&nbsp;того<br>ни&nbsp;с&nbsp;сего');
+  t=t.replace(/во что бы то ни стало/gi,'во что бы то<br>ни стало');
+  t=t.replace(/несмотря ни на что/gi,'несмотря<br>ни на что');
+  t=t.replace(/как бы то ни было/gi,'как бы то<br>ни было');
+  t=t.replace(/ни с того ни с сего/gi,'ни с того<br>ни с сего');
   SHORT_WORDS.forEach(w=>{const re=new RegExp('(^|[\\s>])('+w+')\\s+','gi');t=t.replace(re,'$1$2&nbsp;');});
   t=t.replace(/(^|[\s>])(ни|не)\s+/gi,'$1$2&nbsp;');
+  if(capitalize && t.length > 0){
+    if(/[а-яёa-z]/i.test(t.charAt(0))){
+      t = t.charAt(0).toUpperCase() + t.slice(1);
+    }
+  }
   return t;
 }
 
@@ -853,7 +859,19 @@ function renderMeaningHTMLStacked(m,useDict){
 }
 
 function fitTiles(){document.querySelectorAll('.tile').forEach(tile=>{tile.style.fontSize='';const cs=parseFloat(getComputedStyle(tile).fontSize);const mn=8;let s=cs,it=0;while((tile.scrollHeight>tile.clientHeight+1||tile.scrollWidth>tile.clientWidth+1)&&s>mn&&it<40){s-=.5;tile.style.fontSize=s+'px';it++;}});}
-function fitBook(){document.querySelectorAll('.pair-phrase, .pair-meaning').forEach(item=>{item.style.fontSize='';const cs=parseFloat(getComputedStyle(item).fontSize);const mn=6;let s=cs,it=0;while((item.scrollHeight>item.clientHeight+1||item.scrollWidth>item.clientWidth+1)&&s>mn&&it<40){s-=.3;item.style.fontSize=s+'px';it++;}});}
+
+function fitBook(){
+  document.querySelectorAll('.pair-phrase, .pair-meaning').forEach(item=>{
+    if(item.querySelector('br')) return;
+    item.style.fontSize='';
+    const cs=parseFloat(getComputedStyle(item).fontSize);
+    const mn=6;
+    let s=cs,it=0;
+    while((item.scrollHeight>item.clientHeight+1||item.scrollWidth>item.clientWidth+1)&&s>mn&&it<40){
+      s-=.3;item.style.fontSize=s+'px';it++;
+    }
+  });
+}
 
 const _measureCanvas=document.createElement('canvas');
 const _measureCtx=_measureCanvas.getContext('2d');
@@ -1326,7 +1344,7 @@ function makeDictEntryNode(pair,collected){
     } else {
       const top=document.createElement('div');top.className='dict-entry-top';
       const ph=document.createElement('span');ph.className='entry-phrase';
-      let phraseHtml=capitalizeFirst(addNbspDict(pair.p));
+      let phraseHtml=addNbspDict(pair.p, true);
       ph.innerHTML=phraseHtml+'\u00A0—';
       if(pair.p===LAMP_PHRASE){const l=document.createElement('span');l.className='lamp-inline';l.textContent='💡';l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};ph.appendChild(l);}
       top.appendChild(ph);
@@ -1347,7 +1365,7 @@ function makeDictEntryNode(pair,collected){
   if(svg){ if(collected) lk.innerHTML=''; else lk.innerHTML=LOCK_SVG; }
   else { lk.textContent=collected?'':'🔒'; }
   const ph=document.createElement('span');ph.className='entry-phrase';
-  ph.innerHTML=capitalizeFirst(addNbspDict(pair.p));
+  ph.innerHTML=addNbspDict(pair.p, true);
   if(collected&&pair.p===LAMP_PHRASE){const l=document.createElement('span');l.className='lamp-inline';l.textContent='💡';l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};ph.appendChild(l);}
   const dh=document.createElement('span');dh.className='entry-dash';dh.textContent=collected?'—':'';
   const mn=document.createElement('span');mn.className='entry-meaning';
@@ -1440,7 +1458,7 @@ function renderDictPage(){
   const le=page.slice(0,half),re=page.slice(half);
   [le,re].forEach((entries,side)=>{
     const ct=side===0?lc:rc;
-    ct.classList.add('distribute');
+    ct.classList.toggle('distribute', entries.length >= 5);
     entries.forEach(entry=>{
       if(entry.type==='letter'){const d=document.createElement('div');d.className='dict-section-title';d.textContent=entry.letter;ct.appendChild(d);}
       else{const pair=entry.pair;const collected=collectedPhrases.has(pair.p);ct.appendChild(makeDictEntryNode(pair,collected));}
