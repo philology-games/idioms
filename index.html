@@ -824,21 +824,21 @@ function addNbsp(t){
 
 function addNbspDict(t, capitalize){
   t=t.replace(/делать кое-как/gi,'делать<br>кое-как');
-  t=t.replace(/язык не поворачивается/gi,'язык&nbsp;не<br>поворачивается');
+  t=t.replace(/язык не поворачивается/gi,'язык&nbsp;не<br><span style="font-size:.9em">поворачивается</span>');
   t=t.replace(/избавить от заблуждения/gi,'избавить&nbsp;от<br>заблуждения');
   t=t.replace(/представь себе/gi,'представь<br>себе');
   t=t.replace(/обожать, очень любить/gi,'обожать<br>очень&nbsp;любить');
   t=t.replace(/сейчас, с недавних пор/gi,'сейчас<br>с&nbsp;недавних&nbsp;пор');
   t=t.replace(/передавая содержание, а не форму/gi,'передавая<br>содержание<br>а&nbsp;не&nbsp;форму');
-  t=t.replace(/достать из-под земли/gi,'достать<br>из\u2011под&nbsp;земли');
+  t=t.replace(/достать из-под земли/gi,'достать<br>из\u2011под<br>земли');
   t=t.replace(/о только что приготовленном/gi,'о&nbsp;только&nbsp;что<br><span style="font-size:.92em">приготовленном</span>');
   t=t.replace(/ради кого-то\/чего-то/gi,'ради<br>кого-то/<br>чего-то');
   t=t.replace(/\s+\/\s+/g,'&nbsp;/<br>');
   t=t.replace(/\(([^)]*)\)/g,'<i>($1)</i>');
   t=t.replace(/без свидетелей/gi,'без&nbsp;свидетелей');
   t=t.replace(/без переживаний/gi,'без&nbsp;переживаний');
-  t=t.replace(/как миленький/gi,'как&nbsp;миленький');
-  t=t.replace(/что поделаешь/gi,'что&nbsp;поделаешь');
+  t=t.replace(/как миленький/gi,'как<br>миленький');
+t=t.replace(/что поделаешь/gi,'что<br>поделаешь');
   t=t.replace(/между прочим/gi,'между&nbsp;прочим');
   t=t.replace(/\(на ком-то\/чём-то\)/gi,'<span style="white-space:nowrap">(на&nbsp;ком-то/чём-то)</span>');
   t=t.replace(/один-одинёшенек/g,'один\u0001одинёшенек');
