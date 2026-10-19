@@ -824,7 +824,7 @@ function addNbsp(t){
 
 function addNbspDict(t, capitalize){
   t=t.replace(/делать кое-как/gi,'делать<br>кое-как');
-  t=t.replace(/язык не поворачивается/gi,'язык&nbsp;не<br><span style="font-size:.9em">поворачивается</span>');
+ t=t.replace(/язык не поворачивается/gi,'язык<br>не<br><span style="font-size:.9em">поворачивается</span>');
   t=t.replace(/избавить от заблуждения/gi,'избавить&nbsp;от<br>заблуждения');
   t=t.replace(/представь себе/gi,'представь<br>себе');
   t=t.replace(/обожать, очень любить/gi,'обожать<br>очень&nbsp;любить');
@@ -839,7 +839,10 @@ function addNbspDict(t, capitalize){
   t=t.replace(/без переживаний/gi,'без&nbsp;переживаний');
   t=t.replace(/как миленький/gi,'как<br>миленький');
 t=t.replace(/что поделаешь/gi,'что<br>поделаешь');
-  t=t.replace(/между прочим/gi,'между&nbsp;прочим');
+  t=t.replace(/между прочим/gi,'между<br>прочим');
+t=t.replace(/между делом/gi,'между<br>делом');
+t=t.replace(/что и говорить/gi,'что<br>и&nbsp;говорить');
+t=t.replace(/что касается/gi,'что<br>касается');
   t=t.replace(/\(на ком-то\/чём-то\)/gi,'<span style="white-space:nowrap">(на&nbsp;ком-то/чём-то)</span>');
   t=t.replace(/один-одинёшенек/g,'один\u0001одинёшенек');
   t=t.replace(/(\S)-(\S)/g,'$1\u2011$2');
