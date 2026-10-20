@@ -1447,7 +1447,7 @@ function buildDictPages(){
     dictPages=pages;return;
   }
   const dlEl=document.getElementById('dictPageLeft');
-  const pageLimit=(dlEl && dlEl.clientHeight>100) ? (dlEl.clientHeight-70) : 400;
+  const pageLimit=(dlEl && dlEl.clientHeight>100) ? (2*dlEl.clientHeight-100) : 400;
   let cp=[],used=0;
   entries.forEach(e=>{
     let h=0;
