@@ -180,6 +180,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .book-pair .pair-phrase{flex:0 0 36%}
 .book-pair .pair-dash{flex:0 0 14px}
 .book-pair .pair-meaning{padding-left:0}
+  .tile{font-size:1.2rem}
 }
 @media (orientation:portrait) and (max-width:600px){
 .main{flex-direction:column;padding:0 8px 4px 8px;gap:5px}
@@ -851,9 +852,9 @@ function addNbspDict(t, capitalize){
   t=t.replace(/ради кого-то\/чего-то/gi,'ради<br>кого-то/<br>чего-то');
   t=t.replace(/\s+\/\s+/g,'&nbsp;/<br>');
   t=t.replace(/\(([^)]*)\)/g,'<i>($1)</i>');
-  t=t.replace(/без свидетелей/gi,'без&nbsp;свидетелей');
-  t=t.replace(/как миленький/gi,'как&nbsp;миленький');
-  t=t.replace(/что поделаешь/gi,'что&nbsp;поделаешь');
+  t=t.replace(/без свидетелей/gi, DEVICE_TYPE === 'phone' ? 'без<br>свидетелей' : 'без&nbsp;свидетелей');
+  t=t.replace(/как миленький/gi,'как<br>миленький');
+t=t.replace(/что поделаешь/gi,'что<br>поделаешь');
   t=t.replace(/\(на ком-то\/чём-то\)/gi,'<span style="white-space:nowrap">(на&nbsp;ком-то/чём-то)</span>');
   t=t.replace(/один-одинёшенек/g,'один\u0001одинёшенек');
   t=t.replace(/(\S)-(\S)/g,'$1\u2011$2');
@@ -885,7 +886,7 @@ function renderMeaningHTMLStacked(m,useDict){
 }
 
 function fitTiles(){
-  const minSize=DEVICE_TYPE==='phone'?11:8;
+  const minSize=DEVICE_TYPE==='phone'?11:10;
   document.querySelectorAll('.tile').forEach(tile=>{
     tile.style.fontSize='';
     const cs=parseFloat(getComputedStyle(tile).fontSize);
