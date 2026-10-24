@@ -797,6 +797,12 @@ function addNbsp(t){
   t=t.replace(/без переживаний/gi,'без<br>переживаний');
   t=t.replace(/как миленький/gi,'как<br>миленький');
   t=t.replace(/что поделаешь/gi,'что<br>поделаешь');
+  t=t.replace(/честно, без обмана/gi,'честно,<br>без&nbsp;обмана');
+t=t.replace(/пожелание перед сном/gi,'пожелание<br>перед&nbsp;сном');
+t=t.replace(/пожелание перед едой/gi,'пожелание<br>перед&nbsp;едой');
+t=t.replace(/пропасть без вести/gi,'пропасть<br>без&nbsp;вести');
+t=t.replace(/говорить\/лезть под руку/gi,'говорить/лезть<br>под&nbsp;руку');
+t=t.replace(/достать из-под земли/gi,'достать<br>из\u2011под&nbsp;земли');
   t=t.replace(/между прочим/gi,'между<br>прочим');
   t=t.replace(/о только что приготовленном/gi,'о&nbsp;только&nbsp;что<br>приготовленном');
   t=t.replace(/о недавно появившемся/gi,'о&nbsp;недавно<br>появившемся');
@@ -823,7 +829,7 @@ function addNbsp(t){
   return t;
 }
 
-function addNbspDict(t, capitalize){
+function addNbspDict(t, capitalize, isDict){
   t=t.replace(/делать кое-как/gi,'делать<br>кое-как');
   t=t.replace(/язык не поворачивается/gi,'язык<br>не<br><span style="font-size:.9em">поворачивается</span>');
   t=t.replace(/избавить от заблуждения/gi,'избавить&nbsp;от<br>заблуждения');
@@ -831,7 +837,12 @@ function addNbspDict(t, capitalize){
   t=t.replace(/обожать, очень любить/gi,'обожать<br>очень&nbsp;любить');
   t=t.replace(/сейчас, с недавних пор/gi,'сейчас<br>с&nbsp;недавних&nbsp;пор');
   t=t.replace(/передавая содержание, а не форму/gi,'передавая<br>содержание<br>а&nbsp;не&nbsp;форму');
-  t=t.replace(/достать из-под земли/gi,'достать<br>из\u2011под<br>земли');
+  t=t.replace(/достать из-под земли/gi,'достать<br>из\u2011под&nbsp;земли');
+t=t.replace(/честно, без обмана/gi,'честно,<br>без&nbsp;обмана');
+t=t.replace(/пожелание перед сном/gi,'пожелание<br>перед&nbsp;сном');
+t=t.replace(/пожелание перед едой/gi,'пожелание<br>перед&nbsp;едой');
+t=t.replace(/пропасть без вести/gi,'пропасть<br>без&nbsp;вести');
+t=t.replace(/говорить\/лезть под руку/gi,'говорить/лезть<br>под&nbsp;руку');
   t=t.replace(/между прочим/gi,'между<br>прочим');
   t=t.replace(/между делом/gi,'между<br>делом');
   t=t.replace(/что и говорить/gi,'что<br>и&nbsp;говорить');
@@ -842,17 +853,17 @@ function addNbspDict(t, capitalize){
     t=t.replace(/взаимодействии/gi,'<span style="font-size:.82em">взаимодействии</span>');
     t=t.replace(/невозможности/gi,'<span style="font-size:.82em">невозможности</span>');
     t=t.replace(/предупреждение/gi,'<span style="font-size:.82em">предупреждение</span>');
-    t=t.replace(/без переживаний/gi,'без<br>переживаний');
+    t=t.replace(/без переживаний/gi, isDict ? 'без&nbsp;переживаний' : 'без<br>переживаний');
     t=t.replace(/поведение\/настроение отличается от обычного/gi,'поведение/настроение<br>отличается<br>от&nbsp;обычного');
     t=t.replace(/от скуки, от безделья/gi,'от&nbsp;скуки,<br>от&nbsp;безделья');
   } else {
     t=t.replace(/о только что приготовленном/gi,'о&nbsp;только&nbsp;что<br><span style="font-size:.92em">приготовленном</span>');
     t=t.replace(/без переживаний/gi,'без&nbsp;переживаний');
   }
-  t=t.replace(/ради кого-то\/чего-то/gi,'ради<br>кого-то/<br>чего-то');
+  t=t.replace(/ради кого-то\/чего-то/gi, isDict ? 'ради<br>кого-то/чего-то' : 'ради<br>кого-то/<br>чего-то');
   t=t.replace(/\s+\/\s+/g,'&nbsp;/<br>');
   t=t.replace(/\(([^)]*)\)/g,'<i>($1)</i>');
-  t=t.replace(/без свидетелей/gi, DEVICE_TYPE === 'phone' ? 'без<br>свидетелей' : 'без&nbsp;свидетелей');
+  t=t.replace(/без свидетелей/gi, (DEVICE_TYPE === 'phone' && !isDict) ? 'без<br>свидетелей' : 'без&nbsp;свидетелей');
   t=t.replace(/как миленький/gi,'как<br>миленький');
 t=t.replace(/что поделаешь/gi,'что<br>поделаешь');
   t=t.replace(/\(на ком-то\/чём-то\)/gi,'<span style="white-space:nowrap">(на&nbsp;ком-то/чём-то)</span>');
@@ -1422,8 +1433,8 @@ function makeDictEntryNode(pair,collected){
     } else {
       const top=document.createElement('div');top.className='dict-entry-top';
       const ph=document.createElement('span');ph.className='entry-phrase';
-      let phraseHtml=addNbspDict(pair.p, true);
-      ph.innerHTML=phraseHtml+'\u00A0—';
+      let phraseHtml=addNbspDict(pair.p, true, true);
+      ph.innerHTML=addNbspDict(pair.p, true, true)+'\u00A0—';
       if(pair.p===LAMP_PHRASE){const l=document.createElement('span');l.className='lamp-inline';l.textContent='💡';l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};ph.appendChild(l);}
       top.appendChild(ph);
       const bottom=document.createElement('div');bottom.className='dict-entry-bottom';
@@ -1432,7 +1443,7 @@ function makeDictEntryNode(pair,collected){
       mn.innerHTML=splitMeaning(pair.m).map((part,i)=>{
         const cls=['','second','third'][i]||'third';
         const sep=i<splitMeaning(pair.m).length-1?';':'';
-        return `<span class="${cls}">${addNbspDict(part)}${sep}</span>`;
+        return `<span class="${cls}">${addNbspDict(part, false, true)}${sep}</span>`;
       }).join('<br>');
       bottom.appendChild(mn);
       d.appendChild(top);d.appendChild(bottom);
