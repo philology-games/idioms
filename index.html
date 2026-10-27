@@ -180,7 +180,7 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .book-pair .pair-phrase{flex:0 0 36%}
 .book-pair .pair-dash{flex:0 0 14px}
 .book-pair .pair-meaning{padding-left:0}
-  .tile{font-size:1.2rem}
+.tile{font-size:1.2rem}
 }
 @media (orientation:portrait) and (max-width:600px){
 .main{flex-direction:column;padding:0 8px 4px 8px;gap:5px}
@@ -280,9 +280,9 @@ html,body{background:#346a48;font-family:'EB Garamond',Georgia,serif;height:100%
 .book-shelf{flex:0 0 55%}
 .book-open{height:calc(82% + 2cm)}
 .book-pair .pair-phrase,.book-pair .pair-dash,.book-pair .pair-meaning{font-size:1rem}
-.book-pair .pair-phrase{flex:0 0 36%}
-.book-pair .pair-dash{flex:0 0 14px}
-.book-pair .pair-meaning{padding-left:0}
+.book-pair .pair-phrase{flex:0 0 34%}
+.book-pair .pair-dash{flex:0 0 22px}
+.book-pair .pair-meaning{padding-left:2px}
 .final-book{width:min(360px,52vh);height:min(480px,68vh)}
 .final-book::before{left:calc(-1*min(360px,52vh)*0.13);width:calc(min(360px,52vh)*0.14)}
 .final-book::after{left:calc(-1*min(360px,52vh)*0.095)}
@@ -724,7 +724,7 @@ function getParams(){
   const land=isLandscape();
   if(DEVICE_TYPE==='phone'){return {pairsPerRound:9,tabs:3,cols:3,rows:6,gap:2,bookPairsPerPage:1,totalTiles:190};}
   const laptop = window.innerWidth > 1400;
-  return {pairsPerRound:15,tabs:3,cols:land?6:5,rows:land?5:6,gap:5,bookPairsPerPage:laptop?5:(land?3:4),totalTiles:190};
+  return {pairsPerRound:15,tabs:3,cols:land?6:5,rows:land?5:6,gap:5,bookPairsPerPage:laptop?4:(land?3:4),totalTiles:190};
 }
 
 function normalizeMeaning(m){return m.toLowerCase().replace(/[;,.!?()]/g,' ').split(/\s+/).filter(w=>w.length>2).sort().join(' ');}
@@ -783,7 +783,6 @@ function playChestOpen(){if(!soundOn)return;try{const c=getAudioCtx(),n=c.curren
 function playChestClose(){if(!soundOn)return;try{const c=getAudioCtx(),n=c.currentTime,d=1.2;const o=c.createOscillator();o.type='sawtooth';o.frequency.setValueAtTime(150,n);o.frequency.linearRampToValueAtTime(170,n+d*.5);o.frequency.linearRampToValueAtTime(140,n+d);const v=c.createOscillator();v.frequency.value=9;const vg=c.createGain();vg.gain.value=22;v.connect(vg);vg.connect(o.frequency);const g=c.createGain();g.gain.setValueAtTime(.001,n);g.gain.linearRampToValueAtTime(.08,n+.15);g.gain.setValueAtTime(.08,n+d*.7);g.gain.linearRampToValueAtTime(.001,n+d);const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=700;f.Q.value=1.5;o.connect(f);f.connect(g);g.connect(c.destination);o.start(n);o.stop(n+d);v.start(n);v.stop(n+d);const tt=n+d+.05;const to=c.createOscillator(),tg=c.createGain();to.type='sine';to.frequency.setValueAtTime(90,tt);to.frequency.exponentialRampToValueAtTime(45,tt+.15);tg.gain.setValueAtTime(.001,tt);tg.gain.exponentialRampToValueAtTime(.35,tt+.005);tg.gain.exponentialRampToValueAtTime(.001,tt+.18);to.connect(tg);tg.connect(c.destination);to.start(tt);to.stop(tt+.2);}catch(e){}}
 
 const SHORT_WORDS=['в','на','с','к','по','за','из','от','до','у','о','об','во','со','ко','под','над','при','про','без','для','через','между','перед','и','а','но','да','или','либо','что','как','то','же','бы','ли','не','ни'];
-const ONE_LETTER_WORDS=['в','к','с','у','о','и','а'];
 
 function addNbsp(t){
   t=t.replace(/делать кое-как/gi,'делать<br>кое-как');
@@ -797,12 +796,7 @@ function addNbsp(t){
   t=t.replace(/без переживаний/gi,'без<br>переживаний');
   t=t.replace(/как миленький/gi,'как<br>миленький');
   t=t.replace(/что поделаешь/gi,'что<br>поделаешь');
-  t=t.replace(/честно, без обмана/gi,'честно,<br>без&nbsp;обмана');
-t=t.replace(/пожелание перед сном/gi,'пожелание<br>перед&nbsp;сном');
-t=t.replace(/пожелание перед едой/gi,'пожелание<br>перед&nbsp;едой');
-t=t.replace(/пропасть без вести/gi,'пропасть<br>без&nbsp;вести');
-t=t.replace(/говорить\/лезть под руку/gi,'говорить/лезть<br>под&nbsp;руку');
-t=t.replace(/достать из-под земли/gi,'достать<br>из\u2011под&nbsp;земли');
+  t=t.replace(/что и говорить/gi,'что<br>и&nbsp;говорить');
   t=t.replace(/между прочим/gi,'между<br>прочим');
   t=t.replace(/о только что приготовленном/gi,'о&nbsp;только&nbsp;что<br>приготовленном');
   t=t.replace(/о недавно появившемся/gi,'о&nbsp;недавно<br>появившемся');
@@ -830,23 +824,128 @@ t=t.replace(/достать из-под земли/gi,'достать<br>из\u2
 }
 
 function addNbspDict(t, capitalize, isDict){
-  t=t.replace(/делать кое-как/gi,'делать<br>кое-как');
+  t=t.replace(/делать кое-как/gi, isDict ? 'делать кое-как' : 'делать<br>кое-как');
   t=t.replace(/язык не поворачивается/gi,'язык<br>не<br><span style="font-size:.9em">поворачивается</span>');
   t=t.replace(/избавить от заблуждения/gi,'избавить&nbsp;от<br>заблуждения');
   t=t.replace(/представь себе/gi,'представь<br>себе');
-  t=t.replace(/обожать, очень любить/gi,'обожать<br>очень&nbsp;любить');
+  t=t.replace(/обожать, очень любить/gi,'обожать,<br>очень&nbsp;любить');
   t=t.replace(/сейчас, с недавних пор/gi,'сейчас<br>с&nbsp;недавних&nbsp;пор');
   t=t.replace(/передавая содержание, а не форму/gi,'передавая<br>содержание<br>а&nbsp;не&nbsp;форму');
   t=t.replace(/достать из-под земли/gi,'достать<br>из\u2011под&nbsp;земли');
-t=t.replace(/честно, без обмана/gi,'честно,<br>без&nbsp;обмана');
-t=t.replace(/пожелание перед сном/gi,'пожелание<br>перед&nbsp;сном');
-t=t.replace(/пожелание перед едой/gi,'пожелание<br>перед&nbsp;едой');
-t=t.replace(/пропасть без вести/gi,'пропасть<br>без&nbsp;вести');
-t=t.replace(/говорить\/лезть под руку/gi,'говорить/лезть<br>под&nbsp;руку');
+  t=t.replace(/честно, без обмана/gi,'честно,<br>без&nbsp;обмана');
+  t=t.replace(/пожелание перед сном/gi,'пожелание<br>перед&nbsp;сном');
+  t=t.replace(/пожелание перед едой/gi,'пожелание<br>перед&nbsp;едой');
+  t=t.replace(/пропасть без вести/gi,'пропасть<br>без&nbsp;вести');
+  t=t.replace(/говорить\/лезть под руку/gi,'говорить/лезть<br>под&nbsp;руку');
   t=t.replace(/между прочим/gi,'между<br>прочим');
   t=t.replace(/между делом/gi,'между<br>делом');
   t=t.replace(/что и говорить/gi,'что<br>и&nbsp;говорить');
   t=t.replace(/что касается/gi,'что<br>касается');
+
+  if(isLaptop() && !isDict){
+    const bigBookRules=[
+      ['вопрос касается кого-либо/чего-либо','вопрос касается<br>кого-либо/<br>чего-либо'],
+      ['держать ухо востро','держать<br>ухо востро'],
+      ['быть бдительным','быть<br>бдительным'],
+      ['внимательно следить; быть начеку','внимательно<br>следить; быть начеку'],
+      ['вдруг понадобится','вдруг<br>понадобится'],
+      ['чьё-либо мнение','чьё-либо<br>мнение'],
+      ['о том, что нравится','о том,<br>что нравится'],
+      ['уничтожать улики','уничтожать<br>улики'],
+      ['умышленно отвлечь внимание','умышленно<br>отвлечь внимание'],
+      ['в восхищении от кого-то/чего-то','в восхищении<br>от кого-то/<br>чего-то'],
+      ['думать о ненужном','думать<br>о ненужном'],
+      ['в первую очередь','в первую<br>очередь'],
+      ['по всем правилам','по всем<br>правилам'],
+      ['учитывать что-либо','учитывать<br>что-либо'],
+      ['пойти куда-либо','пойти<br>куда-либо'],
+      ['вне всякого сомнения','вне всякого<br>сомнения'],
+      ['пристально смотреть','пристально<br>смотреть'],
+      ['о чём-то важном','о чём-то<br>важном'],
+      ['до сегодняшнего дня','до сегодняшнего<br>дня'],
+      ['пожелание удачи','пожелание<br>удачи'],
+      ['когда-то в прошлом','когда-то<br>в прошлом'],
+      ['как будто нарочно','как будто<br>нарочно'],
+      ['невозможно найти','невозможно<br>найти'],
+      ['сразу, по первому впечатлению','сразу,<br>по первому<br>впечатлению'],
+      ['в разные стороны','в разные<br>стороны'],
+      ['вместе с тем','вместе<br>с тем'],
+      ['ничего не делать','ничего<br>не делать'],
+      ['с определённого момента в прошлом','с определённого<br>момента<br>в прошлом'],
+      ['жалеть о чём-то','жалеть<br>о чём-то'],
+      ['удивление, недоверие','удивление,<br>недоверие'],
+      ['от скуки, от безделья','от&nbsp;скуки,<br>от&nbsp;безделья'],
+      ['целиком и полностью','целиком<br>и полностью'],
+      ['от края до края','от края<br>до края'],
+      ['бурно протекать; активно проявляться','бурно<br>протекать;<br>активно<br>проявляться'],
+      ['о том, что осталось безнаказанным','о том, что<br>осталось<br>безнаказанным'],
+      ['конечно, разумеется','конечно,<br>разумеется'],
+      ['о проливном дожде','о проливном<br>дожде'],
+      ['понять человека; сильно взволновать','понять<br>человека;<br>сильно<br>взволновать'],
+      ['нет иного выхода','нет иного<br>выхода'],
+      ['настойчиво возникать в мыслях','настойчиво<br>возникать<br>в мыслях'],
+      ['тяжело работать; унижаться','тяжело<br>работать;<br>унижаться'],
+      ['добьётся успехов','добьётся<br>успехов'],
+      ['быть в крайне тяжёлом состоянии','быть в крайне<br>тяжёлом<br>состоянии'],
+      ['быть заметным, выделяться','быть<br>заметным,<br>выделяться'],
+      ['сразу после поездки','сразу после<br>поездки'],
+      ['о том, что неизбежно произойдёт','о том, что<br>неизбежно<br>произойдёт'],
+      ['наоборот, в перевёрнутом виде','наоборот,<br>в перевёрнутом<br>виде'],
+      ['нельзя преодолеть','нельзя<br>преодолеть'],
+      ['в самом начале','в самом<br>начале'],
+      ['постепенно в ходе разговора; пререкаясь','постепенно<br>в ходе разговора;<br>пререкаясь'],
+      ['передать лично','передать<br>лично'],
+      ['быть на иждивении у кого-то','быть<br>на&nbsp;иждивении<br>у&nbsp;кого-то'],
+      ['слишком много всего','слишком<br>много всего'],
+      ['сверх чего-либо','сверх<br>чего-либо'],
+      ['принести пользу','принести<br>пользу'],
+      ['тревога, тяжесть','тревога,<br>тяжесть'],
+      ['талант; благородные задатки','талант;<br>благородные<br>задатки'],
+      ['от одного к другому','от одного<br>к другому'],
+      ['постоянно тревожить','постоянно<br>тревожить'],
+      ['в любом случае','в любом<br>случае'],
+      ['успешное завершение','успешное<br>завершение'],
+      ['сдаться, отчаяться','сдаться,<br>отчаяться'],
+      ['понять кого-то','понять<br>кого-то'],
+      ['неуместное проявление ласки','неуместное<br>проявление<br>ласки'],
+      ['о том, кто остаётся невредимым','о том, кто<br>остаётся<br>невредимым'],
+      ['в худшем случае','в худшем<br>случае'],
+      ['во всех подробностях','во всех<br>подробностях'],
+      ['переживать из-за чего-то/кого-то','переживать<br>из-за чего-то/<br>кого-то'],
+      ['преодолеть отчаяние','преодолеть<br>отчаяние'],
+      ['спорить; бороться за что-либо','спорить;<br>бороться<br>за что-либо'],
+      ['главным образом','главным<br>образом'],
+      ['коротко говоря','коротко<br>говоря'],
+      ['время наибольшей загруженности','время<br>наибольшей<br>загруженности'],
+      ['кстати; не уделяя особого внимания','кстати;<br>не уделяя<br>особого<br>внимания'],
+      ['мучительно думать','мучительно<br>думать'],
+      ['активно проявляться; бурно протекать','активно<br>проявляться;<br>бурно<br>протекать'],
+      ['разувериться; потерять надежду','разувериться;<br>потерять<br>надежду'],
+      ['в тот самый момент','в тот самый<br>момент'],
+      ['никогда не видел','никогда<br>не видел'],
+      ['если говорить о чём-то/ком-то, то…','если говорить<br>о чём-то/ком-то,<br>то…'],
+      ['ничего не получается','ничего<br>не получается'],
+      ['затронуть болезненную тему','затронуть<br>болезненную<br>тему'],
+      ['не решаться что-либо сказать','не решаться<br>что-либо сказать'],
+      ['наиболее вероятно','наиболее<br>вероятно'],
+      ['не показывать своих чувств','не показывать<br>своих чувств'],
+      ['часто, регулярно','часто,<br>регулярно'],
+      ['испытать самому','испытать<br>самому'],
+      ['осуждать, обвинять','осуждать,<br>обвинять'],
+      ['получить любой ценой','получить<br>любой ценой'],
+      ['без переживаний','без<br>переживаний'],
+      ['сильно впечатлить','сильно<br>впечатлить'],
+      ['состояние счастья','состояние<br>счастья'],
+      ['гневно, раздражённо','гневно,<br>раздражённо'],
+      ['о внезапных сильных чувствах','о внезапных<br>сильных<br>чувствах']
+    ];
+    bigBookRules.forEach(pair=>{
+      const find=pair[0], repl=pair[1];
+      const escaped=find.replace(/[.*+?^${}()|[\]\\\/]/g,'\\$&');
+      t=t.replace(new RegExp(escaped,'gi'),repl);
+    });
+  }
+
   if(DEVICE_TYPE === 'phone'){
     t=t.replace(/о только что приготовленном/gi,'о&nbsp;только&nbsp;что<br><span style="font-size:.82em">приготовленном</span>');
     t=t.replace(/легкомысленный/gi,'<span style="font-size:.82em">легкомысленный</span>');
@@ -854,18 +953,20 @@ t=t.replace(/говорить\/лезть под руку/gi,'говорить/�
     t=t.replace(/невозможности/gi,'<span style="font-size:.82em">невозможности</span>');
     t=t.replace(/предупреждение/gi,'<span style="font-size:.82em">предупреждение</span>');
     t=t.replace(/без переживаний/gi, isDict ? 'без&nbsp;переживаний' : 'без<br>переживаний');
-    t=t.replace(/поведение\/настроение отличается от обычного/gi,'поведение/настроение<br>отличается<br>от&nbsp;обычного');
+    t=t.replace(/поведение\/настроение отличается от обычного/gi, isDict ? 'поведение/настроение<br>отличается<br>от&nbsp;обычного' : 'поведение/<br>настроение<br>отличается<br>от&nbsp;обычного');
+    t=t.replace(/вопрос касается кого-либо\/чего-либо/gi,'вопрос<br>касается<br>кого-либо/<br>чего-либо');
     t=t.replace(/от скуки, от безделья/gi,'от&nbsp;скуки,<br>от&nbsp;безделья');
   } else {
     t=t.replace(/о только что приготовленном/gi,'о&nbsp;только&nbsp;что<br><span style="font-size:.92em">приготовленном</span>');
     t=t.replace(/без переживаний/gi,'без&nbsp;переживаний');
   }
-  t=t.replace(/ради кого-то\/чего-то/gi, isDict ? 'ради<br>кого-то/чего-то' : 'ради<br>кого-то/<br>чего-то');
+
+  t=t.replace(/ради кого-то\/чего-то/gi, isDict ? 'ради кого-то/чего-то' : 'ради<br>кого-то/<br>чего-то');
   t=t.replace(/\s+\/\s+/g,'&nbsp;/<br>');
   t=t.replace(/\(([^)]*)\)/g,'<i>($1)</i>');
   t=t.replace(/без свидетелей/gi, (DEVICE_TYPE === 'phone' && !isDict) ? 'без<br>свидетелей' : 'без&nbsp;свидетелей');
-  t=t.replace(/как миленький/gi,'как<br>миленький');
-t=t.replace(/что поделаешь/gi,'что<br>поделаешь');
+  t=t.replace(/как миленький/gi,'как&nbsp;миленький');
+  t=t.replace(/что поделаешь/gi,'что&nbsp;поделаешь');
   t=t.replace(/\(на ком-то\/чём-то\)/gi,'<span style="white-space:nowrap">(на&nbsp;ком-то/чём-то)</span>');
   t=t.replace(/один-одинёшенек/g,'один\u0001одинёшенек');
   t=t.replace(/(\S)-(\S)/g,'$1\u2011$2');
@@ -925,7 +1026,6 @@ function fitBook(){
 const _measureCanvas=document.createElement('canvas');
 const _measureCtx=_measureCanvas.getContext('2d');
 function measureWordWidth(word,fontSizePx,fontFamily,fontWeight){_measureCtx.font=fontWeight+' '+fontSizePx+'px '+fontFamily;return _measureCtx.measureText(word).width;}
-function longestWordWidth(text,fontSizePx,fontFamily,fontWeight){const words=text.split(/\s+/).filter(w=>w.length>0);let max=0;words.forEach(w=>{const clean=w.replace(/&nbsp;/g,' ').replace(/[;,()]/g,'');let parts=[clean];if(clean==='один-одинёшенек'){parts=clean.split('-');}parts.forEach(p=>{const ww=measureWordWidth(p,fontSizePx,fontFamily,fontWeight);if(ww>max)max=ww;});});return max;}
 
 function applySmartBookLayout(){
   if(DEVICE_TYPE !== 'phone') return;
@@ -1433,7 +1533,6 @@ function makeDictEntryNode(pair,collected){
     } else {
       const top=document.createElement('div');top.className='dict-entry-top';
       const ph=document.createElement('span');ph.className='entry-phrase';
-      let phraseHtml=addNbspDict(pair.p, true, true);
       ph.innerHTML=addNbspDict(pair.p, true, true)+'\u00A0—';
       if(pair.p===LAMP_PHRASE){const l=document.createElement('span');l.className='lamp-inline';l.textContent='💡';l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};ph.appendChild(l);}
       top.appendChild(ph);
@@ -1454,7 +1553,7 @@ function makeDictEntryNode(pair,collected){
   if(svg){ if(collected) lk.innerHTML=''; else lk.innerHTML=LOCK_SVG; }
   else { lk.textContent=collected?'':'🔒'; }
   const ph=document.createElement('span');ph.className='entry-phrase';
-  ph.innerHTML=addNbspDict(pair.p, true);
+  ph.innerHTML=addNbspDict(pair.p, true, true);
   if(collected&&pair.p===LAMP_PHRASE){const l=document.createElement('span');l.className='lamp-inline';l.textContent='💡';l.onclick=(e)=>{e.stopPropagation();showTooltip(l);};ph.appendChild(l);}
   const dh=document.createElement('span');dh.className='entry-dash';dh.textContent=collected?'—':'';
   const mn=document.createElement('span');mn.className='entry-meaning';
@@ -1462,7 +1561,7 @@ function makeDictEntryNode(pair,collected){
   mn.innerHTML=collected?splitMeaning(pair.m).map((part,i)=>{
     const cls=['','second','third'][i]||'third';
     const sep=i<splitMeaning(pair.m).length-1?';':'';
-    return `<span class="${cls}">${addNbspDict(part)}${sep}</span>`;
+    return `<span class="${cls}">${addNbspDict(part, false, true)}${sep}</span>`;
   }).join('<br>'):'';
   d.appendChild(lk);d.appendChild(ph);d.appendChild(dh);d.appendChild(mn);
   return d;
@@ -1536,7 +1635,6 @@ function buildDictPages(){
   }
   dictPages=pages;
 }
-function capitalizeFirst(s){if(!s)return s;return s.charAt(0).toUpperCase()+s.slice(1);}
 
 function renderDictPage(){
   const lc=document.getElementById('dictPageLeftContent'),rc=document.getElementById('dictPageRightContent');
