@@ -965,7 +965,7 @@ function addNbspDict(t, capitalize, isDict){
   t=t.replace(/\s+\/\s+/g,'&nbsp;/<br>');
   t=t.replace(/\(([^)]*)\)/g,'<i>($1)</i>');
   t=t.replace(/без свидетелей/gi, (DEVICE_TYPE === 'phone' && !isDict) ? 'без<br>свидетелей' : 'без&nbsp;свидетелей');
-  t=t.replace(/как миленький/gi,'как&nbsp;миленький');
+  t=t.replace(/как миленький/gi, (isLaptop() && !isDict) ? 'как<br>миленький' : 'как&nbsp;миленький');
   t=t.replace(/что поделаешь/gi,'что&nbsp;поделаешь');
   t=t.replace(/\(на ком-то\/чём-то\)/gi,'<span style="white-space:nowrap">(на&nbsp;ком-то/чём-то)</span>');
   t=t.replace(/один-одинёшенек/g,'один\u0001одинёшенек');
